@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DrawerComponent } from './drawer/drawer.component';
-import { EditorToolsComponent } from './editor-tools/editor-tools.component';
+//import { EditorToolsComponent } from './editor-tools/editor-tools.component';
 import { DrRectComponent } from './elements/dr-rect/dr-rect.component';
 import { DynamicSvgDirective } from './dynamic-svg/dynamic-svg.directive';
 import { DrObjectComponent } from './elements/dr-object/dr-object.component';
@@ -16,7 +16,7 @@ import { SelectorToolComponent } from './tools/selector-tool/selector-tool.compo
   ],
   declarations: [
     DrawerComponent,
-    EditorToolsComponent,
+    //EditorToolsComponent,
     DrRectComponent,
     DynamicSvgDirective,
     DrObjectComponent,
