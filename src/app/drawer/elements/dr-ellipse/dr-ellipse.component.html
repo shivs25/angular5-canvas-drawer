@@ -1,0 +1,15 @@
+<ng-template #elementTemplate>
+    <svg:ellipse *ngIf="data" 
+      [ngClass]="{ clickable: data.clickable }"
+      (click)="onClick(data)"
+      [id]="data.id" 
+      [attr.cx]="data.x" 
+      [attr.cy]="data.y" 
+      [attr.rx]="data.rx" 
+      [attr.ry]="data.ry"
+      [attr.fill]="data.fill"
+      [attr.stroke]="data.stroke"
+      [attr.stroke-width]="data.strokeWidth"
+      [attr.opacity]="data.opacity">
+    </svg:ellipse>
+</ng-template>

@@ -1,0 +1,12 @@
+<ng-template #elementTemplate>
+    <svg:polygon *ngIf="data" 
+      [ngClass]="{ clickable: data.clickable }"
+      (click)="onClick(data)"
+      [id]="data.id"
+      [attr.points]="getPoints()"
+      [attr.fill]="data.fill"
+      [attr.stroke]="data.stroke"
+      [attr.stroke-width]="data.strokeWidth"
+      [attr.opacity]="data.opacity">
+    </svg:polygon>
+</ng-template>

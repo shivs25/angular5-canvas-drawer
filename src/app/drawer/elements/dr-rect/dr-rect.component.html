@@ -1,0 +1,18 @@
+<ng-template #elementTemplate>
+    <svg:rect *ngIf="data" 
+      [ngClass]="{ clickable: data.clickable }"
+      (click)="onClick(data)"
+      [id]="data.id" 
+      [attr.x]="data.x" 
+      [attr.y]="data.y" 
+      [attr.width]="data.width" 
+      [attr.height]="data.height"
+      [attr.fill]="data.fill"
+      [attr.stroke]="data.stroke"
+      [attr.stroke-width]="data.strokeWidth"
+      [attr.opacity]="data.opacity">
+    </svg:rect>
+</ng-template>
+
+
+
