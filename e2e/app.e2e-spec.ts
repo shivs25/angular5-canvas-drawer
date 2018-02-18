@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('angular4-canvas-drawer App', () => {
+describe('angular5-canvas-drawer App', () => {
   let page: AppPage;
 
   beforeEach(() => {
