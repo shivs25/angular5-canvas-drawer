@@ -28,11 +28,10 @@ import { DrRect } from './models/dr-rect';
     DrEllipseComponent,
     DrPolygonComponent,
     SelectorToolComponent,
-    Point
   ],
   exports: [
     DrawerComponent,
-    Point
+    DynamicSvgDirective
   ],
   entryComponents: [
     DrRectComponent,
@@ -40,4 +39,6 @@ import { DrRect } from './models/dr-rect';
     DrPolygonComponent
   ]
 })
-export class DrawerLibraryModule { }
+export class DrawerLibraryModule { 
+  
+}
