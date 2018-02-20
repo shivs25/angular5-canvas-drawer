@@ -34,6 +34,9 @@ import { DrRect } from './models/dr-rect';
     DrawerComponent,
     Point
   ],
+  providers: [
+    DynamicSvgDirective
+  ],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
