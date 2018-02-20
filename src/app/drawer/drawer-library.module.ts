@@ -31,11 +31,6 @@ import { DrRect } from './models/dr-rect';
   ],
   exports: [
     DrawerComponent,
-    Point,
-    DrObject,
-    DrPolygon,
-    DrEllipse, 
-    DrRect
   ],
   entryComponents: [
     DrRectComponent,
