@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver } from '@angular/core';
+import { NgModule, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DrawerComponent } from './drawer/drawer.component';
 //import { EditorToolsComponent } from './editor-tools/editor-tools.component';
@@ -35,7 +35,9 @@ import { DrRect } from './models/dr-rect';
     Point
   ],
   providers: [
-    DynamicSvgDirective
+    { provide: DynamicSvgDirective, useValue: DynamicSvgDirective},
+    { provide: ViewContainerRef, useValue: ViewContainerRef },
+    { provide: ComponentFactoryResolver, useValue: ComponentFactoryResolver }
   ],
   entryComponents: [
     DrRectComponent,

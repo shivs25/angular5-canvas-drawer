@@ -1,5 +1,7 @@
 <svg #container xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <ng-container *ngIf="elements !== null">
   <ng-container *ngFor="let s of elements">
     <ng-container dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
   </ng-container>
+</ng-container>
 </svg>
