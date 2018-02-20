@@ -16,9 +16,9 @@ export class DrawerComponent implements OnInit {
   @ViewChild('container') container: ElementRef;
 
   @Input()
-  elements:DrObject[] = null;
+  elements:DrObject[] = [];
 
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(public componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
     

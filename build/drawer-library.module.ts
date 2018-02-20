@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver } from '@angular/core';
+import { NgModule, ComponentFactoryResolver, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DrawerComponent } from './drawer/drawer.component';
 //import { EditorToolsComponent } from './editor-tools/editor-tools.component';
@@ -30,8 +30,7 @@ import { DrRect } from './models/dr-rect';
     SelectorToolComponent,
   ],
   exports: [
-    DrawerComponent,
-    DynamicSvgDirective
+    DrawerComponent
   ],
   entryComponents: [
     DrRectComponent,
@@ -40,5 +39,7 @@ import { DrRect } from './models/dr-rect';
   ]
 })
 export class DrawerLibraryModule { 
-  
+  public static forRoot(): ModuleWithProviders {
+    return {ngModule: DrawerLibraryModule, providers: [ { provide: ComponentFactoryResolver, useValue: ComponentFactoryResolver } ]};
+  }
 }

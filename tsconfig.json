@@ -24,7 +24,8 @@
     }
   },
   "files": [
-    "index.ts"
+    "index.ts",
+    "./src/main.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true
