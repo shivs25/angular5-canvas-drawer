@@ -13,7 +13,7 @@ import { Point } from './drawer/models/point';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  elements:DrObject[] = [];
+  elements:DrObject[] = null;
 
   ngOnInit() {
     /*let r = this._renderer.createElement('rect', 'svg',);
@@ -21,7 +21,6 @@ export class AppComponent implements OnInit {
     this._renderer.setAttribute(r, 'y', '0');
     this._renderer.setAttribute(r, 'width', '100');
     this._renderer.setAttribute(r, 'height', '100');
-
     this._renderer.appendChild(this.container.nativeElement, r);*/
 
     let elements = [];

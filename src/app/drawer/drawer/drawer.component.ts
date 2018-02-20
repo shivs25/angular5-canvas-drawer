@@ -16,10 +16,11 @@ export class DrawerComponent implements OnInit {
   @ViewChild('container') container: ElementRef;
 
   @Input()
-  elements:DrObject[] = [];
+  public elements:DrObject[] = null;
 
-  constructor(public componentFactoryResolver: ComponentFactoryResolver) { }
-
+  //constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor() {}
+  
   ngOnInit() {
     
   }
