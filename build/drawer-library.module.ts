@@ -27,15 +27,12 @@ import { DrRect } from './models/dr-rect';
     DrObjectComponent,
     DrEllipseComponent,
     DrPolygonComponent,
-    SelectorToolComponent
+    SelectorToolComponent,
+    Point
   ],
   exports: [
     DrawerComponent,
-    Point,
-    DrObject,
-    DrPolygon,
-    DrEllipse, 
-    DrRect
+    Point
   ],
   entryComponents: [
     DrRectComponent,

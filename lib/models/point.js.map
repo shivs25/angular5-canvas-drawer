@@ -1,1 +1,1 @@
-{"version":3,"file":"point.js","sourceRoot":"","sources":["../../build/models/point.ts"],"names":[],"mappings":";;AAAA,IAAA;;;gBAAA;IAGC,CAAA;AAHY,sBAAK"}
+{"version":3,"file":"point.js","sourceRoot":"","sources":["../../build/models/point.ts"],"names":[],"mappings":";;AAAA,sCAA0C;;;;;gBAEzC,gBAAS,SAAC;oBACP,QAAQ,EAAE,cAAc;iBAC3B;;;;gBAJD;;AAMa,sBAAK"}
