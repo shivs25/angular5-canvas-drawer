@@ -8,7 +8,7 @@ import { Point } from '../models/point';
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <svg #container xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\">\n      <ng-container *ngFor=\"let s of elements\">\n        <ng-container dynamic-svg [resolver]=\"componentFactoryResolver\" [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n      </ng-container>\n    </svg>\n  ",
+  template: "\n    <svg #container xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\">\n      <ng-container *ngFor=\"let s of elements\">\n        <ng-container dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n      </ng-container>\n    </svg>\n  ",
   styles: ["\n\n  "]
 })
 export class DrawerComponent implements OnInit {
@@ -16,10 +16,11 @@ export class DrawerComponent implements OnInit {
   @ViewChild('container') container: ElementRef;
 
   @Input()
-  elements:DrObject[] = [];
+  public elements:DrObject[] = null;
 
-  constructor(public componentFactoryResolver: ComponentFactoryResolver) { }
-
+  //constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor() {}
+  
   ngOnInit() {
     
   }

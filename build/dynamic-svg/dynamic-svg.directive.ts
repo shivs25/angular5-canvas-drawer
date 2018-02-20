@@ -23,10 +23,6 @@ export class DynamicSvgDirective implements OnInit {
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
-  @Input()
-  public resolver: ComponentFactoryResolver;
-
-
   @Input() set componentData(data: DrObject) {
     if (!data || data.id === this._currentId) {
         return;
@@ -36,7 +32,7 @@ export class DynamicSvgDirective implements OnInit {
     let injector = ReflectiveInjector.fromResolvedProviders([], this._viewContainerRef.parentInjector);
 
     // We create a factory out of the component we want to create
-    let factory = this.resolver.resolveComponentFactory(this.buildComponent(data));
+    let factory = this._resolver.resolveComponentFactory(this.buildComponent(data));
 
     // We create the component using the factory and the injector
     let component = factory.create(injector);
@@ -75,7 +71,7 @@ export class DynamicSvgDirective implements OnInit {
     return returnValue;
   }
 
-  constructor(private _viewContainerRef: ViewContainerRef) {  
+  constructor(private _viewContainerRef: ViewContainerRef, private _resolver: ComponentFactoryResolver) {  
   }
 
   
