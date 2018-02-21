@@ -20,6 +20,6 @@
         "./build/**/*"
     ],
     "angularCompilerOptions": {
-        "skipTemplateCodegen": true
+        "strictMetadataEmit": true
     }
 }

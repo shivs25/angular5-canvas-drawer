@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    DrawerLibraryModule
+    DrawerLibraryModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

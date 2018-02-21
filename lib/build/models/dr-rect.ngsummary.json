@@ -1,0 +1,1 @@
+{"moduleName":null,"summaries":[{"symbol":{"__symbol":0,"members":[]},"metadata":{"__symbolic":"class","extends":{"__symbolic":"resolved","symbol":{"__symbol":1,"members":[]},"line":2,"character":28,"fileName":"build/models/dr-rect.ts"}}}],"symbols":[{"__symbol":0,"name":"DrRect","filePath":"./dr-rect"},{"__symbol":1,"name":"DrObject","filePath":"./dr-object"}]}

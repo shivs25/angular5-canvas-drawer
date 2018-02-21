@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
     this._renderer.setAttribute(r, 'y', '0');
     this._renderer.setAttribute(r, 'width', '100');
     this._renderer.setAttribute(r, 'height', '100');
+
     this._renderer.appendChild(this.container.nativeElement, r);*/
 
     let elements = [];

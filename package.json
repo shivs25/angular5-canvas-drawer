@@ -1,6 +1,6 @@
 {
   "name": "angular5-canvas-drawer",
-  "version": "1.0.18",
+  "version": "1.0.25",
   "license": "MIT",
   "author": "Billy Shivers",
   "keywords": [
@@ -31,8 +31,8 @@
     "type": "git",
     "url": "https://github.com/shivs25/angular5-canvas-drawer.git"
   },
-  "main": "./lib/drawer-library.module.js",
-  "typings": "./lib/drawer-library.module.d.ts",
+  "main": "./lib/build/drawer-library.module.js",
+  "typings": "./build/lib/drawer-library.module.d.ts",
   "private": false,
   "dependencies": {
     "@angular/animations": "^5.2.5",
