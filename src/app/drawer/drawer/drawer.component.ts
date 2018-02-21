@@ -21,6 +21,24 @@ export class DrawerComponent implements OnInit {
   @Input()
   public elements:DrObject[] = null;
 
+  @Input()
+  public widthValue: string = null;
+
+  @Input()
+  public heightValue: string = null;
+
+  @Input()
+  public viewWidthValue: string = null;
+
+  @Input()
+  public viewHeightValue: string = null;
+
+  @Input()
+  public viewTopValue: string = null;
+
+  @Input()
+  public viewLeftValue: string = null;
+
   constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
   //constructor() {}
   
@@ -34,6 +52,10 @@ export class DrawerComponent implements OnInit {
 
   onClick(data:DrObject): void {
     console.log(data);
+  }
+
+  getViewBoxValues(): string {
+    return this.viewTopValue + " " + this.viewLeftValue + " " + this.viewWidthValue + " " + this.viewHeightValue;
   }
 }
 

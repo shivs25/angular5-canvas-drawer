@@ -14,7 +14,12 @@ import { Point } from './drawer/models/point';
 export class AppComponent implements OnInit {
   title = 'app';
   elements:DrObject[] = null;
-
+  width: string = "100%";
+  height: string = "100%";
+  viewTop: string = "0";
+  viewLeft: string = "0";
+  viewHeight: string = "560";
+  viewWidth: string = "1000"
   ngOnInit() {
     /*let r = this._renderer.createElement('rect', 'svg',);
     this._renderer.setAttribute(r, 'x', '0');

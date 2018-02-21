@@ -1,6 +1,8 @@
 
-<svg #container xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <ng-container *ngFor="let s of elements">
-    <ng-container dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
-  </ng-container>
-</svg>
+<ng-container *ngIf="widthValue !== null && heightValue !== null && viewTopValue !== null && viewWidthValue !== null && viewHeightValue !== null && viewLeftValue !== null">
+  <svg #container xmlns="http://www.w3.org/2000/svg" attr.width="{{ widthValue }}" attr.height="{{ heightValue }}" attr.viewBox="{{ getViewBoxValues() }}">
+    <ng-container *ngFor="let s of elements">
+      <ng-container dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
+    </ng-container>
+  </svg>
+</ng-container>
