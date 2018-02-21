@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, Input } from '@angular/core';
+import { NgModule, ModuleWithProviders, Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, Input, Output, EventEmitter } from '@angular/core';
 
 import { DrEllipse } from '../models/dr-ellipse';
 import { DrObject } from '../models/dr-object';
@@ -39,6 +39,9 @@ export class DrawerComponent implements OnInit {
   @Input()
   public viewLeftValue: string = null;
 
+  @Output()
+  public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
   constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
   //constructor() {}
   
@@ -51,7 +54,10 @@ export class DrawerComponent implements OnInit {
   }
 
   onClick(data:DrObject): void {
-    console.log(data);
+    if(data !== null && typeof data !== 'undefined'){
+      console.log(data);
+      this.clickedObject.emit(data);
+    }
   }
 
   getViewBoxValues(): string {
