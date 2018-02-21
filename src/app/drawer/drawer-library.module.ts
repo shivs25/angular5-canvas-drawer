@@ -10,22 +10,23 @@ import { CommonModule } from '@angular/common';
 //import { SelectorToolComponent } from './tools/selector-tool/selector-tool.component';
 
 
-import { Point } from './models/point';
+import { DrPoint } from './models/dr-point';
 import { DrObject } from './models/dr-object';
 import { DrPolygon } from './models/dr-polygon';
 import { DrEllipse } from './models/dr-ellipse';
 import { DrRect } from './models/dr-rect';
-
+import { DrType } from './models/dr-type.enum';
 
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
 //export { DrawerComponent } from './drawer/drawer.component';
 //export { ComponentFactoryResolver } from '@angular/core';
-export { Point } from './models/point';
+export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
 export { DrPolygon } from './models/dr-polygon';
 export { DrEllipse } from './models/dr-ellipse';
 export { DrRect } from './models/dr-rect';
+export { DrType } from './models/dr-type.enum';
 
 @NgModule({
   imports: [

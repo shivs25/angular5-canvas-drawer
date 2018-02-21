@@ -6,18 +6,19 @@ import { DrPolygonComponent } from "../elements/dr-polygon/dr-polygon.component"
 import { DynamicSvgDirective } from "../dynamic-svg/dynamic-svg.directive";
 import { DrObjectComponent } from "../elements/dr-object/dr-object.component";
 import { DrEllipseComponent } from "../elements/dr-ellipse/dr-ellipse.component";
-import { Point } from '../models/point';
+import { DrPoint } from '../models/dr-point';
 import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
 import { DrEllipse } from '../models/dr-ellipse';
 import { DrPolygon } from '../models/dr-polygon';
+import { DrType } from '../models/dr-type.enum';
 
-
-export { Point } from '../models/point';
+export { DrPoint } from '../models/dr-point';
 export { DrObject } from '../models/dr-object';
 export { DrRect } from '../models/dr-rect';
 export { DrEllipse } from '../models/dr-ellipse';
 export { DrPolygon } from '../models/dr-polygon';
+export { DrType } from '../models/dr-type.enum';
 
 
 @NgModule({
