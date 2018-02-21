@@ -4,7 +4,7 @@ import { DrEllipse } from './drawer/models/dr-ellipse';
 import { DrObject } from './drawer/models/dr-object';
 import { DrRect } from './drawer/models/dr-rect';
 import { DrPolygon } from './drawer/models/dr-polygon';
-import { Point } from './drawer/models/point';
+import { DrPoint } from './drawer/models/dr-point';
 
 @Component({
   selector: 'app-root',
@@ -82,24 +82,24 @@ export class AppComponent implements OnInit {
 
     let p: DrPolygon = new DrPolygon();
     p.id = 5;
-    let pts: Point[] = [];
-    let pt: Point;
-    pt = new Point();
+    let pts: DrPoint[] = [];
+    let pt: DrPoint;
+    pt = new DrPoint();
     pt.x = 100;
     pt.y = 100;
     pts.push(pt);
 
-    pt = new Point();
+    pt = new DrPoint();
     pt.x = 200;
     pt.y = 100;
     pts.push(pt);
 
-    pt = new Point();
+    pt = new DrPoint();
     pt.x = 300;
     pt.y = 200;
     pts.push(pt);
 
-    pt = new Point();
+    pt = new DrPoint();
     pt.x = 350;
     pt.y = 300;
     pts.push(pt);

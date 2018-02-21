@@ -1,4 +1,4 @@
-export declare class Point {
+export declare class DrPoint {
     x: number;
     y: number;
 }

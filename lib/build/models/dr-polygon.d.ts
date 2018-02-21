@@ -1,5 +1,5 @@
 import { DrObject } from "./dr-object";
-import { Point } from './point';
+import { DrPoint } from './dr-point';
 export declare class DrPolygon extends DrObject {
-    points: Point[];
+    points: DrPoint[];
 }
