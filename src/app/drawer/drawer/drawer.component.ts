@@ -18,8 +18,8 @@ export class DrawerComponent implements OnInit {
   @Input()
   public elements:DrObject[] = null;
 
-  //constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
-  constructor() {}
+  constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
+  //constructor() {}
   
   ngOnInit() {
     
