@@ -9,4 +9,5 @@ export declare class DrObject {
     stroke: string;
     strokeWidth: number;
     opacity: number;
+    drType: string;
 }

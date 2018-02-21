@@ -15,11 +15,11 @@ export class DrObjectComponent implements OnInit {
   public data: DrObject;
 
   @Output()
-  public clickedItem: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
   onClick(data:DrObject): void {
     if (data.clickable) {
-      this.clickedItem.emit(data);
+      this.click.emit(data);
     }
   }
 

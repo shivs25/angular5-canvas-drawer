@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DrObjectComponent } from '../dr-object/dr-object.component';
 import { DrPolygon } from '../../models/dr-polygon';
-import { Point } from '../../models/point';
+import { DrPoint } from '../../models/dr-point';
 
 @Component({
   selector: 'dr-polygon',
@@ -13,7 +13,7 @@ export class DrPolygonComponent extends DrObjectComponent {
   getPoints(): string {
     let returnValue: string = "";
     let r: DrPolygon = <DrPolygon>this.data;
-    let p: Point;
+    let p: DrPoint;
     for(p of r.points) {
       returnValue += p.x + " " + p.y + " ";
     }
