@@ -10,5 +10,5 @@ export class DrObject {
     stroke: string = "black";
     strokeWidth: number = 1;
     opacity: number = 1;
-    
+    drType: string = "drObject"
 }
