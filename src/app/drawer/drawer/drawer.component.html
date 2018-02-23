@@ -1,6 +1,10 @@
 
-<ng-container *ngIf="widthValue !== null && heightValue !== null && viewTopValue !== null && viewWidthValue !== null && viewHeightValue !== null && viewLeftValue !== null">
-  <svg #container xmlns="http://www.w3.org/2000/svg"  attr.width="{{ widthValue }}" attr.height="{{ heightValue }}" attr.viewBox="{{ getViewBoxValues() }}" preserveAspectRatio="xMinYMin meet">
+<ng-container>
+  <svg #container xmlns="http://www.w3.org/2000/svg" 
+    [attr.width]="widthValue !== null ? widthValue : null" 
+    [attr.height]="heightValue !== null ? heightValue : null" 
+    [attr.viewBox]="getViewBoxValues() !== null ? getViewBoxValues() : null" 
+    [attr.preserveAspectRatio]="preserveAspectRatioValue !== null ? preserveAspectRatioValue : null">
     <ng-container *ngFor="let s of elements">
       <ng-container dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
     </ng-container>

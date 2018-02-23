@@ -28,16 +28,19 @@ export class DrawerComponent implements OnInit {
   public heightValue: string = null;
 
   @Input()
-  public viewWidthValue: string = null;
+  public viewBoxWidthValue: string = null;
 
   @Input()
-  public viewHeightValue: string = null;
+  public viewBoxHeightValue: string = null;
 
   @Input()
-  public viewTopValue: string = null;
+  public viewBoxYValue: string = null;
 
   @Input()
-  public viewLeftValue: string = null;
+  public viewBoxXValue: string = null;
+
+  @Input()
+  public preserveAspectRatioValue: string = null;
 
   @Output()
   public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
@@ -61,7 +64,24 @@ export class DrawerComponent implements OnInit {
   }
 
   getViewBoxValues(): string {
-    return this.viewTopValue + " " + this.viewLeftValue + " " + this.viewWidthValue + " " + this.viewHeightValue;
+    let r: string = null;
+
+    if(!this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue)){
+        r = this.viewBoxXValue + " " + this.viewBoxYValue + " " + this.viewBoxWidthValue + " " + this.viewBoxHeightValue;
+    }
+
+    return r;
+  }
+
+  private isNullOrEmpty(s:string): boolean{
+   
+    if(null !== s && s.length > 0){
+      return false;
+    }
+    else{
+      return true;
+    }
+
   }
 }
 
