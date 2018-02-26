@@ -11,7 +11,7 @@ import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <ng-container *ngIf=\"widthValue !== null && heightValue !== null && viewTopValue !== null && viewWidthValue !== null && viewHeightValue !== null && viewLeftValue !== null\">\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\"  attr.width=\"{{ widthValue }}\" attr.height=\"{{ heightValue }}\" attr.viewBox=\"{{ getViewBoxValues() }}\" preserveAspectRatio=\"xMinYMin meet\">\n        <ng-container *ngFor=\"let s of elements\">\n          <ng-container dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
+  template: "\n\n    <ng-container>\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\" \n        [attr.width]=\"widthValue !== null ? widthValue : null\" \n        [attr.height]=\"heightValue !== null ? heightValue : null\" \n        [attr.viewBox]=\"getViewBoxValues() !== null ? getViewBoxValues() : null\" \n        [attr.preserveAspectRatio]=\"preserveAspectRatioValue !== null ? preserveAspectRatioValue : null\">\n        <ng-container *ngFor=\"let s of elements\">\n          <ng-container dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
   styles: ["\n\n  "]
 })
 export class DrawerComponent implements OnInit {
@@ -28,16 +28,19 @@ export class DrawerComponent implements OnInit {
   public heightValue: string = null;
 
   @Input()
-  public viewWidthValue: string = null;
+  public viewBoxWidthValue: string = null;
 
   @Input()
-  public viewHeightValue: string = null;
+  public viewBoxHeightValue: string = null;
 
   @Input()
-  public viewTopValue: string = null;
+  public viewBoxYValue: string = null;
 
   @Input()
-  public viewLeftValue: string = null;
+  public viewBoxXValue: string = null;
+
+  @Input()
+  public preserveAspectRatioValue: string = null;
 
   @Output()
   public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
@@ -61,7 +64,24 @@ export class DrawerComponent implements OnInit {
   }
 
   getViewBoxValues(): string {
-    return this.viewTopValue + " " + this.viewLeftValue + " " + this.viewWidthValue + " " + this.viewHeightValue;
+    let r: string = null;
+
+    if(!this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue)){
+        r = this.viewBoxXValue + " " + this.viewBoxYValue + " " + this.viewBoxWidthValue + " " + this.viewBoxHeightValue;
+    }
+
+    return r;
+  }
+
+  private isNullOrEmpty(s:string): boolean{
+   
+    if(null !== s && s.length > 0){
+      return false;
+    }
+    else{
+      return true;
+    }
+
   }
 }
 

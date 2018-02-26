@@ -6,14 +6,16 @@ export declare class DrawerComponent implements OnInit {
     elements: DrObject[];
     widthValue: string;
     heightValue: string;
-    viewWidthValue: string;
-    viewHeightValue: string;
-    viewTopValue: string;
-    viewLeftValue: string;
+    viewBoxWidthValue: string;
+    viewBoxHeightValue: string;
+    viewBoxYValue: string;
+    viewBoxXValue: string;
+    preserveAspectRatioValue: string;
     clickedObject: EventEmitter<DrObject>;
     constructor(_componentFactoryResolver: ComponentFactoryResolver);
     ngOnInit(): void;
     onRectClick(): void;
     onClick(data: DrObject): void;
     getViewBoxValues(): string;
+    private isNullOrEmpty(s);
 }
