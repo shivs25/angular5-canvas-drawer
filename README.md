@@ -28,8 +28,8 @@ To use this library in your newly generated component, add the `app-drawer` to y
 
 ## Latest Update
 
-DATE: `2018-02-23`  VERSION: `1.0.33`
- - Added input for `preserveAspectRatio` to set SVG property
+DATE: `2018-02-23`  VERSION: `1.0.33-beta.2`
+ - Testing new beta publishing.
 
 ## Development server
 
