@@ -12,6 +12,9 @@ import { DrRect } from '../models/dr-rect';
 import { DrEllipse } from '../models/dr-ellipse';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrType } from '../models/dr-type.enum';
+import { DrText } from '../models/dr-text';
+import { DrImage } from '../models/dr-image';
+import { DrTextAlignment } from '../models/dr-text-alignment.enum';
 
 export { DrPoint } from '../models/dr-point';
 export { DrObject } from '../models/dr-object';
@@ -19,7 +22,9 @@ export { DrRect } from '../models/dr-rect';
 export { DrEllipse } from '../models/dr-ellipse';
 export { DrPolygon } from '../models/dr-polygon';
 export { DrType } from '../models/dr-type.enum';
-
+export { DrText } from '../models/dr-text';
+export { DrImage } from '../models/dr-image';
+export { DrTextAlignment } from '../models/dr-text-alignment.enum';
 
 @NgModule({
   imports: [CommonModule],
@@ -43,5 +48,5 @@ export { DrType } from '../models/dr-type.enum';
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DynamicSvgDirective, DrObject, DrEllipse, DrRect, DrPolygon ]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DynamicSvgDirective]}; }
 }
