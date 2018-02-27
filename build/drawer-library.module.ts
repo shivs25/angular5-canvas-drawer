@@ -16,6 +16,9 @@ import { DrPolygon } from './models/dr-polygon';
 import { DrEllipse } from './models/dr-ellipse';
 import { DrRect } from './models/dr-rect';
 import { DrType } from './models/dr-type.enum';
+import { DrText } from './models/dr-text';
+import { DrImage } from './models/dr-image';
+import { DrTextAlignment } from './models/dr-text-alignment.enum';
 
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
@@ -27,6 +30,10 @@ export { DrPolygon } from './models/dr-polygon';
 export { DrEllipse } from './models/dr-ellipse';
 export { DrRect } from './models/dr-rect';
 export { DrType } from './models/dr-type.enum';
+export { DrText } from './models/dr-text';
+export { DrImage } from './models/dr-image';
+export { DrTextAlignment } from './models/dr-text-alignment.enum';
+
 
 @NgModule({
   imports: [

@@ -5,6 +5,9 @@ export { DrPolygon } from './models/dr-polygon';
 export { DrEllipse } from './models/dr-ellipse';
 export { DrRect } from './models/dr-rect';
 export { DrType } from './models/dr-type.enum';
+export { DrText } from './models/dr-text';
+export { DrImage } from './models/dr-image';
+export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export declare class DrawerLibraryRootModule {
 }
 export declare class DrawerLibraryModule {
