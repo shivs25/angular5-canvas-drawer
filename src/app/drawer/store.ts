@@ -8,12 +8,15 @@ import { DrRect } from './models/dr-rect';
 import undoable, { distinctState } from 'redux-undo';
 import { combineReducers, Reducer } from 'redux';
 
+export interface IHistory<T> {
+    past: T[],
+    present: T[],
+    future: T[]
+
+}
+
 export interface IDrawerAppState {
-    elements: {
-        past: DrObject[],
-        present: DrObject[],
-        future: DrObject[]
-    }
+    elements: IHistory<DrObject[]>;
 }
 
 export const INITIAL_STATE: IDrawerAppState = {
@@ -25,12 +28,12 @@ export const INITIAL_STATE: IDrawerAppState = {
 }
 
 
-export const elementsReducer: Reducer<DrObject[]> = (state = [], action) => {
+export const elementsReducer: Reducer<DrObject[]> = (state: any[] = [], action: any) => {
     switch(action.type) {
         case SET_ELEMENTS:
             return action.elements.slice(0);
         case CHANGE_OBJECT_BOUNDS:
-            let item: DrObject = state.find(t => t.id === action.id);
+            let item: DrObject = state.find((t: any) => t.id === action.id);
             let index = state.indexOf(item);
             if (DrType.RECTANGLE === item.drType) {
                 let i: any = Object.assign({}, item, {
@@ -50,7 +53,7 @@ export const elementsReducer: Reducer<DrObject[]> = (state = [], action) => {
     }
 }
 
-export const undoableElementsReducer = undoable(elementsReducer, {
+export const undoableElementsReducer: any = undoable(elementsReducer, {
     filter: distinctState(),
     limit: 10
 });
