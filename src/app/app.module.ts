@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { DrawerLibraryModule } from './drawer/drawer-library.module';
+import { DrawerLibraryModule, DrawerObjectHelperService } from './drawer/drawer-library.module';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     DrawerLibraryModule.forRoot()
   ],
-  providers: [],
+  providers: [DrawerObjectHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

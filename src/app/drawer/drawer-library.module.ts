@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders, ComponentFactoryResolver } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DrPoint } from './models/dr-point';
+/* import { DrPoint } from './models/dr-point';
 import { DrObject } from './models/dr-object';
 import { DrPolygon } from './models/dr-polygon';
 import { DrEllipse } from './models/dr-ellipse';
@@ -9,7 +9,7 @@ import { DrRect } from './models/dr-rect';
 import { DrType } from './models/dr-type.enum';
 import { DrText } from './models/dr-text';
 import { DrImage } from './models/dr-image';
-import { DrTextAlignment } from './models/dr-text-alignment.enum';
+import { DrTextAlignment } from './models/dr-text-alignment.enum'; */
 
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
@@ -24,7 +24,7 @@ export { DrType } from './models/dr-type.enum';
 export { DrText } from './models/dr-text';
 export { DrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
-
+export { DrawerObjectHelperService } from './services/drawer-object-helper.service';
 
 @NgModule({
   imports: [
