@@ -5,21 +5,23 @@ import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPoint } from '../models/dr-point';
-import { DrRectComponent } from '../elements/dr-rect/dr-rect.component';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
+import { NgRedux, select } from '@angular-redux/store';
+import { IDrawerAppState } from '../store';
+import { SET_ELEMENTS, MOVE_OBJECT } from '../actions';
+import { DrImage } from '../models/dr-image';
 
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <ng-container>\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\" \n        [attr.width]=\"widthValue !== null ? widthValue : null\" \n        [attr.height]=\"heightValue !== null ? heightValue : null\" \n        [attr.viewBox]=\"getViewBoxValues() !== null ? getViewBoxValues() : null\" \n        [attr.preserveAspectRatio]=\"preserveAspectRatioValue !== null ? preserveAspectRatioValue : null\">\n        <ng-container *ngFor=\"let s of elements\">\n          <ng-container dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
+  template: "\n\n    <ng-container>\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\" \n        [attr.width]=\"widthValue !== null ? widthValue : null\" \n        [attr.height]=\"heightValue !== null ? heightValue : null\" \n        [attr.viewBox]=\"getViewBoxValues() !== null ? getViewBoxValues() : null\" \n        [attr.preserveAspectRatio]=\"preserveAspectRatioValue !== null ? preserveAspectRatioValue : null\">\n        <ng-container *ngFor=\"let s of items | async\">\n          <ng-container *ngIf=\"s.visible\" dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
   styles: ["\n\n  "]
 })
 export class DrawerComponent implements OnInit {
 
   @ViewChild('container') container: ElementRef;
 
-  @Input()
-  public elements:DrObject[] = null;
+  @select('elements') items;
 
   @Input()
   public widthValue: string = null;
@@ -45,15 +47,21 @@ export class DrawerComponent implements OnInit {
   @Output()
   public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
-  //constructor() {}
-  
+  t: DrRect = null;
+
+  constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
+
   ngOnInit() {
-    
+    setTimeout(() => {
+      let item: DrRect = this.ngRedux.getState().elements[0] as DrRect;
+      this.ngRedux.dispatch({ type: MOVE_OBJECT, id: item.id, delta: { x: 100, y: -40 } });
+      
+    }, 5000);
   }
 
-  onRectClick(): void {
-    console.log("CLICK");
+  @Input()
+  set elements(elements: DrObject[]) {
+    this.ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
   }
 
   onClick(data:DrObject): void {
