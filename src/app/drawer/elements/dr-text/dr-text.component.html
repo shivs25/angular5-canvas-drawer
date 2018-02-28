@@ -1,42 +1,41 @@
 <ng-template #elementTemplate>
-    <svg:clipPath [id]="data.id + 'clip'">
-      <svg:rect
-        [attr.x]="data.x"
-        [attr.y]="data.y"
-        [attr.width]="data.width"
-        [attr.height]="data.height">
-      </svg:rect>
-    </svg:clipPath>
-
-    <svg:rect
-      [ngClass]="{ clickable: data.clickable }"
-      (click)="onClick(data)"
-      [id]="data.id"
-      [attr.x]="data.x"
-      [attr.y]="data.y"
-      [attr.width]="data.width"
-      [attr.height]="data.height"
-      [attr.fill]="data.showFill ? data.fill : 'transparent'"
-      [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
-      [attr.stroke-width]="data.strokeWidth"
-      [attr.opacity]="data.opacity">
-    </svg:rect>
-    <svg:g [attr.clip-path]="'url(#' + data.id + 'clip)'">
-      <svg:text 
-        [attr.x]="getTextX()" 
-        [attr.y]="getTextY()"
-        [attr.fill]="data.fontColor"
-        [attr.font-size]="data.size + 'px'"
-        [attr.font-family]="data.fontFamily"
-        [attr.font-weight]="data.bold ? 'bold' : 'normal'"
-        [attr.font-style]="data.italic ? 'italic' : 'normal'"
-        [attr.alignment-baseline]="getVAlignment()"
-        [attr.text-anchor]="getHAlignment()">
-        {{ data.text }}
-        
-      </svg:text>
-    </svg:g>
-
+  <ng-container *ngIf="data">
+      <svg:clipPath [id]="data.id + 'clip'">
+          <svg:rect
+            [attr.x]="data.x"
+            [attr.y]="data.y"
+            [attr.width]="data.width"
+            [attr.height]="data.height">
+          </svg:rect>
+        </svg:clipPath>
     
-    
+        <svg:rect
+          [ngClass]="{ clickable: data.clickable }"
+          (click)="onClick(data)"
+          [id]="data.id"
+          [attr.x]="data.x"
+          [attr.y]="data.y"
+          [attr.width]="data.width"
+          [attr.height]="data.height"
+          [attr.fill]="data.showFill ? data.fill : 'transparent'"
+          [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
+          [attr.stroke-width]="data.strokeWidth"
+          [attr.opacity]="data.opacity">
+        </svg:rect>
+        <svg:g [attr.clip-path]="'url(#' + data.id + 'clip)'">
+          <svg:text 
+            [attr.x]="getTextX()" 
+            [attr.y]="getTextY()"
+            [attr.fill]="data.fontColor"
+            [attr.font-size]="data.size + 'px'"
+            [attr.font-family]="data.fontFamily"
+            [attr.font-weight]="data.bold ? 'bold' : 'normal'"
+            [attr.font-style]="data.italic ? 'italic' : 'normal'"
+            [attr.alignment-baseline]="getVAlignment()"
+            [attr.text-anchor]="getHAlignment()">
+            {{ data.text }}
+            
+          </svg:text>
+        </svg:g>
+  </ng-container>
 </ng-template>

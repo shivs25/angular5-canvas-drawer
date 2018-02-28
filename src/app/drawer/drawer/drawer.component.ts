@@ -6,6 +6,10 @@ import { DrRect } from '../models/dr-rect';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPoint } from '../models/dr-point';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
+import { NgRedux, select } from '@angular-redux/store';
+import { IDrawerAppState } from '../store';
+import { SET_ELEMENTS, MOVE_OBJECT } from '../actions';
+import { DrImage } from '../models/dr-image';
 
 
 @Component({
@@ -17,8 +21,7 @@ export class DrawerComponent implements OnInit {
 
   @ViewChild('container') container: ElementRef;
 
-  @Input()
-  public elements:DrObject[] = null;
+  @select('elements') items;
 
   @Input()
   public widthValue: string = null;
@@ -46,16 +49,24 @@ export class DrawerComponent implements OnInit {
 
   t: DrRect = null;
 
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
-  //constructor() {}
-  
-  ngOnInit() {
+  constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
-    
+  ngOnInit() {
+    setTimeout(() => {
+      let item: DrRect = this.ngRedux.getState().elements[0] as DrRect;
+      this.ngRedux.dispatch({ type: MOVE_OBJECT, id: item.id, delta: { x: 100, y: -40 } });
+      
+    }, 5000);
+  }
+
+  @Input()
+  set elements(elements: DrObject[]) {
+    this.ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
   }
 
   onClick(data:DrObject): void {
     if(data !== null && typeof data !== 'undefined'){
+      console.log(data);
       this.clickedObject.emit(data);
     }
   }

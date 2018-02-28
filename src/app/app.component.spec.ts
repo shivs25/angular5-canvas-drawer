@@ -5,7 +5,7 @@ import { DrawerComponent } from './drawer/drawer/drawer.component';
 import { DynamicSvgDirective } from './drawer/dynamic-svg/dynamic-svg.directive';
 import { DrawerObjectHelperService } from './drawer/drawer-library.module';
 
-describe('AppComponent', () => {
+xdescribe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [

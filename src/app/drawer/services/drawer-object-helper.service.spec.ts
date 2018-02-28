@@ -1,13 +1,13 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { DrawerObjectHelperService } from './drawer-object-helper.service';
-import { DrEllipse } from '../models/dr-ellipse';
-import { DrImage } from '../models/dr-image';
+import { DrEllipse, DEFAULT_ELLIPSE } from '../models/dr-ellipse';
+import { DrImage, DEFAULT_IMAGE } from '../models/dr-image';
 import { DrObject } from '../models/dr-object';
 import { DrPoint } from '../models/dr-point';
-import { DrPolygon } from '../models/dr-polygon';
-import { DrRect } from '../models/dr-rect';
-import { DrText } from '../models/dr-text';
+import { DrPolygon, DEFAULT_POLYGON } from '../models/dr-polygon';
+import { DrRect, DEFAULT_RECT } from '../models/dr-rect';
+import { DrText, DEFAULT_TEXT } from '../models/dr-text';
 import { DrType } from '../models/dr-type.enum';
 import { BoundingBox } from '../models/bounding-box';
 import { BoundDirectivePropertyAst } from '@angular/compiler';
@@ -26,18 +26,20 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return a squares bounding box', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let r: DrRect = new DrRect();
-    r.id = 1;
-    r.x = 15;
-    r.y = 10;
-    r.width = 40;
-    r.height = 75;
-    r.stroke = "red";
-    r.fill = "yellow";
-    r.strokeWidth = 3;
-    r.showStroke = r.showFill = true;
-    r.clickable = true;
-    r.drType = DrType.RECTANGLE; 
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
 
     let bb: BoundingBox = service.getBoundingBox([r]);
 
@@ -48,26 +50,13 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return a text bounding box', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let t = new DrText();
-    t.id = 10;
-    t.x = 300;
-    t.y = 10;
-    t.width = 100;
-    t.height = 40;
-    t.stroke = 'purple';
-    t.strokeWidth = 1;
-    t.size = 16;
-    t.text = 'I Love You';
-    t.fill = 'transparent';
-    t.fontColor = 'red';
-    t.fontFamily = 'Courier';
-    t.italic = false;
-    t.bold = true;
-    t.clickable = true;
-    t.showStroke = t.showFill = true;
-    t.hAlignment = DrTextAlignment.CENTER;
-    t.vAlignment = DrTextAlignment.CENTER;
-    t.drType = DrType.TEXT; 
+    let t:DrText = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 40,
+
+    });
 
     let bb: BoundingBox = service.getBoundingBox([t]);
 
@@ -78,16 +67,12 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return a ellipse bounding box', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let c: DrEllipse = new DrEllipse();
-    c.id = 3;
-    c.x = 200;
-    c.y = 500;
-    c.rx = 25;
-    c.ry = 50;
-    c.fill = 'blue';
-    c.showStroke = c.showFill = true;
-    c.clickable = true;
-    c.drType = DrType.ELLIPSE;
+    let c: DrEllipse = Object.assign({}, DEFAULT_ELLIPSE, {
+      x: 200,
+      y: 500,
+      rx: 25,
+      ry: 50
+    });
 
     let bb: BoundingBox = service.getBoundingBox([c]);
 
@@ -98,40 +83,17 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return a polygon bounding box', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let p: DrPolygon = new DrPolygon();
-    p.id = 5;
+    
     let pts: DrPoint[] = [];
-    let pt: DrPoint;
-    pt = new DrPoint();
-    pt.x = 100;
-    pt.y = 100;
-    pts.push(pt);
+    pts.push({ x: 100, y: 100 });
+    pts.push({ x: 200, y: 100 });
+    pts.push({ x: 300, y: 200 });
+    pts.push({ x: 350, y: 300 });
 
-    pt = new DrPoint();
-    pt.x = 200;
-    pt.y = 100;
-    pts.push(pt);
-
-    pt = new DrPoint();
-    pt.x = 300;
-    pt.y = 200;
-    pts.push(pt);
-
-    pt = new DrPoint();
-    pt.x = 350;
-    pt.y = 300;
-    pts.push(pt);
-
-    p.points = pts;
-
-    p.strokeWidth = 3;
-    p.clickable = true;
-    p.fill = "red";
-    p.showStroke = p.showFill = true;
-    p.opacity = 0.8;
-    p.visible =true;
-    p.drType = DrType.POLYGON;
-
+    let p: DrPolygon = Object.assign({}, DEFAULT_POLYGON, {
+      points: pts
+    });
+   
     let bb: BoundingBox = service.getBoundingBox([p]);
 
     expect(bb.top).toEqual(100);
@@ -141,19 +103,12 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return an image bounding box', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let i: DrImage = new DrImage();
-    i.id = 100;
-    i.x = 400;
-    i.y = 200;
-    i.width = 320;
-    i.height = 213;
-    i.strokeWidth = 5;
-    i.stroke="green";
-    i.clickable = true;
-    i.showStroke = true;
-    i.opacity = 1;
-    i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
-    i.drType = DrType.IMAGE; 
+    let i: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213
+    });
 
     let bb: BoundingBox = service.getBoundingBox([i]);
 
@@ -164,98 +119,47 @@ describe('DrawerObjectHelperService', () => {
   }));
 
   it('should return the boudning box of a group of images', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
-    let t = new DrText();
-    t.id = 10;
-    t.x = 300;
-    t.y = 10;
-    t.width = 100;
-    t.height = 40;
-    t.stroke = 'purple';
-    t.strokeWidth = 1;
-    t.size = 16;
-    t.text = 'I Love You';
-    t.fill = 'transparent';
-    t.fontColor = 'red';
-    t.fontFamily = 'Courier';
-    t.italic = false;
-    t.bold = true;
-    t.clickable = true;
-    t.showStroke = t.showFill = true;
-    t.hAlignment = DrTextAlignment.CENTER;
-    t.vAlignment = DrTextAlignment.CENTER;
-    t.drType = DrType.TEXT; 
-
-    let c: DrEllipse = new DrEllipse();
-    c.id = 3;
-    c.x = 200;
-    c.y = 500;
-    c.rx = 25;
-    c.ry = 50;
-    c.fill = 'blue';
-    c.showStroke = c.showFill = true;
-    c.clickable = true;
-    c.drType = DrType.ELLIPSE;
-
-    let p: DrPolygon = new DrPolygon();
-    p.id = 5;
-    let pts: DrPoint[] = [];
-    let pt: DrPoint;
-    pt = new DrPoint();
-    pt.x = 100;
-    pt.y = 100;
-    pts.push(pt);
-
-    pt = new DrPoint();
-    pt.x = 200;
-    pt.y = 100;
-    pts.push(pt);
-
-    pt = new DrPoint();
-    pt.x = 300;
-    pt.y = 200;
-    pts.push(pt);
-
-    pt = new DrPoint();
-    pt.x = 350;
-    pt.y = 300;
-    pts.push(pt);
-
-    p.points = pts;
-
-    p.strokeWidth = 3;
-    p.clickable = true;
-    p.fill = "red";
-    p.showStroke = p.showFill = true;
-    p.opacity = 0.8;
-    p.visible =true;
-    p.drType = DrType.POLYGON;
+    let t = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 10
+    });
     
-    let i: DrImage = new DrImage();
-    i.id = 100;
-    i.x = 400;
-    i.y = 200;
-    i.width = 320;
-    i.height = 213;
-    i.strokeWidth = 5;
-    i.stroke="green";
-    i.clickable = true;
-    i.showStroke = true;
-    i.opacity = 1;
-    i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
-    i.drType = DrType.IMAGE; 
 
-    let r: DrRect = new DrRect();
-    r.id = 1;
-    r.x = 15;
-    r.y = 10;
-    r.width = 40;
-    r.height = 75;
-    r.stroke = "red";
-    r.fill = "yellow";
-    r.strokeWidth = 3;
-    r.showStroke = r.showFill = true;
-    r.clickable = true;
-    r.drType = DrType.RECTANGLE; 
+    let c: DrEllipse = Object.assign({}, DEFAULT_ELLIPSE, {
+      x: 200,
+      y: 500,
+      rx: 25,
+      ry: 50
+    });
+    
+    let pts: DrPoint[] = [];
+    pts.push({ x: 100, y: 100 });
+    pts.push({ x: 200, y: 100 });
+    pts.push({ x: 300, y: 200 });
+    pts.push({ x: 350, y: 300 });
+
+    let p: DrPolygon = Object.assign({}, DEFAULT_POLYGON, {
+      points: pts
+
+    });
+
+    let i: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213
+
+    });
+    
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75
+    });
+   
 
     let bb: BoundingBox = service.getBoundingBox([i, r, c, p, t]);
     
