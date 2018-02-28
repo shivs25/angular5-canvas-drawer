@@ -3,6 +3,7 @@ import { DrawerLibraryModule } from './drawer/drawer-library.module';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { DrawerObjectHelperService } from './drawer/services/drawer-object-helper.service';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     DrawerLibraryModule.forRoot()
   ],
-  providers: [],
+  providers: [DrawerObjectHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

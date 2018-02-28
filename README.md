@@ -36,6 +36,8 @@ DATE: `2018-02-27` VERSION: `1.0.33.-beta.3`
 
 DATE: `2018-02-28` VERSION: ``
  - Added visible, name, showFill, showStroke properties to the DrObject
+ - Changed from classes to interfaces for all models
+ - Created factory convenience methods for all models
 
 ## Development server
 

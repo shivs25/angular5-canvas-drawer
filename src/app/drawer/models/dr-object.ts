@@ -20,7 +20,7 @@ export interface DrObject {
     
 }
 
-export const INITIAL_OBJECT_STATE: DrObject = {
+export const DEFAULT_OBJECT: DrObject = {
     id: 0,
     drType: DrType.INVALID,
     name: "Object",
@@ -29,7 +29,7 @@ export const INITIAL_OBJECT_STATE: DrObject = {
     transformY: 0,
     scaleX: 1,
     scaleY: 1,
-    clickable: false,
+    clickable: true,
     showFill: true,
     showStroke: true,
     fill: "white",

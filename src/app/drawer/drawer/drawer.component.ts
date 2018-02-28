@@ -5,7 +5,6 @@ import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPoint } from '../models/dr-point';
-import { DrRectComponent } from '../elements/dr-rect/dr-rect.component';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 import { NgRedux, select } from '@angular-redux/store';
 import { IDrawerAppState } from '../store';
@@ -55,9 +54,8 @@ export class DrawerComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       let item: DrRect = this.ngRedux.getState().elements[0] as DrRect;
-      console.log(item);
       this.ngRedux.dispatch({ type: MOVE_OBJECT, id: item.id, delta: { x: 100, y: -40 } });
-
+      
     }, 5000);
   }
 
