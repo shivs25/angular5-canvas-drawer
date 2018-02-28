@@ -1,1 +1,0 @@
-{"moduleName":null,"summaries":[{"symbol":{"__symbol":0,"members":[]},"metadata":{"__symbolic":"class","extends":{"__symbolic":"resolved","symbol":{"__symbol":1,"members":[]},"line":3,"character":31,"fileName":"build/models/dr-polygon.ts"}}}],"symbols":[{"__symbol":0,"name":"DrPolygon","filePath":"./dr-polygon"},{"__symbol":1,"name":"DrObject","filePath":"./dr-object"}]}

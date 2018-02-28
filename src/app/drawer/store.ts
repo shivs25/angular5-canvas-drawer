@@ -12,7 +12,7 @@ export const INITIAL_STATE: IDrawerAppState = {
     elements: []
 }
 
-export function rootReducer(state, action) {
+export function rootReducer(state: any, action: any) {
 
     switch(action.type) {
         case SET_ELEMENTS:

@@ -1,1 +1,0 @@
-{"moduleName":null,"summaries":[{"symbol":{"__symbol":0,"members":[]},"metadata":{"__symbolic":"class","extends":{"__symbolic":"resolved","symbol":{"__symbol":1,"members":[]},"line":2,"character":29,"fileName":"build/models/dr-image.ts"}}}],"symbols":[{"__symbol":0,"name":"DrImage","filePath":"./dr-image"},{"__symbol":1,"name":"DrRect","filePath":"./dr-rect"}]}

@@ -7,7 +7,7 @@ import { DrPolygon } from '../models/dr-polygon';
 import { DrRect } from '../models/dr-rect';
 import { DrText } from '../models/dr-text';
 import { DrType } from '../models/dr-type.enum';
-import { BoundingBox } from '../models/bounding-box';
+import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/bounding-box';
 import { BoundDirectivePropertyAst } from '@angular/compiler';
 
 @Injectable()
@@ -16,19 +16,16 @@ export class DrawerObjectHelperService {
   constructor() { }
 
   public getBoundingBox(drObjs: DrObject[]): BoundingBox {
-    let boundingBox: BoundingBox = new BoundingBox();
-    boundingBox.top = 0;
-    boundingBox.left = 0;
-    boundingBox.height = 0;
-    boundingBox.width = 0;
+    let boundingBox: BoundingBox = createBoundingBox();
+    
     let boundingBoxes: BoundingBox[] = [];
     for(let i = 0; i < drObjs.length; i++){
       boundingBoxes.push(this.getBoundingBoxForObject(drObjs[i]));
     }
     
     if(boundingBoxes.length === 1){
-      boundingBox.top = boundingBoxes[0].top;
-      boundingBox.left = boundingBoxes[0].left;
+      boundingBox.y = boundingBoxes[0].y;
+      boundingBox.x = boundingBoxes[0].x;
       boundingBox.height = boundingBoxes[0].height;
       boundingBox.width = boundingBoxes[0].width;
     } else if (boundingBoxes.length > 1){
@@ -39,28 +36,28 @@ export class DrawerObjectHelperService {
       //Current logic just adds total width height together, it does not take into account the top or left values....
       for(let j = 0; j < boundingBoxes.length; j++){
         if(j === 0){
-          minX = boundingBoxes[j].left;
-          minY = boundingBoxes[j].top;
-          maxY = boundingBoxes[j].top + boundingBoxes[j].height;
-          maxX = boundingBoxes[j].left + boundingBoxes[j].width;
+          minX = boundingBoxes[j].x;
+          minY = boundingBoxes[j].y;
+          maxY = boundingBoxes[j].y + boundingBoxes[j].height;
+          maxX = boundingBoxes[j].x + boundingBoxes[j].width;
         } else {
-          if(minX > boundingBoxes[j].left){
-            minX = boundingBoxes[j].left;
+          if(minX > boundingBoxes[j].x){
+            minX = boundingBoxes[j].x;
           }
-          if(maxX < (boundingBoxes[j].left + boundingBoxes[j].width)){
-            maxX = boundingBoxes[j].left + boundingBoxes[j].width;
+          if(maxX < (boundingBoxes[j].x + boundingBoxes[j].width)){
+            maxX = boundingBoxes[j].x + boundingBoxes[j].width;
           }
-          if(minY > boundingBoxes[j].top){
-            minY = boundingBoxes[j].top;
+          if(minY > boundingBoxes[j].y){
+            minY = boundingBoxes[j].y;
           }
-          if(maxY < (boundingBoxes[j].top + boundingBoxes[j].height)){
-            maxY = boundingBoxes[j].top + boundingBoxes[j].height;
+          if(maxY < (boundingBoxes[j].y + boundingBoxes[j].height)){
+            maxY = boundingBoxes[j].y + boundingBoxes[j].height;
           }
         }
       }
 
-      boundingBox.top = minY;
-      boundingBox.left = minX;
+      boundingBox.y = minY;
+      boundingBox.x = minX;
       boundingBox.height = maxY - minY;
       boundingBox.width = maxX - minX;
     }
@@ -69,11 +66,11 @@ export class DrawerObjectHelperService {
   }
                                 //currently set to any because when trying to access individual items it errored on compilation
   private getBoundingBoxForObject(drObj: any): BoundingBox {
-    let boundingBox: BoundingBox = new BoundingBox();
+    let boundingBox: BoundingBox =  createBoundingBox();
     switch(drObj.drType){
       case(DrType.ELLIPSE):
-        boundingBox.top = drObj.y - drObj.ry;
-        boundingBox.left = drObj.x - drObj.rx;
+        boundingBox.y = drObj.y - drObj.ry;
+        boundingBox.x = drObj.x - drObj.rx;
         boundingBox.height = drObj.ry * 2;
         boundingBox.width = drObj.rx * 2;
       break;
@@ -104,16 +101,16 @@ export class DrawerObjectHelperService {
         }
       }
 
-      boundingBox.top = minY;
-      boundingBox.left = minX;
+      boundingBox.y = minY;
+      boundingBox.x = minX;
       boundingBox.height = maxY - minY;
       boundingBox.width = maxX - minX;
       break;
       case(DrType.IMAGE):
       case(DrType.TEXT):
       case(DrType.RECTANGLE):
-        boundingBox.top = drObj.y;
-        boundingBox.left = drObj.x;
+        boundingBox.y = drObj.y;
+        boundingBox.x = drObj.x;
         boundingBox.width = drObj.width;
         boundingBox.height = drObj.height;
       break;

@@ -12,6 +12,6 @@ export const DEFAULT_POLYGON: DrPolygon = Object.assign({}, DEFAULT_OBJECT, {
     drType: DrType.POLYGON
 });
 
-export function createDrPolygon(properties): DrPolygon {
+export function createDrPolygon(properties: any): DrPolygon {
     return  Object.assign({}, DEFAULT_POLYGON, properties);
 }
