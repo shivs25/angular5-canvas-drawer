@@ -28,6 +28,6 @@ export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     drType: DrType.TEXT
 });
 
-export function createDrText(properties): DrText {
+export function createDrText(properties: any): DrText {
     return  Object.assign({}, DEFAULT_TEXT, properties);
 }

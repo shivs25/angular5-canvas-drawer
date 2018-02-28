@@ -22,7 +22,7 @@ export class DrawerComponent implements OnInit {
 
   @ViewChild('container') container: ElementRef;
 
-  @select('elements') items;
+  @select('elements') items: any;
 
   @Input()
   public widthValue: string = null;
@@ -53,7 +53,6 @@ export class DrawerComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-
   }
 
   @Input()
@@ -63,7 +62,6 @@ export class DrawerComponent implements OnInit {
 
   onClick(data:DrObject): void {
     if(data !== null && typeof data !== 'undefined'){
-      console.log(data);
       this.clickedObject.emit(data);
     }
   }

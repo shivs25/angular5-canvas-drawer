@@ -8,6 +8,11 @@ import { DrRectComponent } from '../elements/dr-rect/dr-rect.component';
 import { DrEllipseComponent } from '../elements/dr-ellipse/dr-ellipse.component';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPolygonComponent } from '../elements/dr-polygon/dr-polygon.component';
+import { DrText } from '../models/dr-text';
+import { DrTextComponent } from '../elements/dr-text/dr-text.component';
+import { DrImage } from '../models/dr-image';
+import { DrImageComponent } from '../elements/dr-image/dr-image.component';
+import { DrType } from '../models/dr-type.enum';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -38,10 +43,10 @@ export class DynamicSvgDirective implements OnInit {
     let component = factory.create(injector);
 
     // We insert the component into the dom container
-    
 
     let c: DrObjectComponent = <DrObjectComponent>component.instance;
     c.data = data;
+    c.ngOnInit();
     c.click.subscribe((s:any) => {
       this.click.emit(s);
     });
@@ -59,16 +64,20 @@ export class DynamicSvgDirective implements OnInit {
 
   private buildComponent(data: DrObject): any {
     let returnValue: any = null;
-    if (data instanceof DrRect) {
-      returnValue = DrRectComponent;
+
+    switch(data.drType) {
+      case DrType.TEXT:
+        return  DrTextComponent;
+      case DrType.IMAGE:
+        return  DrImageComponent;
+      case DrType.ELLIPSE:
+        return  DrEllipseComponent;
+      case DrType.POLYGON:
+        return DrPolygonComponent;
+      case DrType.RECTANGLE:
+        return  DrRectComponent;
     }
-    else if(data instanceof DrEllipse) {
-      returnValue = DrEllipseComponent;
-    }
-    else if (data instanceof DrPolygon) {
-      returnValue  = DrPolygonComponent;
-    }
-    return returnValue;
+    return null;
   }
 
   constructor(private _viewContainerRef: ViewContainerRef, private _resolver: ComponentFactoryResolver) {  

@@ -18,6 +18,6 @@ export const DEFAULT_ELLIPSE: DrEllipse = Object.assign({}, DEFAULT_OBJECT, {
     drType: DrType.ELLIPSE
 });
 
-export function createDrEllipse(properties): DrEllipse {
+export function createDrEllipse(properties: any): DrEllipse {
     return  Object.assign({}, DEFAULT_ELLIPSE, properties);
 }

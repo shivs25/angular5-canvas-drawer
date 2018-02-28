@@ -24,6 +24,7 @@ export const INITIAL_STATE: IDrawerAppState = {
     }
 }
 
+
 export const elementsReducer: Reducer<DrObject[]> = (state = [], action) => {
     switch(action.type) {
         case SET_ELEMENTS:

@@ -1,1 +1,1 @@
-[{"__symbolic":"module","version":4,"metadata":{"DrObject":{"__symbolic":"class"}}}]
+[{"__symbolic":"module","version":4,"metadata":{"DrObject":{"__symbolic":"interface"},"DEFAULT_OBJECT":{"id":0,"drType":{"__symbolic":"select","expression":{"__symbolic":"reference","module":"./dr-type.enum","name":"DrType","line":24,"character":12},"member":"INVALID"},"name":"Object","visible":true,"transformX":0,"transformY":0,"scaleX":1,"scaleY":1,"clickable":true,"showFill":true,"showStroke":true,"fill":"white","stroke":"black","strokeWidth":1,"opacity":1}}}]

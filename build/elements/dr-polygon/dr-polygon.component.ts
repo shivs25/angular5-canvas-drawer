@@ -5,7 +5,7 @@ import { DrPoint } from '../../models/dr-point';
 
 @Component({
   selector: 'dr-polygon',
-  template: "\n    <ng-template #elementTemplate>\n        <svg:polygon *ngIf=\"data\" \n          [ngClass]=\"{ clickable: data.clickable }\"\n          (click)=\"onClick(data)\"\n          [id]=\"data.id\"\n          [attr.points]=\"getPoints()\"\n          [attr.fill]=\"data.fill\"\n          [attr.stroke]=\"data.stroke\"\n          [attr.stroke-width]=\"data.strokeWidth\"\n          [attr.opacity]=\"data.opacity\">\n        </svg:polygon>\n    </ng-template>\n  ",
+  template: "\n    <ng-template #elementTemplate>\n        <svg:polygon *ngIf=\"data\" \n          [ngClass]=\"{ clickable: data.clickable }\"\n          (click)=\"onClick(data)\"\n          [id]=\"data.id\"\n          [attr.points]=\"getPoints()\"\n          [attr.fill]=\"data.showFill ? data.fill : 'transparent'\"\n          [attr.stroke]=\"data.showStroke ? data.stroke : 'transparent'\"\n          [attr.stroke-width]=\"data.strokeWidth\"\n          [attr.opacity]=\"data.opacity\">\n        </svg:polygon>\n    </ng-template>\n  ",
   styles: ["\n\n  "]
 })
 export class DrPolygonComponent extends DrObjectComponent {

@@ -1,14 +1,39 @@
-export class DrObject {
+import { DrType } from "./dr-type.enum";
+
+export interface DrObject {
 
     id: number;
-    transformX: number = 0;
-    transformY: number = 0;
-    scaleX: number = 1;
-    scaleY: number = 1;
+    drType: DrType;
+    name: string;
+    visible: boolean;
+    transformX: number;
+    transformY: number;
+    scaleX: number;
+    scaleY: number;
     clickable: boolean;
-    fill: string = "white";
-    stroke: string = "black";
-    strokeWidth: number = 1;
-    opacity: number = 1;
-    drType: string = "drObject"
+    showFill: boolean;
+    showStroke: boolean;
+    fill: string;
+    stroke: string;
+    strokeWidth: number;
+    opacity: number;
+    
+}
+
+export const DEFAULT_OBJECT: DrObject = {
+    id: 0,
+    drType: DrType.INVALID,
+    name: "Object",
+    visible: true,
+    transformX: 0,
+    transformY: 0,
+    scaleX: 1,
+    scaleY: 1,
+    clickable: true,
+    showFill: true,
+    showStroke: true,
+    fill: "white",
+    stroke: "black",
+    strokeWidth: 1,
+    opacity: 1
 }

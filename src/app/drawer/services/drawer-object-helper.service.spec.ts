@@ -43,8 +43,8 @@ describe('DrawerObjectHelperService', () => {
 
     let bb: BoundingBox = service.getBoundingBox([r]);
 
-    expect(bb.top).toEqual(10);
-    expect(bb.left).toEqual(15);
+    expect(bb.y).toEqual(10);
+    expect(bb.x).toEqual(15);
     expect(bb.height).toEqual(75);
     expect(bb.width).toEqual(40);
   }));
@@ -60,8 +60,8 @@ describe('DrawerObjectHelperService', () => {
 
     let bb: BoundingBox = service.getBoundingBox([t]);
 
-    expect(bb.top).toEqual(10);
-    expect(bb.left).toEqual(300);
+    expect(bb.y).toEqual(10);
+    expect(bb.x).toEqual(300);
     expect(bb.height).toEqual(40);
     expect(bb.width).toEqual(100);
   }));
@@ -76,8 +76,8 @@ describe('DrawerObjectHelperService', () => {
 
     let bb: BoundingBox = service.getBoundingBox([c]);
 
-    expect(bb.top).toEqual(450);
-    expect(bb.left).toEqual(175);
+    expect(bb.y).toEqual(450);
+    expect(bb.x).toEqual(175);
     expect(bb.height).toEqual(100);
     expect(bb.width).toEqual(50);
   }));
@@ -96,8 +96,8 @@ describe('DrawerObjectHelperService', () => {
    
     let bb: BoundingBox = service.getBoundingBox([p]);
 
-    expect(bb.top).toEqual(100);
-    expect(bb.left).toEqual(100);
+    expect(bb.y).toEqual(100);
+    expect(bb.x).toEqual(100);
     expect(bb.height).toEqual(200);
     expect(bb.width).toEqual(250);
   }));
@@ -112,8 +112,8 @@ describe('DrawerObjectHelperService', () => {
 
     let bb: BoundingBox = service.getBoundingBox([i]);
 
-    expect(bb.top).toEqual(200);
-    expect(bb.left).toEqual(400);
+    expect(bb.y).toEqual(200);
+    expect(bb.x).toEqual(400);
     expect(bb.height).toEqual(213);
     expect(bb.width).toEqual(320);
   }));
@@ -163,8 +163,8 @@ describe('DrawerObjectHelperService', () => {
 
     let bb: BoundingBox = service.getBoundingBox([i, r, c, p, t]);
     
-    expect(bb.top).toEqual(10);
-    expect(bb.left).toEqual(15);
+    expect(bb.y).toEqual(10);
+    expect(bb.x).toEqual(15);
     expect(bb.height).toEqual(540);
     expect(bb.width).toEqual(705);
   }));

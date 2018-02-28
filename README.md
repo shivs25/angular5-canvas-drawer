@@ -27,20 +27,25 @@ To use this library in your newly generated component, add the `app-drawer` to y
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
+DATE: `2018-02-28` VERSION: `1.0.33-beta.6`
+ - Removed line of test code that was left in module.
 
-DATE: `2018-02-23`  VERSION: `1.0.33-beta.2`
- - Testing new beta publishing.
+DATE: `2018-02-28` VERSION: `1.0.33-beta.6`
+ - Removed line of test code that was left in module.
 
-DATE: `2018-02-27` VERSION: `1.0.33.-beta.3`
- - Added DrText, DrImage, DrTextAlignment
-
-DATE: `2018-02-28` VERSION: ``
+DATE: `2018-02-28` VERSION: `1.0.33-beta.5`
  - Added visible, name, showFill, showStroke properties to the DrObject
  - Changed from classes to interfaces for all models
  - Created factory convenience methods for all models
  - Added DrawerObjectHelperService and "getBoundingBox" public function
  - Exported DrawerObjectHelperService through the Library Module
  - Cleaned up existing object and class exports for use outside of the application.
+
+DATE: `2018-02-27` VERSION: `1.0.33-beta.3`
+ - Added DrText, DrImage, DrTextAlignment
+
+DATE: `2018-02-23`  VERSION: `1.0.33-beta.2`
+ - Testing new beta publishing.
 
 ## Development server
 
