@@ -16,7 +16,7 @@ export interface IHistory<T> {
 }
 
 export interface IDrawerAppState {
-    elements: IHistory<DrObject[]>;
+    elements: IHistory<DrObject>;
 }
 
 export const INITIAL_STATE: IDrawerAppState = {
