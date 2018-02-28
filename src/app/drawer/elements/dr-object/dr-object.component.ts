@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
+import { select } from '@angular-redux/store';
 
 @Component({
   selector: 'app-dr-object',
@@ -14,6 +15,7 @@ export class DrObjectComponent implements OnInit {
   @Input()
   public data: DrObject;
 
+  //@select()
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 

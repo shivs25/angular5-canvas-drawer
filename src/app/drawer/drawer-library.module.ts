@@ -15,7 +15,7 @@ import { DrTextAlignment } from './models/dr-text-alignment.enum'; */
 
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
-import { IDrawerAppState, rootReducer, INITIAL_STATE } from './store';
+import { IDrawerAppState, rootReducer, INITIAL_STATE, undoableElementsReducer } from './store';
 //export { DrawerComponent } from './drawer/drawer.component';
 //export { ComponentFactoryResolver } from '@angular/core';
 export { DrPoint } from './models/dr-point';
@@ -45,6 +45,7 @@ export { DrawerObjectHelperService } from './services/drawer-object-helper.servi
 export class DrawerLibraryRootModule {
   constructor(ngRedux: NgRedux<IDrawerAppState>) {
     ngRedux.configureStore(rootReducer, INITIAL_STATE);
+    
   }
  }
 

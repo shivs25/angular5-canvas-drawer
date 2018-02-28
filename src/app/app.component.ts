@@ -8,6 +8,7 @@ import { DrPoint } from './drawer/models/dr-point';
 import { DrText } from './drawer/models/dr-text';
 import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService } from './drawer/drawer-library.module';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
     let elements = [];
 
     let r: DrRect = createDrRect({
+      id: 1,
       x: 10,
       y: 10,
       width: 40,

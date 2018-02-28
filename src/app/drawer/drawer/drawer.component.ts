@@ -8,8 +8,9 @@ import { DrPoint } from '../models/dr-point';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 import { NgRedux, select } from '@angular-redux/store';
 import { IDrawerAppState } from '../store';
-import { SET_ELEMENTS, MOVE_OBJECT } from '../actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from '../actions';
 import { DrImage } from '../models/dr-image';
+import { ActionCreators } from 'redux-undo';
 
 
 @Component({
@@ -52,11 +53,7 @@ export class DrawerComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      let item: DrRect = this.ngRedux.getState().elements[0] as DrRect;
-      this.ngRedux.dispatch({ type: MOVE_OBJECT, id: item.id, delta: { x: 100, y: -40 } });
-      
-    }, 5000);
+
   }
 
   @Input()
