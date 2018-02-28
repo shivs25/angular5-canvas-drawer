@@ -21,12 +21,11 @@ export class DrawerObjectHelperService {
     boundingBox.left = 0;
     boundingBox.height = 0;
     boundingBox.width = 0;
-
     let boundingBoxes: BoundingBox[] = [];
     for(let i = 0; i < drObjs.length; i++){
       boundingBoxes.push(this.getBoundingBoxForObject(drObjs[i]));
     }
-
+    
     if(boundingBoxes.length === 1){
       boundingBox.top = boundingBoxes[0].top;
       boundingBox.left = boundingBoxes[0].left;
