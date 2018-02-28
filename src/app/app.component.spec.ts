@@ -3,6 +3,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { DrawerComponent } from './drawer/drawer/drawer.component';
 import { DynamicSvgDirective } from './drawer/dynamic-svg/dynamic-svg.directive';
+import { DrawerObjectHelperService } from './drawer/drawer-library.module';
 
 xdescribe('AppComponent', () => {
   beforeEach(async(() => {
@@ -12,6 +13,7 @@ xdescribe('AppComponent', () => {
         DrawerComponent,
         DynamicSvgDirective
       ],
+      providers: [DrawerObjectHelperService]
     }).compileComponents();
   }));
 

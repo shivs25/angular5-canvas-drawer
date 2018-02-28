@@ -6,8 +6,7 @@ import { DrRect, DEFAULT_RECT, createDrRect } from './drawer/models/dr-rect';
 import { DrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
 import { DrText } from './drawer/models/dr-text';
-import { DrTextAlignment, DrImage, DrType } from './drawer/drawer/drawer.module';
-import { DrawerObjectHelperService } from './drawer/services/drawer-object-helper.service';
+import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService } from './drawer/drawer-library.module';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +22,7 @@ export class AppComponent implements OnInit {
   viewLeft: string = "0";
   viewHeight: string = "560";
   viewWidth: string = "1000";
+
 
   constructor(private drawerObjHelper: DrawerObjectHelperService) {
   }

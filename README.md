@@ -36,8 +36,14 @@ DATE: `2018-02-27` VERSION: `1.0.33.-beta.3`
 
 DATE: `2018-02-28` VERSION: ``
  - Added visible, name, showFill, showStroke properties to the DrObject
+<<<<<<< HEAD
  - Changed from classes to interfaces for all models
  - Created factory convenience methods for all models
+=======
+ - Added DrawerObjectHelperService and "getBoundingBox" public function
+ - Exported DrawerObjectHelperService through the Library Module
+ - Cleaned up existing object and class exports for use outside of the application.
+>>>>>>> c7cd84e17f8c1785fad179f19999f2bfa3635ea4
 
 ## Development server
 
