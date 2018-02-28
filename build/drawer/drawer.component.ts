@@ -52,11 +52,7 @@ export class DrawerComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      let item: DrRect = this.ngRedux.getState().elements[0] as DrRect;
-      this.ngRedux.dispatch({ type: MOVE_OBJECT, id: item.id, delta: { x: 100, y: -40 } });
-      
-    }, 5000);
+    
   }
 
   @Input()
