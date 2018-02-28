@@ -18,6 +18,6 @@ export const DEFAULT_RECT: DrRect = Object.assign({}, DEFAULT_OBJECT, {
    drType: DrType.RECTANGLE
 });
 
-export function createDrRect(properties): DrRect {
+export function createDrRect(properties: any): DrRect {
     return  Object.assign({}, DEFAULT_RECT, properties);
 }

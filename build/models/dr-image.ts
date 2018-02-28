@@ -12,6 +12,6 @@ export const DEFAULT_IMAGE: DrImage = Object.assign({}, DEFAULT_RECT, {
     drType: DrType.IMAGE
 });
 
-export function createDrImage(properties): DrImage {
+export function createDrImage(properties: any): DrImage {
     return Object.assign({}, DEFAULT_IMAGE, properties);
 }

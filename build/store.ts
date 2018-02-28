@@ -12,7 +12,7 @@ export const INITIAL_STATE: IDrawerAppState = {
     elements: []
 }
 
-export function rootReducer(state, action) {
+export function rootReducer(state: any, action: any) {
 
     switch(action.type) {
         case SET_ELEMENTS:
@@ -20,7 +20,7 @@ export function rootReducer(state, action) {
                 elements: action.elements.slice(0)
             });
         case MOVE_OBJECT:
-            let item: DrObject = state.elements.find(t => t.id === action.id);
+            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
             let index = state.elements.indexOf(item);
             if (DrType.IMAGE === item.drType) {
                 let i: DrImage = Object.assign({}, item) as DrImage;

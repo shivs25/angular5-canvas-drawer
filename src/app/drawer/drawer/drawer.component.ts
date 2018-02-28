@@ -21,7 +21,7 @@ export class DrawerComponent implements OnInit {
 
   @ViewChild('container') container: ElementRef;
 
-  @select('elements') items;
+  @select('elements') items: any;
 
   @Input()
   public widthValue: string = null;
