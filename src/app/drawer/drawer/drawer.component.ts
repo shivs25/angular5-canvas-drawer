@@ -62,7 +62,6 @@ export class DrawerComponent implements OnInit {
 
   onClick(data:DrObject): void {
     if(data !== null && typeof data !== 'undefined'){
-      console.log(data);
       this.clickedObject.emit(data);
     }
   }
