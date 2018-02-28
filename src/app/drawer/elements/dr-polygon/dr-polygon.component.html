@@ -4,8 +4,8 @@
       (click)="onClick(data)"
       [id]="data.id"
       [attr.points]="getPoints()"
-      [attr.fill]="data.fill"
-      [attr.stroke]="data.stroke"
+      [attr.fill]="data.showFill ? data.fill : 'transparent'"
+      [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
       [attr.stroke-width]="data.strokeWidth"
       [attr.opacity]="data.opacity">
     </svg:polygon>

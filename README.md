@@ -31,6 +31,12 @@ To use this library in your newly generated component, add the `app-drawer` to y
 DATE: `2018-02-23`  VERSION: `1.0.33-beta.2`
  - Testing new beta publishing.
 
+DATE: `2018-02-27` VERSION: `1.0.33.-beta.3`
+ - Added DrText, DrImage, DrTextAlignment
+
+DATE: `2018-02-28` VERSION: ``
+ - Added visible, name, showFill, showStroke properties to the DrObject
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

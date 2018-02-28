@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
     r.stroke = "red";
     r.fill = "yellow";
     r.strokeWidth = 3;
+    r.showStroke = r.showFill = true;
     r.clickable = false;
 
     elements.push(r);
@@ -62,22 +63,12 @@ export class AppComponent implements OnInit {
     t.italic = false;
     t.bold = true;
     t.clickable = true;
+    t.showStroke = t.showFill = true;
     t.hAlignment = DrTextAlignment.CENTER;
     t.vAlignment = DrTextAlignment.CENTER;
     elements.push(t);
     
-    let i = new DrImage();
-    i.id = 100;
-    i.x = 10;
-    i.y = 10;
-    i.width = 320;
-    i.height = 213;
-    i.strokeWidth = 5;
-    i.stroke="green";
-    i.clickable = true;
-    i.opacity = 0.7;
-    i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
-    elements.push(i);
+    
 
     r = new DrRect();
     r.id = 2;
@@ -87,6 +78,7 @@ export class AppComponent implements OnInit {
     r.height = 5;
     r.stroke = "black";
     r.fill = "blue";
+    r.showStroke = r.showFill = true;
     r.strokeWidth = 1;
     r.clickable = true;
     elements.push(r);
@@ -98,6 +90,7 @@ export class AppComponent implements OnInit {
     c.rx = 25;
     c.ry = 50;
     c.fill = 'blue';
+    c.showStroke = c.showFill = true;
     c.clickable = true;
 
     elements.push(c);
@@ -109,6 +102,7 @@ export class AppComponent implements OnInit {
     c.y = 200;
     c.rx = 100;
     c.ry = 50;
+    c.showStroke = c.showFill = true;
     c.opacity = 0.4
     
     c.clickable = true;
@@ -144,9 +138,24 @@ export class AppComponent implements OnInit {
     p.strokeWidth = 3;
     p.clickable = true;
     p.fill = "red";
+    p.showStroke = p.showFill = true;
     p.opacity = 0.8;
+    p.visible =true;
     elements.push(p);
 
+    let i = new DrImage();
+    i.id = 100;
+    i.x = 10;
+    i.y = 10;
+    i.width = 320;
+    i.height = 213;
+    i.strokeWidth = 5;
+    i.stroke="green";
+    i.clickable = true;
+    i.showStroke = true;
+    i.opacity = 1;
+    i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
+    elements.push(i);
 
     this.elements = elements;
   }

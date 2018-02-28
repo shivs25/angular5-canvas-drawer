@@ -6,7 +6,7 @@
     [attr.viewBox]="getViewBoxValues() !== null ? getViewBoxValues() : null" 
     [attr.preserveAspectRatio]="preserveAspectRatioValue !== null ? preserveAspectRatioValue : null">
     <ng-container *ngFor="let s of elements">
-      <ng-container dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
+      <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
     </ng-container>
   </svg>
 </ng-container>

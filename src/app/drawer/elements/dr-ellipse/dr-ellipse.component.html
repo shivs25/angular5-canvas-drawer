@@ -7,8 +7,8 @@
       [attr.cy]="data.y" 
       [attr.rx]="data.rx" 
       [attr.ry]="data.ry"
-      [attr.fill]="data.fill"
-      [attr.stroke]="data.stroke"
+      [attr.fill]="data.showFill ? data.fill : 'transparent'"
+      [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
       [attr.stroke-width]="data.strokeWidth"
       [attr.opacity]="data.opacity">
     </svg:ellipse>
