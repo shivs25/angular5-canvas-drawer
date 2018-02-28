@@ -11,7 +11,6 @@ export class DrRectComponent extends DrObjectComponent {
 
   
   ngOnInit() {
-    
   }
 
 }

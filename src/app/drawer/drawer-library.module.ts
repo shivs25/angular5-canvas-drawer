@@ -1,14 +1,5 @@
 import { NgModule, ModuleWithProviders, ComponentFactoryResolver } from '@angular/core';
 import { CommonModule } from '@angular/common';
-//import { DrawerComponent } from './drawer/drawer.component';
-//import { EditorToolsComponent } from './editor-tools/editor-tools.component';
-//import { DrRectComponent } from './elements/dr-rect/dr-rect.component';
-//import { DynamicSvgDirective } from './dynamic-svg/dynamic-svg.directive';
-//import { DrObjectComponent } from './elements/dr-object/dr-object.component';
-//import { DrEllipseComponent } from './elements/dr-ellipse/dr-ellipse.component';
-//import { DrPolygonComponent } from './elements/dr-polygon/dr-polygon.component';
-//import { SelectorToolComponent } from './tools/selector-tool/selector-tool.component';
-
 
 import { DrPoint } from './models/dr-point';
 import { DrObject } from './models/dr-object';
@@ -45,6 +36,7 @@ export { DrTextAlignment } from './models/dr-text-alignment.enum';
     SelectorToolModule,
     DrawerModule
   ],
+  declarations: [],
 })
 export class DrawerLibraryRootModule { }
 

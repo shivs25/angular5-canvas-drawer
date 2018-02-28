@@ -5,6 +5,8 @@ import { DrObject } from './drawer/models/dr-object';
 import { DrRect } from './drawer/models/dr-rect';
 import { DrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
+import { DrText } from './drawer/models/dr-text';
+import { DrTextAlignment, DrImage } from './drawer/drawer/drawer.module';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +45,39 @@ export class AppComponent implements OnInit {
     r.clickable = false;
 
     elements.push(r);
+
+    let t = new DrText();
+    t.id = 10;
+    t.x = 0;
+    t.y = 10;
+    t.width = 100;
+    t.height = 40;
+    t.stroke = 'purple';
+    t.strokeWidth = 1;
+    t.size = 16;
+    t.text = 'I Love You';
+    t.fill = 'transparent';
+    t.fontColor = 'red';
+    t.fontFamily = 'Courier';
+    t.italic = false;
+    t.bold = true;
+    t.clickable = true;
+    t.hAlignment = DrTextAlignment.CENTER;
+    t.vAlignment = DrTextAlignment.CENTER;
+    elements.push(t);
+    
+    let i = new DrImage();
+    i.id = 100;
+    i.x = 10;
+    i.y = 10;
+    i.width = 320;
+    i.height = 213;
+    i.strokeWidth = 5;
+    i.stroke="green";
+    i.clickable = true;
+    i.opacity = 0.7;
+    i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
+    elements.push(i);
 
     r = new DrRect();
     r.id = 2;

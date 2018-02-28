@@ -8,6 +8,7 @@ export class DrText extends DrRect {
     italic: boolean;
     size: number;
     fontFamily: string;
+    fontColor: string;
     hAlignment: DrTextAlignment;
     vAlignment: DrTextAlignment; 
 

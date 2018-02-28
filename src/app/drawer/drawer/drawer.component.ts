@@ -45,15 +45,14 @@ export class DrawerComponent implements OnInit {
   @Output()
   public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
+  t: DrRect = null;
+
   constructor(private _componentFactoryResolver: ComponentFactoryResolver) { }
   //constructor() {}
   
   ngOnInit() {
-    
-  }
 
-  onRectClick(): void {
-    console.log("CLICK");
+    
   }
 
   onClick(data:DrObject): void {

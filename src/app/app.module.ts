@@ -3,12 +3,10 @@ import { DrawerLibraryModule } from './drawer/drawer-library.module';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { DrTextComponent } from './dr-text/dr-text.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DrTextComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

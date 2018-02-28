@@ -15,6 +15,8 @@ import { DrType } from '../models/dr-type.enum';
 import { DrText } from '../models/dr-text';
 import { DrImage } from '../models/dr-image';
 import { DrTextAlignment } from '../models/dr-text-alignment.enum';
+import { DrTextComponent } from '../elements/dr-text/dr-text.component';
+import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 
 export { DrPoint } from '../models/dr-point';
 export { DrObject } from '../models/dr-object';
@@ -36,14 +38,18 @@ export { DrTextAlignment } from '../models/dr-text-alignment.enum';
     DynamicSvgDirective,
     DrObjectComponent,
     DrEllipseComponent,
-    DrPolygonComponent
+    DrPolygonComponent,
+    DrTextComponent,
+    DrImageComponent
   ], 
   exports: [DrawerComponent], 
   providers: [DynamicSvgDirective],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
-    DrPolygonComponent
+    DrPolygonComponent,
+    DrTextComponent,
+    DrImageComponent
   ]
 })
 

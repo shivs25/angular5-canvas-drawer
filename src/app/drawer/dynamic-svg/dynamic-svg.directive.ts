@@ -8,6 +8,10 @@ import { DrRectComponent } from '../elements/dr-rect/dr-rect.component';
 import { DrEllipseComponent } from '../elements/dr-ellipse/dr-ellipse.component';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPolygonComponent } from '../elements/dr-polygon/dr-polygon.component';
+import { DrText } from '../models/dr-text';
+import { DrTextComponent } from '../elements/dr-text/dr-text.component';
+import { DrImage } from '../models/dr-image';
+import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -38,10 +42,10 @@ export class DynamicSvgDirective implements OnInit {
     let component = factory.create(injector);
 
     // We insert the component into the dom container
-    
 
     let c: DrObjectComponent = <DrObjectComponent>component.instance;
     c.data = data;
+    c.ngOnInit();
     c.click.subscribe((s:any) => {
       this.click.emit(s);
     });
@@ -59,7 +63,13 @@ export class DynamicSvgDirective implements OnInit {
 
   private buildComponent(data: DrObject): any {
     let returnValue: any = null;
-    if (data instanceof DrRect) {
+    if (data instanceof DrText){
+      returnValue = DrTextComponent;
+    }
+    else if (data instanceof DrImage) {
+      returnValue = DrImageComponent;
+    }
+    else if (data instanceof DrRect) {
       returnValue = DrRectComponent;
     }
     else if(data instanceof DrEllipse) {
@@ -68,6 +78,7 @@ export class DynamicSvgDirective implements OnInit {
     else if (data instanceof DrPolygon) {
       returnValue  = DrPolygonComponent;
     }
+    
     return returnValue;
   }
 
