@@ -3,7 +3,10 @@
   "version": "1.0.33-beta.3",
   "license": "MIT",
   "author": "Billy Shivers",
-  "contributors": ["Brian Vercelli", "Robert Collins"],
+  "contributors": [
+    "Brian Vercelli",
+    "Robert Collins"
+  ],
   "keywords": [
     "angular",
     "angular5",
@@ -36,6 +39,7 @@
   "typings": "./build/lib/drawer-library.module.d.ts",
   "private": false,
   "dependencies": {
+    "@angular-redux/store": "^7.1.0",
     "@angular/animations": "^5.2.5",
     "@angular/common": "^5.2.5",
     "@angular/compiler": "^5.2.5",
@@ -48,6 +52,7 @@
     "@angular/platform-server": "^5.2.5",
     "@angular/router": "^5.2.5",
     "core-js": "^2.4.1",
+    "redux": "^3.7.2",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
   },

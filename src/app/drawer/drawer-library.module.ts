@@ -1,5 +1,7 @@
 import { NgModule, ModuleWithProviders, ComponentFactoryResolver } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgRedux, NgReduxModule } from '@angular-redux/store';
+
 
 import { DrPoint } from './models/dr-point';
 import { DrObject } from './models/dr-object';
@@ -13,6 +15,7 @@ import { DrTextAlignment } from './models/dr-text-alignment.enum';
 
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
+import { IDrawerAppState, rootReducer, INITIAL_STATE } from './store';
 //export { DrawerComponent } from './drawer/drawer.component';
 //export { ComponentFactoryResolver } from '@angular/core';
 export { DrPoint } from './models/dr-point';
@@ -33,12 +36,17 @@ export { DrTextAlignment } from './models/dr-text-alignment.enum';
     DrawerModule.forRoot()
   ],
   exports: [
+    NgReduxModule,
     SelectorToolModule,
     DrawerModule
   ],
   declarations: [],
 })
-export class DrawerLibraryRootModule { }
+export class DrawerLibraryRootModule {
+  constructor(ngRedux: NgRedux<IDrawerAppState>) {
+    ngRedux.configureStore(rootReducer, INITIAL_STATE);
+  }
+ }
 
 @NgModule({imports: [SelectorToolModule.forRoot(), DrawerModule.forRoot(), CommonModule], exports: [CommonModule, SelectorToolModule, DrawerModule]})
 export class DrawerLibraryModule {

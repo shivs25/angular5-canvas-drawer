@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { DrEllipse } from './drawer/models/dr-ellipse';
-import { DrObject } from './drawer/models/dr-object';
+import { DrObject, INITIAL_OBJECT_STATE } from './drawer/models/dr-object';
 import { DrRect } from './drawer/models/dr-rect';
 import { DrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
 import { DrText } from './drawer/models/dr-text';
-import { DrTextAlignment, DrImage } from './drawer/drawer/drawer.module';
+import { DrTextAlignment, DrImage, DrType } from './drawer/drawer/drawer.module';
 
 @Component({
   selector: 'app-root',
@@ -33,21 +33,21 @@ export class AppComponent implements OnInit {
 
     let elements = [];
 
-    let r: DrRect = new DrRect();
-    r.id = 1;
-    r.x = 10;
-    r.y = 10;
-    r.width = 40;
-    r.height = 40;
-    r.stroke = "red";
-    r.fill = "yellow";
-    r.strokeWidth = 3;
-    r.showStroke = r.showFill = true;
-    r.clickable = false;
+    let r: DrRect = Object.assign({}, INITIAL_OBJECT_STATE, {
+      x: 10,
+      y: 10,
+      width: 40,
+      height: 40,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      drType: DrType.RECTANGLE
+    });
+
 
     elements.push(r);
 
-    let t = new DrText();
+    /*let t = new DrText();
     t.id = 10;
     t.x = 0;
     t.y = 10;
@@ -155,7 +155,7 @@ export class AppComponent implements OnInit {
     i.showStroke = true;
     i.opacity = 1;
     i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
-    elements.push(i);
+    elements.push(i);*/
 
     this.elements = elements;
   }

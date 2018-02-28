@@ -1,7 +1,7 @@
 import { DrRect } from "./dr-rect";
 import { DrTextAlignment } from "./dr-text-alignment.enum";
 
-export class DrText extends DrRect {
+export interface DrText extends DrRect {
 
     text: string;
     bold: boolean;

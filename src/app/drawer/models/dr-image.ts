@@ -1,6 +1,6 @@
 import { DrRect } from "./dr-rect";
 
-export class DrImage extends DrRect {
+export interface DrImage extends DrRect {
 
     url: string;
     

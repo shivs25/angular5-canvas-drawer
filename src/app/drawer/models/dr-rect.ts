@@ -1,6 +1,6 @@
 import { DrObject } from "./dr-object";
 
-export class DrRect extends DrObject {
+export interface DrRect extends DrObject {
 
     x: number;
     y: number;
