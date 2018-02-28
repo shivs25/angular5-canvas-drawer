@@ -5,7 +5,6 @@ import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPoint } from '../models/dr-point';
-import { DrRectComponent } from '../elements/dr-rect/dr-rect.component';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 
 
@@ -57,7 +56,6 @@ export class DrawerComponent implements OnInit {
 
   onClick(data:DrObject): void {
     if(data !== null && typeof data !== 'undefined'){
-      console.log(data);
       this.clickedObject.emit(data);
     }
   }

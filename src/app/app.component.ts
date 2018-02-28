@@ -6,7 +6,8 @@ import { DrRect } from './drawer/models/dr-rect';
 import { DrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
 import { DrText } from './drawer/models/dr-text';
-import { DrTextAlignment, DrImage } from './drawer/drawer/drawer.module';
+import { DrTextAlignment, DrImage, DrType } from './drawer/drawer/drawer.module';
+import { DrawerObjectHelperService } from './drawer/services/drawer-object-helper.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,14 @@ export class AppComponent implements OnInit {
   viewTop: string = "0";
   viewLeft: string = "0";
   viewHeight: string = "560";
-  viewWidth: string = "1000"
+  viewWidth: string = "1000";
+
+  private drawerObjHelper: DrawerObjectHelperService;
+
+  constructor() {
+    this.drawerObjHelper = new DrawerObjectHelperService();
+  }
+
   ngOnInit() {
     /*let r = this._renderer.createElement('rect', 'svg',);
     this._renderer.setAttribute(r, 'x', '0');
@@ -43,13 +51,13 @@ export class AppComponent implements OnInit {
     r.fill = "yellow";
     r.strokeWidth = 3;
     r.showStroke = r.showFill = true;
-    r.clickable = false;
-
+    r.clickable = true;
+    r.drType = DrType.RECTANGLE;
     elements.push(r);
 
     let t = new DrText();
     t.id = 10;
-    t.x = 0;
+    t.x = 300;
     t.y = 10;
     t.width = 100;
     t.height = 40;
@@ -66,6 +74,8 @@ export class AppComponent implements OnInit {
     t.showStroke = t.showFill = true;
     t.hAlignment = DrTextAlignment.CENTER;
     t.vAlignment = DrTextAlignment.CENTER;
+    t.drType = DrType.TEXT;
+
     elements.push(t);
     
     
@@ -81,17 +91,19 @@ export class AppComponent implements OnInit {
     r.showStroke = r.showFill = true;
     r.strokeWidth = 1;
     r.clickable = true;
+    r.drType = DrType.RECTANGLE;
     elements.push(r);
 
     let c = new DrEllipse();
     c.id = 3;
     c.x = 200;
-    c.y = 200;
+    c.y = 500;
     c.rx = 25;
     c.ry = 50;
     c.fill = 'blue';
     c.showStroke = c.showFill = true;
     c.clickable = true;
+    c.drType = DrType.ELLIPSE;
 
     elements.push(c);
 
@@ -106,6 +118,7 @@ export class AppComponent implements OnInit {
     c.opacity = 0.4
     
     c.clickable = true;
+    c.drType = DrType.ELLIPSE;
 
     elements.push(c);
 
@@ -141,12 +154,14 @@ export class AppComponent implements OnInit {
     p.showStroke = p.showFill = true;
     p.opacity = 0.8;
     p.visible =true;
+    p.drType = DrType.POLYGON;
+
     elements.push(p);
 
     let i = new DrImage();
     i.id = 100;
-    i.x = 10;
-    i.y = 10;
+    i.x = 400;
+    i.y = 200;
     i.width = 320;
     i.height = 213;
     i.strokeWidth = 5;
@@ -155,8 +170,15 @@ export class AppComponent implements OnInit {
     i.showStroke = true;
     i.opacity = 1;
     i.url = 'https://static.pexels.com/photos/34676/pexels-photo.jpg';
+    i.drType = DrType.IMAGE;
+
     elements.push(i);
 
     this.elements = elements;
+  }
+
+  testService(evt: DrObject){
+    console.log(evt);
+    console.log(this.drawerObjHelper.getBoundingBox([evt]));
   }
 }

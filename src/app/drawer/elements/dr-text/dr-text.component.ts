@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DrObjectComponent } from '../dr-object/dr-object.component';
-import { DrRectComponent } from '../dr-rect/dr-rect.component';
 import { DrText } from '../../models/dr-text';
-import { DrTextAlignment } from '../../drawer/drawer.module';
+import { DrTextAlignment } from '../../models/dr-text-alignment.enum';
 
 @Component({
   selector: 'dr-text',
