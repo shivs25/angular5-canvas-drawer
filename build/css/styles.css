@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+.clickable:hover {
+  cursor: pointer; }
+
+.fill-parent {
+  width: 100%;
+  height: 100%; }
+
+.absolute-position {
+  position: absolute; }

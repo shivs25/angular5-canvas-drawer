@@ -1,6 +1,6 @@
 {
   "name": "angular5-canvas-drawer",
-  "version": "1.0.33-beta.8",
+  "version": "1.0.33-beta.10",
   "license": "MIT",
   "author": "Billy Shivers",
   "contributors": [
@@ -24,7 +24,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "inline-build-templates": "gulp inline-build-templates",
-    "ngc-build": "ngc -p ./tsconfig.lib.json",
+    "ngc-build": "ngc -p ./tsconfig.lib.json && gulp sass",
     "cleardown": "rimraf build lib",
     "prepare": "npm run cleardown && npm run inline-build-templates && npm run ngc-build"
   },
@@ -67,6 +67,7 @@
     "codelyzer": "~3.1.1",
     "gulp": "^3.9.1",
     "gulp-inline-ng2-template": "^4.1.0",
+    "gulp-sass": "^3.1.0",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
