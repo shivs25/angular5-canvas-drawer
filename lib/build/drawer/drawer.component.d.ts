@@ -1,26 +1,15 @@
-import { OnInit, ElementRef, ComponentFactoryResolver, EventEmitter } from '@angular/core';
+import { OnInit, ComponentFactoryResolver, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
-import { NgRedux } from '@angular-redux/store';
-import { IDrawerAppState } from '../store';
+import { DataStoreService } from '../services/data-store.service';
 export declare class DrawerComponent implements OnInit {
-    private ngRedux;
+    private _dataService;
     private _componentFactoryResolver;
-    container: ElementRef;
-    items: any;
-    widthValue: string;
-    heightValue: string;
-    viewBoxWidthValue: string;
-    viewBoxHeightValue: string;
-    viewBoxYValue: string;
-    viewBoxXValue: string;
-    preserveAspectRatioValue: string;
+    elementState: any;
     clickedObject: EventEmitter<DrObject>;
     t: DrRect;
-    constructor(ngRedux: NgRedux<IDrawerAppState>, _componentFactoryResolver: ComponentFactoryResolver);
+    constructor(_dataService: DataStoreService, _componentFactoryResolver: ComponentFactoryResolver);
     ngOnInit(): void;
     elements: DrObject[];
     onClick(data: DrObject): void;
-    getViewBoxValues(): string;
-    private isNullOrEmpty(s);
 }

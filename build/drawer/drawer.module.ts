@@ -10,13 +10,15 @@ import { DrTextAlignment } from '../models/dr-text-alignment.enum';
 import { DrTextComponent } from '../elements/dr-text/dr-text.component';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DataStoreService } from '../services/data-store.service';
+import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
+import { EditorModule } from '../tools/editor.module';
+import { EditorToolComponent } from '../tools/editor-tool.component';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, EditorModule.forRoot()],
 
   declarations: [
     DrawerComponent,
-    //EditorToolsComponent,
     DrRectComponent,
     DynamicSvgDirective,
     DrObjectComponent,
@@ -37,5 +39,5 @@ import { DataStoreService } from '../services/data-store.service';
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DynamicSvgDirective, DataStoreService]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DynamicSvgDirective, DrawerObjectHelperService, DataStoreService]}; }
 }
