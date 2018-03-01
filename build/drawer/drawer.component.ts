@@ -8,13 +8,14 @@ import { DrPoint } from '../models/dr-point';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 import { NgRedux, select } from '@angular-redux/store';
 import { IDrawerAppState } from '../store';
-import { SET_ELEMENTS, MOVE_OBJECT } from '../actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from '../actions';
 import { DrImage } from '../models/dr-image';
+import { ActionCreators } from 'redux-undo';
 
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <ng-container>\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\" \n        [attr.width]=\"widthValue !== null ? widthValue : null\" \n        [attr.height]=\"heightValue !== null ? heightValue : null\" \n        [attr.viewBox]=\"getViewBoxValues() !== null ? getViewBoxValues() : null\" \n        [attr.preserveAspectRatio]=\"preserveAspectRatioValue !== null ? preserveAspectRatioValue : null\">\n        <ng-container *ngFor=\"let s of items | async\">\n          <ng-container *ngIf=\"s.visible\" dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
+  template: "\n\n    <ng-container>\n      <svg #container xmlns=\"http://www.w3.org/2000/svg\" \n        [attr.width]=\"widthValue !== null ? widthValue : null\" \n        [attr.height]=\"heightValue !== null ? heightValue : null\" \n        [attr.viewBox]=\"getViewBoxValues() !== null ? getViewBoxValues() : null\" \n        [attr.preserveAspectRatio]=\"preserveAspectRatioValue !== null ? preserveAspectRatioValue : null\">\n   \n    \n        <ng-container *ngFor=\"let s of (items | async)?.present\">\n          <ng-container *ngIf=\"s.visible\" dynamic-svg [componentData]=\"s\" (click)=\"onClick($event)\"></ng-container>\n        </ng-container>\n      </svg>\n    </ng-container>\n  ",
   styles: ["\n\n  "]
 })
 export class DrawerComponent implements OnInit {
@@ -52,7 +53,6 @@ export class DrawerComponent implements OnInit {
   constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    
   }
 
   @Input()
@@ -62,7 +62,6 @@ export class DrawerComponent implements OnInit {
 
   onClick(data:DrObject): void {
     if(data !== null && typeof data !== 'undefined'){
-      console.log(data);
       this.clickedObject.emit(data);
     }
   }

@@ -1,2 +1,2 @@
 export const SET_ELEMENTS = "SET_ELEMENTS";
-export const MOVE_OBJECT = "MOVE_OBJECT";
+export const CHANGE_OBJECT_BOUNDS = "CHANGE_OBJECT_BOUNDS";

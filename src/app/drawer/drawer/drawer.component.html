@@ -7,7 +7,7 @@
     [attr.preserveAspectRatio]="preserveAspectRatioValue !== null ? preserveAspectRatioValue : null">
    
     
-    <ng-container *ngFor="let s of (items | async)?.present">
+    <ng-container *ngFor="let s of (elementState | async)?.present.elements">
       <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
     </ng-container>
   </svg>

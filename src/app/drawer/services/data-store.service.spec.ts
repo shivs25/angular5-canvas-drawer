@@ -1,11 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { DataStoreService } from './data-store.service';
+import { NgRedux } from '@angular-redux/store';
 
 describe('DataStoreService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DataStoreService]
+      providers: [DataStoreService, NgRedux]
     });
   });
 

@@ -3,21 +3,9 @@ import { CommonModule } from '@angular/common';
 import { NgRedux, NgReduxModule } from '@angular-redux/store';
 
 
-/* import { DrPoint } from './models/dr-point';
-import { DrObject } from './models/dr-object';
-import { DrPolygon } from './models/dr-polygon';
-import { DrEllipse } from './models/dr-ellipse';
-import { DrRect } from './models/dr-rect';
-import { DrType } from './models/dr-type.enum';
-import { DrText } from './models/dr-text';
-import { DrImage } from './models/dr-image';
-import { DrTextAlignment } from './models/dr-text-alignment.enum'; */
-
 import { DrawerModule } from './drawer/drawer.module';
 import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
 import { IDrawerAppState, rootReducer, INITIAL_STATE, undoableElementsReducer } from './store';
-//export { DrawerComponent } from './drawer/drawer.component';
-//export { ComponentFactoryResolver } from '@angular/core';
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
 export { DrPolygon, createDrPolygon } from './models/dr-polygon';
@@ -28,6 +16,7 @@ export { DrText, createDrText } from './models/dr-text';
 export { DrImage, createDrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export { DrawerObjectHelperService } from './services/drawer-object-helper.service';
+export { DataStoreService } from './services/data-store.service';
 
 @NgModule({
   imports: [

@@ -11,6 +11,7 @@ import { IDrawerAppState } from '../store';
 import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from '../actions';
 import { DrImage } from '../models/dr-image';
 import { ActionCreators } from 'redux-undo';
+import { DataStoreService } from '../services/data-store.service';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class DrawerComponent implements OnInit {
 
   @ViewChild('container') container: ElementRef;
 
-  @select('elements') items: any;
+  @select() elementState;
 
   @Input()
   public widthValue: string = null;
@@ -50,14 +51,17 @@ export class DrawerComponent implements OnInit {
 
   t: DrRect = null;
 
-  constructor(private ngRedux: NgRedux<IDrawerAppState>, private _componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(private _dataService: DataStoreService, private _componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
   }
 
   @Input()
   set elements(elements: DrObject[]) {
-    this.ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
+    this._dataService.elements = elements;
+  }
+  get elements(): DrObject[] { 
+    return  this._dataService.elements;
   }
 
   onClick(data:DrObject): void {

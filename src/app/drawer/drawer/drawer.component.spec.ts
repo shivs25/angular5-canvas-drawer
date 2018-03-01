@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawerComponent } from './drawer.component';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
 import { NgRedux } from '@angular-redux/store';
+import { DataStoreService } from '../services/data-store.service';
 
 describe('DrawerComponent', () => {
   let component: DrawerComponent;
@@ -11,7 +12,7 @@ describe('DrawerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DrawerComponent, DynamicSvgDirective ],
-      providers: [NgRedux]
+      providers: [NgRedux, DataStoreService]
     })
     .compileComponents();
   }));

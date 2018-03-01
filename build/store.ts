@@ -1,42 +1,65 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, MOVE_OBJECT } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
+import { DrRect } from './models/dr-rect';
+
+import undoable, { distinctState } from 'redux-undo';
+import { combineReducers, Reducer } from 'redux';
+
+export interface IHistory<T> {
+    past: T[],
+    present: T[],
+    future: T[]
+
+}
 
 export interface IDrawerAppState {
-    elements: DrObject[]
+    elements: IHistory<DrObject>;
 }
 
 export const INITIAL_STATE: IDrawerAppState = {
-    elements: []
+    elements: {
+        past: [],
+        present: [],
+        future: []
+    }
 }
 
-export function rootReducer(state: any, action: any) {
 
+export const elementsReducer: Reducer<DrObject[]> = (state: any[] = [], action: any) => {
     switch(action.type) {
         case SET_ELEMENTS:
-            return Object.assign({}, state, {
-                elements: action.elements.slice(0)
-            });
-        case MOVE_OBJECT:
-            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
-            let index = state.elements.indexOf(item);
-            if (DrType.IMAGE === item.drType) {
-                let i: DrImage = Object.assign({}, item) as DrImage;
-                i.x += action.delta.x;
-                i.y += action.delta.y;
-                console.log(i);
-                return Object.assign({}, state, {
-                    elements: [
-                        ...state.elements.slice(0, index),
-                        i,
-                        ...state.elements.slice(index + 1)
-                    ]
+            return action.elements.slice(0);
+        case CHANGE_OBJECT_BOUNDS:
+            let item: DrObject = state.find((t: any) => t.id === action.id);
+            let index = state.indexOf(item);
+            if (DrType.RECTANGLE === item.drType) {
+                let i: any = Object.assign({}, item, {
+                    x: action.newBounds.x,
+                    y: action.newBounds.y,
+                    width: action.newBounds.width,
+                    height: action.newBounds.height
                 });
+                return [
+                    ...state.slice(0, index),
+                    i,
+                    ...state.slice(index + 1)
+                ];
             }
-            
+        default:
+            return state;
     }
-
-    return state;
 }
+
+export const undoableElementsReducer: any = undoable(elementsReducer, {
+    filter: distinctState(),
+    limit: 10
+});
+
+export const rootReducer: Reducer<IDrawerAppState> = combineReducers({
+    elements: undoableElementsReducer
+});
+
+

@@ -11,6 +11,7 @@ export { DrText, createDrText } from './models/dr-text';
 export { DrImage, createDrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export { DrawerObjectHelperService } from './services/drawer-object-helper.service';
+export { DataStoreService } from './services/data-store.service';
 export declare class DrawerLibraryRootModule {
     constructor(ngRedux: NgRedux<IDrawerAppState>);
 }
