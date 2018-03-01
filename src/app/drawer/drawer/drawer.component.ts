@@ -6,45 +6,20 @@ import { DrRect } from '../models/dr-rect';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrPoint } from '../models/dr-point';
 import { DynamicSvgDirective } from '../dynamic-svg/dynamic-svg.directive';
-import { NgRedux, select } from '@angular-redux/store';
-import { IDrawerAppState } from '../store';
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from '../actions';
+import { select } from '@angular-redux/store';
 import { DrImage } from '../models/dr-image';
 import { ActionCreators } from 'redux-undo';
 import { DataStoreService } from '../services/data-store.service';
 
-
 @Component({
   selector: 'app-drawer',
   templateUrl: './drawer.component.html',
-  styleUrls: ['./drawer.component.scss']
+  styleUrls: ['./drawer.component.scss'],
+  entryComponents: []
 })
 export class DrawerComponent implements OnInit {
 
-  @ViewChild('container') container: ElementRef;
-
   @select() elementState;
-
-  @Input()
-  public widthValue: string = null;
-
-  @Input()
-  public heightValue: string = null;
-
-  @Input()
-  public viewBoxWidthValue: string = null;
-
-  @Input()
-  public viewBoxHeightValue: string = null;
-
-  @Input()
-  public viewBoxYValue: string = null;
-
-  @Input()
-  public viewBoxXValue: string = null;
-
-  @Input()
-  public preserveAspectRatioValue: string = null;
 
   @Output()
   public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
@@ -68,27 +43,6 @@ export class DrawerComponent implements OnInit {
     if(data !== null && typeof data !== 'undefined'){
       this.clickedObject.emit(data);
     }
-  }
-
-  getViewBoxValues(): string {
-    let r: string = null;
-
-    if(!this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue) && !this.isNullOrEmpty(this.viewBoxXValue)){
-        r = this.viewBoxXValue + " " + this.viewBoxYValue + " " + this.viewBoxWidthValue + " " + this.viewBoxHeightValue;
-    }
-
-    return r;
-  }
-
-  private isNullOrEmpty(s:string): boolean{
-   
-    if(null !== s && s.length > 0){
-      return false;
-    }
-    else{
-      return true;
-    }
-
   }
 }
 

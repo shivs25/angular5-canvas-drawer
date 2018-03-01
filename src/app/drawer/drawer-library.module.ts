@@ -4,8 +4,8 @@ import { NgRedux, NgReduxModule } from '@angular-redux/store';
 
 
 import { DrawerModule } from './drawer/drawer.module';
-import { SelectorToolModule } from './tools/selector-tool/selector-tool.module';
 import { IDrawerAppState, rootReducer, INITIAL_STATE, undoableElementsReducer } from './store';
+import { EditorModule } from './tools/editor.module';
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
 export { DrPolygon, createDrPolygon } from './models/dr-polygon';
@@ -17,16 +17,16 @@ export { DrImage, createDrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export { DrawerObjectHelperService } from './services/drawer-object-helper.service';
 export { DataStoreService } from './services/data-store.service';
+export { EditorToolType } from './models/enums';
 
 @NgModule({
   imports: [
     CommonModule,
-    SelectorToolModule.forRoot(),
-    DrawerModule.forRoot()
+    DrawerModule.forRoot(),
+    EditorModule.forRoot()
   ],
   exports: [
     NgReduxModule,
-    SelectorToolModule,
     DrawerModule
   ],
   declarations: [],
@@ -38,7 +38,7 @@ export class DrawerLibraryRootModule {
   }
  }
 
-@NgModule({imports: [SelectorToolModule.forRoot(), DrawerModule.forRoot(), CommonModule], exports: [CommonModule, SelectorToolModule, DrawerModule]})
+@NgModule({imports: [DrawerModule.forRoot(), CommonModule], exports: [CommonModule, DrawerModule]})
 export class DrawerLibraryModule {
   static forRoot(): ModuleWithProviders { return {ngModule: DrawerLibraryRootModule}; }
 }

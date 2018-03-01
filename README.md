@@ -30,6 +30,7 @@ To use this library in your newly generated component, add the `app-drawer` to y
 DATE: `2018-03-01` VERSION: ``
  - Added move operations for all objects
  - Added selectedIds and selectedTool to the application state
+ - Got rid of viewbox and width and height on the svg's
 
 DATE: `2018-02-28` VERSION: `1.0.33-beta.7`
  - Added Undo/Redo support

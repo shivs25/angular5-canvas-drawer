@@ -5,6 +5,7 @@ import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
 import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS } from '../actions';
 import { ActionCreators } from 'redux-undo';
+import { EditorToolType } from '../models/enums';
 
 @Injectable()
 export class DataStoreService {
@@ -17,6 +18,14 @@ export class DataStoreService {
 
   public set elements(elements: DrObject[]) {
     this.ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
+  }
+
+  public get selectedIds(): number[] { 
+    return this.ngRedux.getState().elementState.present.selectedIds;
+  }
+
+  public get selectedTool(): EditorToolType {
+    return  this.ngRedux.getState().elementState.present.selectedTool;
   }
 
   public moveObject(item: DrObject, newBounds: BoundingBox): void {
