@@ -1,6 +1,7 @@
 export const SET_ELEMENTS = "SET_ELEMENTS";
 export const CHANGE_OBJECT_BOUNDS = "CHANGE_OBJECT_BOUNDS";
 export const SELECT_OBJECTS = "SELECT_OBJECTS";
+export const CHANGE_STYLE = "CHANGE_STYLE";
 
 
 export const BEGIN_EDIT = "BEGIN_EDIT";

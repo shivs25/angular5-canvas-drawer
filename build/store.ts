@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -81,7 +81,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 selectedObject: [],
                 selectedBounds: null
             });
-        case CHANGE_OBJECT_BOUNDS:
+        case CHANGE_OBJECT_BOUNDS: {
             let item: DrObject = state.elements.find((t: any) => t.id === action.id);
             let index = state.elements.indexOf(item);
             let newItem: DrObject = Object.assign({}, item, action.changes);
@@ -107,6 +107,19 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 selectedBounds: Object.assign({}, action.newBounds),
                 selectedObjects: newSelectedObjects ? newSelectedObjects : state.selectedObjects
             });
+        }
+        case CHANGE_STYLE: {
+            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
+            let index = state.elements.indexOf(item);
+            let newItem: DrObject = Object.assign({}, item, action.newStyle);
+            return Object.assign({}, state, {
+                elements: [
+                    ...state.elements.slice(0, index),
+                    newItem,
+                    ...state.elements.slice(index + 1)
+                ]
+            });
+        }
         case SELECT_OBJECTS:
             return Object.assign({}, state, {
                 selectedBounds: Object.assign({}, action.selectedBounds),

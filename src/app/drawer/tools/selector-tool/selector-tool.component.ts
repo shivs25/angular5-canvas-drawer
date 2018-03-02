@@ -38,6 +38,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     showStroke: true,
     stroke: 'red',
     strokeWidth: 1
+
   };
 
   private _subClicked: any;

@@ -22,8 +22,8 @@
           [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
           [attr.width]="visualData.width"
           [attr.height]="visualData.height"
-          [attr.fill]="visualData.showFill ? data.fill : 'transparent'"
-          [attr.stroke]="visualData.showStroke ? data.stroke : 'transparent'"
+          [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
+          [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
           [attr.stroke-width]="visualData.strokeWidth"
           [attr.opacity]="visualData.opacity">
         </svg:rect>

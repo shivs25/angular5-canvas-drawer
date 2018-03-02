@@ -11,7 +11,7 @@
       [attr.y]="visualData.y"
       [attr.width]="visualData.width"
       [attr.height]="visualData.height"
-      [attr.fill]="visualData.fill"
+      [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
       [attr.opacity]="visualData.opacity">
     </svg:rect>
     <svg:image 
@@ -39,7 +39,6 @@
       [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
       [attr.width]="visualData.width"
       [attr.height]="visualData.height"
-      [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
       [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
       [attr.stroke-width]="visualData.strokeWidth"
       [attr.opacity]="visualData.opacity">

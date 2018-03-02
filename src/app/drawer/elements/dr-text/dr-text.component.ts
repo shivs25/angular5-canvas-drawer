@@ -37,7 +37,7 @@ export class DrTextComponent extends DrObjectComponent {
       case DrTextAlignment.CENTER:
         return o.y + o.height / 2;
       case DrTextAlignment.FAR:
-        return o.x + o.height;
+        return o.y + o.height;
 
     }
   }

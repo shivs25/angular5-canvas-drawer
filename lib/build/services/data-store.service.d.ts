@@ -7,6 +7,7 @@ import { EditorToolType } from '../models/enums';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
+import { DrStyle } from '../models/dr-style';
 export declare class DataStoreService {
     private _ngRedux;
     private _objectHelperService;
@@ -30,6 +31,7 @@ export declare class DataStoreService {
     handleMouseMoveObject(clickedObject: MouseEventData): void;
     handleMouseUpObject(clickedObject: MouseEventData): void;
     moveObject(item: DrObject, newBounds: BoundingBox): void;
+    setStyle(item: DrObject, newStyle: DrStyle): void;
     selectObjects(items: DrObject[]): void;
     beginEdit(): void;
     endEdit(): void;

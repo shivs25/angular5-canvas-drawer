@@ -3,13 +3,14 @@ import { NgRedux } from '@angular-redux/store';
 import { IDrawerAppState, IElementState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
-import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS, SELECT_OBJECTS, END_EDIT, BEGIN_EDIT } from '../actions';
+import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS, SELECT_OBJECTS, END_EDIT, BEGIN_EDIT, CHANGE_STYLE } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType } from '../models/enums';
 import { DrRect } from '../models/dr-rect';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
+import { DrStyle } from '../models/dr-style';
 
 @Injectable()
 export class DataStoreService {
@@ -84,7 +85,13 @@ export class DataStoreService {
     });
   }
 
-
+  public setStyle(item: DrObject, newStyle: DrStyle) {
+    this._ngRedux.dispatch({
+      type: CHANGE_STYLE,
+      id: item.id,
+      newStyle: newStyle
+    });
+  }
 
   //=========Selection========
   public selectObjects(items: DrObject[]): void {

@@ -8,6 +8,9 @@ import { DrPoint } from './drawer/models/dr-point';
 import { DrText, createDrText } from './drawer/models/dr-text';
 import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService } from './drawer/drawer-library.module';
 import { DataStoreService } from './drawer/services/data-store.service';
+import { DEFAULT_STYLE } from './drawer/models/dr-style';
+import { createDrTextStyle } from './drawer/models/dr-text-style';
+import { select } from '@angular-redux/store';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +26,8 @@ export class AppComponent implements OnInit {
   viewLeft: string = "0";
   viewHeight: string = "560";
   viewWidth: string = "1000";
+
+  @select() elementState;
 
 
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
@@ -50,6 +55,18 @@ export class AppComponent implements OnInit {
       strokeWidth: 5,
       showFill: false
     });
+
+    let text: DrText = createDrText({
+      x: 0, 
+      y: 0,
+      width: 200,
+      height: 100,
+      vAlignment: DrTextAlignment.CENTER,
+      hAlignment:  DrTextAlignment.CENTER, 
+      text: "Boom SHAKA-laka",
+      id: 6
+    });
+    elements.push(text);
     
     let e: DrEllipse = createDrEllipse({
       id: 4,
@@ -90,6 +107,28 @@ export class AppComponent implements OnInit {
     elements.push(r);
 
     this.elements = elements;
+
+
+    setTimeout(() => {
+
+      this.dataStoreService.setStyle(r, Object.assign({}, DEFAULT_STYLE, {
+        fill: 'yellow',
+        stroke: 'blue',
+        strokeWidth: 5
+      }));
+
+    }, 5000);
+
+    setTimeout(() => {
+
+      this.dataStoreService.setStyle(text, createDrTextStyle({
+        vAlignment: DrTextAlignment.FAR,
+        size: 8,
+        fontColor: 'red'
+      }));
+
+    }, 10000);
+
 
     /*let r = this._renderer.createElement('rect', 'svg',);
     this._renderer.setAttribute(r, 'x', '0');
