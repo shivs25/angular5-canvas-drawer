@@ -18,7 +18,7 @@ export class DrPolygonComponent extends DrObjectComponent {
 
   getPoints(): string {
     let returnValue: string = "";
-    let r: DrPolygon = <DrPolygon>this.data;
+    let r: DrPolygon = this.visualData as DrPolygon;
     let p: DrPoint;
 
     for(p of r.points) {

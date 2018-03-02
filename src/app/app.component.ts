@@ -9,7 +9,6 @@ import { DrText, createDrText } from './drawer/models/dr-text';
 import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService } from './drawer/drawer-library.module';
 import { DataStoreService } from './drawer/services/data-store.service';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,6 +28,14 @@ export class AppComponent implements OnInit {
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }
 
+  undo(): void {
+    this.dataStoreService.undo();
+  }
+
+  redo(): void {
+    this.dataStoreService.redo();
+  }
+
   ngOnInit() {
     let elements = [];
 
@@ -43,8 +50,19 @@ export class AppComponent implements OnInit {
       strokeWidth: 5,
       showFill: false
     });
-    elements.push(t);
-
+    
+    let e: DrEllipse = createDrEllipse({
+      id: 4,
+      x: 400,
+      y: 400,
+      rx: 100,
+      ry: 50,
+      showFill: true,
+      fill: 'rgba(0,0,255,0.5)',
+      stroke: 'black',
+      strokeWidth: 3
+    });
+    elements.push(e);
     let t2: DrRect = createDrRect({
       id: 3,
       x: 100,
@@ -52,10 +70,11 @@ export class AppComponent implements OnInit {
       width: 200,
       height: 200,
       strokeWidth: 5,
-      showFill: false
+      showFill: false,
+      clickable: false
     });
     elements.push(t2);
-
+    elements.push(t);
     let r: DrPolygon = createDrPolygon({
       id: 1,
       stroke: 'green',
@@ -127,15 +146,6 @@ export class AppComponent implements OnInit {
       this.dataStoreService.redo();
      }, 12000);*/
 
-     setTimeout(() => {
-      this.dataStoreService.moveObject(r, { 
-        x: 140,
-        y: 140,
-        width: 200,
-        height: 200
-       });
-
-     }, 2000);
 
      /*setTimeout(() => {
       this.dataStoreService.undo();

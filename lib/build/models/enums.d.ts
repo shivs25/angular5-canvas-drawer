@@ -12,5 +12,6 @@ export declare enum DrTextAlignment {
     FAR = 3,
 }
 export declare enum EditorToolType {
+    NONE = -1,
     SELECTOR_TOOL = 1,
 }

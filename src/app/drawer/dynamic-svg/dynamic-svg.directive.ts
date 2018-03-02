@@ -13,6 +13,7 @@ import { DrTextComponent } from '../elements/dr-text/dr-text.component';
 import { DrImage } from '../models/dr-image';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DrType } from '../models/dr-type.enum';
+import { MouseEventData } from '../models/mouse-event-data';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -25,23 +26,29 @@ export class DynamicSvgDirective implements OnInit {
   ngOnInit() {
   }
 
-  @Output()
-  public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  @Input() 
+  hoverClass: string;
+
+  @Input()
+  overrideProperties: any;
 
   @Output()
-  public mouseDown: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
   @Output()
-  public mouseMove: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  mouseDown: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   @Output()
-  public mouseUp: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  mouseMove: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
-  @Input() set componentData(data: DrObject) {
-    if (!data || data.id === this._currentId) {
+  @Output()
+  mouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+
+  @Input() set componentData(data: any) {
+    /*if (!data || data.id === this._currentId) {
         return;
-    }
-
+    }*/
+    
     // We create an injector out of the data we want to pass down and this components injector
     let injector = ReflectiveInjector.fromResolvedProviders([], this._viewContainerRef.parentInjector);
 
@@ -54,7 +61,10 @@ export class DynamicSvgDirective implements OnInit {
     // We insert the component into the dom container
 
     let c: DrObjectComponent = <DrObjectComponent>component.instance;
+    
+    c.visualData = Object.assign({}, data, this.overrideProperties ? this.overrideProperties : {});
     c.data = data;
+    c.hoverClass = this.hoverClass;
     c.ngOnInit();
     c.click.subscribe((s:any) => {
       this.click.emit(s);
@@ -68,7 +78,7 @@ export class DynamicSvgDirective implements OnInit {
       this.mouseUp.emit(s);
     });
 
-
+    this._viewContainerRef.clear();
     this._viewContainerRef.createEmbeddedView(c.elementTemplate);
 
     // We can destroy the old component is we like by calling destroy

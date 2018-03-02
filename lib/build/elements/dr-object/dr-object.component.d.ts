@@ -1,10 +1,19 @@
 import { OnInit, TemplateRef, EventEmitter } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
+import { MouseEventData } from '../../models/mouse-event-data';
 export declare class DrObjectComponent implements OnInit {
     elementTemplate: TemplateRef<any>;
     data: DrObject;
+    visualData: DrObject;
+    hoverClass: string;
     click: EventEmitter<DrObject>;
-    onClick(data: DrObject): void;
+    mouseDown: EventEmitter<MouseEventData>;
+    mouseMove: EventEmitter<MouseEventData>;
+    mouseUp: EventEmitter<MouseEventData>;
+    onClick(evt: any, data: DrObject): void;
+    onMouseDown(evt: any, data: DrObject): void;
+    onMouseMove(evt: any, data: DrObject): void;
+    onMouseUp(evt: any, data: DrObject): void;
     constructor();
     ngOnInit(): void;
 }

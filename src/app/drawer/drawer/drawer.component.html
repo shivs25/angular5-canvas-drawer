@@ -7,7 +7,8 @@
           (mouseUp)="onBackgroundMouseUp($event)"
           class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
       <ng-container *ngFor="let s of (elementState | async)?.present.elements">
-        <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" 
+        <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties"
+          [hoverClass]="hoverClass"
           (click)="onClick($event)"
           (mouseDown)="onMouseDown($event)"
           (mouseMove)="onMouseMove($event)"
@@ -15,10 +16,6 @@
           >
         </ng-container>
       </ng-container>
-
-
     </svg>
-    <app-editor-tool></app-editor-tool>
-    
 </div>
 

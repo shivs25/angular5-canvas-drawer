@@ -11,11 +11,10 @@ import { DrTextComponent } from '../elements/dr-text/dr-text.component';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DataStoreService } from '../services/data-store.service';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
-import { EditorModule } from '../tools/editor.module';
-import { EditorToolComponent } from '../tools/editor-tool.component';
+import { ChangeHelperService } from '../services/change-helper.service';
 
 @NgModule({
-  imports: [CommonModule, EditorModule.forRoot()],
+  imports: [CommonModule],
 
   declarations: [
     DrawerComponent,
@@ -24,10 +23,11 @@ import { EditorToolComponent } from '../tools/editor-tool.component';
     DrEllipseComponent,
     DrPolygonComponent,
     DrTextComponent,
-    DrImageComponent
+    DrImageComponent,
+    DynamicSvgDirective
   ], 
-  exports: [DrawerComponent], 
-  providers: [DataStoreService],
+  exports: [DrawerComponent, DynamicSvgDirective], 
+  providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
@@ -38,5 +38,5 @@ import { EditorToolComponent } from '../tools/editor-tool.component';
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DrawerObjectHelperService, DataStoreService]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective]}; }
 }

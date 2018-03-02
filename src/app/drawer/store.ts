@@ -1,11 +1,11 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
 
-import undoable, { distinctState } from 'redux-undo';
+import undoable, { distinctState, excludeAction } from 'redux-undo';
 import { combineReducers, Reducer } from 'redux';
 import { DrawerObjectHelperService } from './services/drawer-object-helper.service';
 import { BoundingBox } from './models/bounding-box';
@@ -21,18 +21,29 @@ export interface IHistory<T> {
 
 export interface IElementState {
     elements: DrObject[];
-    selectedIds: number[];
+    selectedObjects: DrObject[];
+    selectedBounds: BoundingBox;
     selectedTool: EditorToolType;
+}
+
+export interface IEditingState {
+    isEditing: boolean;
 }
 
 export interface IDrawerAppState {
     elementState: IHistory<IElementState>;
+    editingState: IEditingState;
 }
 
 export const INITIAL_ELEMENT_STATE: IElementState = {
     elements: [],
-    selectedIds: [],
+    selectedObjects: [],
+    selectedBounds: null,
     selectedTool: EditorToolType.SELECTOR_TOOL
+}
+
+export const INITIAL_EDITING_STATE: IEditingState = {
+    isEditing: false
 }
 
 export const INITIAL_STATE: IDrawerAppState = {
@@ -40,98 +51,84 @@ export const INITIAL_STATE: IDrawerAppState = {
         past: [],
         present: INITIAL_ELEMENT_STATE,
         future: []
+    },
+    editingState: {
+        isEditing: false
     }
 }
 
+export const editingReducer: Reducer<IEditingState> = (state: IEditingState = INITIAL_EDITING_STATE, action: any) => {
 
+    switch(action.type) {
+        case BEGIN_EDIT:
+            return  Object.assign({}, state, {
+                isEditing: true
+            });
+        case END_EDIT:
+            return  Object.assign({}, state, {
+                isEditing: false
+            });
+    }
+    
+    return state;
+}
 
 export const elementsReducer: Reducer<IElementState> = (state: IElementState = INITIAL_ELEMENT_STATE, action: any) => {
     switch(action.type) {
         case SET_ELEMENTS:
             return Object.assign({}, state, {
-                elements: action.elements ? action.elements.map(x => Object.assign({}, x)) : [],
-                selectedIds: [],
-                selectedTool: state.selectedTool
+                elements: action.elements ? action.elements.slice(0) : [],
+                selectedObject: [],
+                selectedBounds: null
             });
         case CHANGE_OBJECT_BOUNDS:
             let item: DrObject = state.elements.find((t: any) => t.id === action.id);
             let index = state.elements.indexOf(item);
-            let i;
-            switch(item.drType) {
-                case DrType.RECTANGLE:
-                case DrType.TEXT:
-                case DrType.IMAGE:
+            let newItem: DrObject = Object.assign({}, item, action.changes);
 
-                    i = Object.assign({}, item, {
-                        x: action.newBounds.x,
-                        y: action.newBounds.y,
-                        width: action.newBounds.width,
-                        height: action.newBounds.height
-                    });
-                    break;
-                case DrType.ELLIPSE:
-                    i = Object.assign({}, item, {
-                        x: action.newBounds.x + action.newBounds.width / 2,
-                        y: action.newBounds.y + action.newBounds.height / 2,
-                        rx: action.newBounds.width / 2,
-                        ry: action.newBounds.height / 2
-                    });
-                    break;
-                case DrType.POLYGON:
-                    let helper: DrawerObjectHelperService = new DrawerObjectHelperService();
-                    let bounds: BoundingBox = helper.getBoundingBox([item]);
-                    
-                    let r: DrPolygon = Object.assign({}, item) as DrPolygon;
-
-                    let scaleX: number = action.newBounds.width / bounds.width;
-                    let scaleY: number = action.newBounds.height / bounds.height;
-
-                    for(let pt of r.points) {
-                        pt.x = pt.x - (bounds.x + bounds.width / 2);
-                        pt.x = pt.x * scaleX;
-                        pt.x = pt.x + action.newBounds.x + action.newBounds.width / 2;
-
-                        pt.y = pt.y - (bounds.y + bounds.height / 2);
-                        pt.y = pt.y * scaleY;
-                        pt.y = pt.y + action.newBounds.y + action.newBounds.height / 2;
-                    }
-
-                    i = r;
-
-                    
-                    break;
+            let newSelectedObjects: DrObject[] = null;
+            let selectedItem: DrObject = state.selectedObjects ? state.selectedObjects.find((t: any) => t.id === action.id) : null;
+            if (null !== selectedItem) {
+                //item was in the selection
+                let selectedIndex = state.selectedObjects.indexOf(selectedItem);
+                newSelectedObjects = [
+                    ...state.selectedObjects.slice(0, selectedIndex),
+                    Object.assign({}, newItem),
+                    ...state.selectedObjects.slice(selectedIndex + 1)
+                ];
             }
+
             return Object.assign({}, state, {
                 elements: [
                     ...state.elements.slice(0, index),
-                    i,
+                    newItem,
                     ...state.elements.slice(index + 1)
                 ],
-                selectedIds: state.selectedIds,
-                selectedTool: state.selectedTool
+                selectedBounds: Object.assign({}, action.newBounds),
+                selectedObjects: newSelectedObjects ? newSelectedObjects : state.selectedObjects
             });
         case SELECT_OBJECTS:
-            let ids: number[] = [];
-            for(let i of action.items) {
-                ids.push(i.id);
-            }
             return Object.assign({}, state, {
-                elements: state.elements,
-                selectedIds: ids,
-                selectedTool: state.selectedTool
+                selectedBounds: Object.assign({}, action.selectedBounds),
+                selectedObjects: action.items.map(x => Object.assign({}, x))
             });
         default:
             return state;
     }
 }
 
+const ACTIONS_TO_IGNORE = [SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
-    filter: distinctState(),
-    limit: 10
+    filter: excludeAction(ACTIONS_TO_IGNORE),
+    limit: 10,
+    
 });
 
+
+
 export const rootReducer: Reducer<IDrawerAppState> = combineReducers({
-    elementState: undoableElementsReducer
+    elementState: undoableElementsReducer,
+    editingState: editingReducer
 });
 
 

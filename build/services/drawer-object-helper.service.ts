@@ -15,6 +15,34 @@ export class DrawerObjectHelperService {
 
   constructor() { }
 
+  public projectObject(item: DrObject, bounds: BoundingBox, offsetX: number, offsetY: number): void {
+    switch(item.drType) {
+      case DrType.IMAGE:
+      case DrType.RECTANGLE:
+      case DrType.TEXT:
+        let r: DrRect = item as DrRect;
+        r.x -= (bounds.x - offsetX);
+        r.y -= (bounds.y - offsetY);
+
+        break;
+      case DrType.ELLIPSE:
+        let e: DrEllipse = item as DrEllipse;
+        r.x -= (bounds.x - offsetX);
+        r.y -= (bounds.y - offsetY);
+        break;
+      case DrType.POLYGON:
+        let p: DrPolygon = item as DrPolygon;
+        let pts: DrPoint[] = [];
+
+        for(let i of p.points) {
+          pts.push({ x: i.x - (bounds.x - offsetX), y: i.y - (bounds.y - offsetY)});
+        }
+
+        p.points = pts;
+        break;
+    }
+  }
+
   public getBoundingBox(drObjs: DrObject[]): BoundingBox {
     let boundingBox: BoundingBox = createBoundingBox();
     

@@ -19,6 +19,7 @@ export enum DrTextAlignment {
 }
 
 export enum EditorToolType {
+    NONE = -1,
     SELECTOR_TOOL = 1
 }
 

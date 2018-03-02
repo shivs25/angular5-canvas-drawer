@@ -1,15 +1,23 @@
-import { OnInit, ComponentFactoryResolver, EventEmitter } from '@angular/core';
+import { OnInit, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
-import { DrRect } from '../models/dr-rect';
 import { DataStoreService } from '../services/data-store.service';
+import { MouseEventData } from '../models/mouse-event-data';
 export declare class DrawerComponent implements OnInit {
     private _dataService;
-    private _componentFactoryResolver;
     elementState: any;
+    overrideProperties: any;
+    hoverClass: any;
+    handleMouseEvents: boolean;
     clickedObject: EventEmitter<DrObject>;
-    t: DrRect;
-    constructor(_dataService: DataStoreService, _componentFactoryResolver: ComponentFactoryResolver);
-    ngOnInit(): void;
     elements: DrObject[];
+    constructor(_dataService: DataStoreService);
+    ngOnInit(): void;
+    onBackgroundClick(evt: any): void;
+    onBackgroundMouseDown(evt: any): void;
+    onBackgroundMouseMove(evt: any): void;
+    onBackgroundMouseUp(evt: any): void;
     onClick(data: DrObject): void;
+    onMouseDown(data: MouseEventData): void;
+    onMouseMove(data: MouseEventData): void;
+    onMouseUp(data: MouseEventData): void;
 }

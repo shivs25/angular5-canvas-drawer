@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
 import { select } from '@angular-redux/store';
+import { MouseEventData } from '../../models/mouse-event-data';
 
 @Component({
   selector: 'app-dr-object',
@@ -15,40 +16,45 @@ export class DrObjectComponent implements OnInit {
   @Input()
   public data: DrObject;
 
+  @Input()
+  public visualData: DrObject;
+
+  @Input()
+  public hoverClass: string;
+
   //@select()
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
   @Output()
-  public mouseDown: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  public mouseDown: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   @Output()
-  public mouseMove: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  public mouseMove: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
 
   @Output()
-  public mouseUp: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  public mouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
 
   onClick(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.click.emit( data);
+    this.click.emit(data);
   }
 
   onMouseDown(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    console.log(evt);
-    this.mouseDown.emit(data);
+    this.mouseDown.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
   }
 
   onMouseMove(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseMove.emit(data);
+    this.mouseMove.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
   }
 
   onMouseUp(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseUp.emit(data);
+    this.mouseUp.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
   }
 
   constructor() { }

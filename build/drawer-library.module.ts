@@ -6,6 +6,9 @@ import { NgRedux, NgReduxModule } from '@angular-redux/store';
 import { DrawerModule } from './drawer/drawer.module';
 import { IDrawerAppState, rootReducer, INITIAL_STATE, undoableElementsReducer } from './store';
 import { EditorModule } from './tools/editor.module';
+import { EditableDrawerComponent } from './editable-drawer/editable-drawer.component';
+import { EditableDrawerModule } from './editable-drawer/editable-drawer.module';
+
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
 export { DrPolygon, createDrPolygon } from './models/dr-polygon';
@@ -22,12 +25,11 @@ export { EditorToolType } from './models/enums';
 @NgModule({
   imports: [
     CommonModule,
-    DrawerModule.forRoot(),
-    EditorModule.forRoot()
+    EditableDrawerModule.forRoot()
   ],
   exports: [
     NgReduxModule,
-    DrawerModule
+    EditableDrawerComponent
   ],
   declarations: [],
 })
@@ -38,7 +40,7 @@ export class DrawerLibraryRootModule {
   }
  }
 
-@NgModule({imports: [DrawerModule.forRoot(), CommonModule], exports: [CommonModule, DrawerModule]})
+@NgModule({imports: [DrawerModule.forRoot(), CommonModule], exports: [CommonModule, NgReduxModule]})
 export class DrawerLibraryModule {
   static forRoot(): ModuleWithProviders { return {ngModule: DrawerLibraryRootModule}; }
 }

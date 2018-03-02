@@ -1,48 +1,48 @@
 <ng-template #elementTemplate>
-  <ng-container *ngIf="data">
+  <ng-container *ngIf="data && visualData">
       <svg:rect
-      [ngClass]="{ clickable: data.clickable }"
+      [ngClass]="visualData.clickable ? hoverClass : ''"
       (click)="onClick($event, data)"
       (mousedown)="onMouseDown($event, data)"
       (mousemove)="onMouseMove($event, data)"
       (mouseup)="onMouseUp($event, data)"
       [id]="data.id"
-      [attr.x]="data.x"
-      [attr.y]="data.y"
-      [attr.width]="data.width"
-      [attr.height]="data.height"
-      [attr.fill]="data.fill"
-      [attr.opacity]="data.opacity">
+      [attr.x]="visualData.x"
+      [attr.y]="visualData.y"
+      [attr.width]="visualData.width"
+      [attr.height]="visualData.height"
+      [attr.fill]="visualData.fill"
+      [attr.opacity]="visualData.opacity">
     </svg:rect>
     <svg:image 
-        [ngClass]="{ clickable: data.clickable }"
+        [ngClass]="visualData.clickable ? hoverClass : ''"
         (click)="onClick($event, data)"
         (mousedown)="onMouseDown($event, data)"
         (mousemove)="onMouseMove($event, data)"
         (mouseup)="onMouseUp($event, data)"
-        [attr.x]="data.x"
-        [attr.y]="data.y"
-        [attr.width]="data.width"
-        [attr.height]="data.height"
-        [attr.href]="data.url"
-        [attr.opacity]="data.opacity">
+        [attr.x]="visualData.x"
+        [attr.y]="visualData.y"
+        [attr.width]="visualData.width"
+        [attr.height]="visualData.height"
+        [attr.href]="visualData.url"
+        [attr.opacity]="visualData.opacity">
       </svg:image>
     <svg:rect
-      [ngClass]="{ clickable: data.clickable }"
+      [ngClass]="visualData.clickable ? hoverClass : ''"
       (click)="onClick($event, data)"
       (mousedown)="onMouseDown($event, data)"
       (mousemove)="onMouseMove($event, data)"
       (mouseup)="onMouseUp($event, data)"
       [id]="data.id"
-      [attr.x]="data.x"
-      [attr.y]="data.y"
-      [attr.stroke-dasharray]="data.dashedLine ? '10 10' : ''"
-      [attr.width]="data.width"
-      [attr.height]="data.height"
-      [attr.fill]="data.showFill ? data.fill : 'transparent'"
-      [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
-      [attr.stroke-width]="data.strokeWidth"
-      [attr.opacity]="data.opacity">
+      [attr.x]="visualData.x"
+      [attr.y]="visualData.y"
+      [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+      [attr.width]="visualData.width"
+      [attr.height]="visualData.height"
+      [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
+      [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
+      [attr.stroke-width]="visualData.strokeWidth"
+      [attr.opacity]="visualData.opacity">
     </svg:rect>
   </ng-container>
     

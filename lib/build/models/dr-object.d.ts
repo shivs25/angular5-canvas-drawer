@@ -15,5 +15,6 @@ export interface DrObject {
     stroke: string;
     strokeWidth: number;
     opacity: number;
+    dashedLine: boolean;
 }
 export declare const DEFAULT_OBJECT: DrObject;

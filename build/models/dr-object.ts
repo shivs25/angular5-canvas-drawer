@@ -17,6 +17,7 @@ export interface DrObject {
     stroke: string;
     strokeWidth: number;
     opacity: number;
+    dashedLine: boolean;
     
 }
 
@@ -35,5 +36,6 @@ export const DEFAULT_OBJECT: DrObject = {
     fill: "white",
     stroke: "black",
     strokeWidth: 1,
-    opacity: 1
+    opacity: 1,
+    dashedLine: false
 }

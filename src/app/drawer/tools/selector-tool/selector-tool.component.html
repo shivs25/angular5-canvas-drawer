@@ -1,8 +1,22 @@
 
-<svg [ngStyle]="getCssBoundsOfAll()"
+
+<app-drawer [overrideProperties]="invisibleStyle"  [hoverClass]="'clickable'"></app-drawer>
+
+<svg *ngIf="cssBounds" [ngStyle]="cssBounds"
   xmlns="http://www.w3.org/2000/svg">
-  <ng-container *ngFor="let s of (elementState | async)?.present.selectedIds">
-    <ng-container dynamic-svg [componentData]="getObjectById(s)" (click)="onClick($event)"></ng-container>
-    <ng-container dynamic-svg [componentData]="getBoundingObjectById(s)"></ng-container>
-  </ng-container>
+  <svg:g [attr.transform]="selectionTransform">
+    <ng-container *ngFor="let s of (elementState | async)?.present.selectedObjects">
+      <ng-container dynamic-svg [componentData]="s" [overrideProperties]="selectionStyle" (click)="onClick($event)"></ng-container>
+    </ng-container>
+    <ng-container 
+      *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject" dynamic-svg 
+      [componentData]="boundingBoxObject"
+      [hoverClass]="'clickable'" 
+
+      (mouseDown)="onMouseDown($event)"
+      (mouseMove)="onMouseMove($event)"
+      (mouseUp)="onMouseUp($event)"
+
+      ></ng-container>
+  </svg:g>
 </svg>

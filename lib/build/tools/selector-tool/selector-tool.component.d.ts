@@ -1,5 +1,31 @@
-import { OnInit } from '@angular/core';
-export declare class SelectorToolComponent implements OnInit {
-    constructor();
+import { OnInit, OnDestroy } from '@angular/core';
+import { DataStoreService } from '../../services/data-store.service';
+import { DrRect } from '../../models/dr-rect';
+import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
+import { MouseEventData } from '../../models/mouse-event-data';
+export declare class SelectorToolComponent implements OnInit, OnDestroy {
+    private _dataStoreService;
+    private _objectHelperService;
+    elementState: any;
+    boundingBoxObjectUniqueId: number;
+    boundingBoxObject: DrRect;
+    selectionTransform: string;
+    cssBounds: any;
+    invisibleStyle: any;
+    selectionStyle: any;
+    private _subClicked;
+    private _subMouseDown;
+    private _subMouseMove;
+    private _subMouseUp;
+    private _subRedid;
+    private _subUndid;
+    private _mouseDownLocation;
+    private _mouseDown;
+    constructor(_dataStoreService: DataStoreService, _objectHelperService: DrawerObjectHelperService);
     ngOnInit(): void;
+    onMouseDown(data: MouseEventData): void;
+    onMouseMove(data: MouseEventData): void;
+    onMouseUp(data: MouseEventData): void;
+    private setupBounds();
+    ngOnDestroy(): void;
 }

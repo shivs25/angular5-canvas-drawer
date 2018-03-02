@@ -1,3 +1,7 @@
 export const SET_ELEMENTS = "SET_ELEMENTS";
 export const CHANGE_OBJECT_BOUNDS = "CHANGE_OBJECT_BOUNDS";
 export const SELECT_OBJECTS = "SELECT_OBJECTS";
+
+
+export const BEGIN_EDIT = "BEGIN_EDIT";
+export const END_EDIT = "END_EDIT";

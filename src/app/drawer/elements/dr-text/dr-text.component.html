@@ -1,31 +1,31 @@
 <ng-template #elementTemplate>
-  <ng-container *ngIf="data">
+  <ng-container *ngIf="data && visualData">
       <svg:clipPath [id]="data.id + 'clip'">
           <svg:rect
-            [attr.x]="data.x"
-            [attr.y]="data.y"
-            [attr.width]="data.width"
-            [attr.height]="data.height">
+            [attr.x]="visualData.x"
+            [attr.y]="visualData.y"
+            [attr.width]="visualData.width"
+            [attr.height]="visualData.height">
           </svg:rect>
         </svg:clipPath>
     
         <svg:rect
-          [ngClass]="{ clickable: data.clickable }"
+          [ngClass]="visualData.clickable ? hoverClass : ''"
           (click)="onClick($event, data)"
           (mousedown)="onMouseDown($event, data)"
           (mousemove)="onMouseMove($event, data)"
           (mouseup)="onMouseUp($event, data)"
           
           [id]="data.id"
-          [attr.x]="data.x"
-          [attr.y]="data.y"
-          [attr.stroke-dasharray]="data.dashedLine ? '10 10' : ''"
-          [attr.width]="data.width"
-          [attr.height]="data.height"
-          [attr.fill]="data.showFill ? data.fill : 'transparent'"
-          [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
-          [attr.stroke-width]="data.strokeWidth"
-          [attr.opacity]="data.opacity">
+          [attr.x]="visualData.x"
+          [attr.y]="visualData.y"
+          [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+          [attr.width]="visualData.width"
+          [attr.height]="visualData.height"
+          [attr.fill]="visualData.showFill ? data.fill : 'transparent'"
+          [attr.stroke]="visualData.showStroke ? data.stroke : 'transparent'"
+          [attr.stroke-width]="visualData.strokeWidth"
+          [attr.opacity]="visualData.opacity">
         </svg:rect>
         <svg:g [attr.clip-path]="'url(#' + data.id + 'clip)'">
           <svg:text 
@@ -36,14 +36,14 @@
 
             [attr.x]="getTextX()" 
             [attr.y]="getTextY()"
-            [attr.fill]="data.fontColor"
-            [attr.font-size]="data.size + 'px'"
-            [attr.font-family]="data.fontFamily"
-            [attr.font-weight]="data.bold ? 'bold' : 'normal'"
-            [attr.font-style]="data.italic ? 'italic' : 'normal'"
+            [attr.fill]="visualData.fontColor"
+            [attr.font-size]="visualData.size + 'px'"
+            [attr.font-family]="visualData.fontFamily"
+            [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
+            [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
             [attr.alignment-baseline]="getVAlignment()"
             [attr.text-anchor]="getHAlignment()">
-            {{ data.text }}
+            {{ visualData.text }}
             
           </svg:text>
         </svg:g>
