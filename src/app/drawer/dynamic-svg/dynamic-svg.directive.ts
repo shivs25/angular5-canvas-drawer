@@ -28,6 +28,15 @@ export class DynamicSvgDirective implements OnInit {
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
+  @Output()
+  public mouseDown: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
+  @Output()
+  public mouseMove: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
+  @Output()
+  public mouseUp: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
   @Input() set componentData(data: DrObject) {
     if (!data || data.id === this._currentId) {
         return;
@@ -50,6 +59,15 @@ export class DynamicSvgDirective implements OnInit {
     c.click.subscribe((s:any) => {
       this.click.emit(s);
     });
+    c.mouseDown.subscribe((s:any) => {
+      this.mouseDown.emit(s);
+    });
+    c.mouseMove.subscribe((s:any) => {
+      this.mouseMove.emit(s);
+    }); c.mouseUp.subscribe((s:any) => {
+      this.mouseUp.emit(s);
+    });
+
 
     this._viewContainerRef.createEmbeddedView(c.elementTemplate);
 

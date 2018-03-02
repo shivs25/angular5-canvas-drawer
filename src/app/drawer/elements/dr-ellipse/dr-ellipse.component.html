@@ -1,9 +1,13 @@
 <ng-template #elementTemplate>
     <svg:ellipse *ngIf="data" 
       [ngClass]="{ clickable: data.clickable }"
-      (click)="onClick(data)"
+      (click)="onClick($event, data)"
+      (mousedown)="onMouseDown($event, data)"
+      (mousemove)="onMouseMove($event, data)"
+      (mouseup)="onMouseUp($event, data)"
       [id]="data.id" 
-      [attr.cx]="data.x" 
+      [attr.stroke-dasharray]="data.dashedLine ? '10 10' : ''"
+      [attr.cx]="data.x", 
       [attr.cy]="data.y" 
       [attr.rx]="data.rx" 
       [attr.ry]="data.ry"

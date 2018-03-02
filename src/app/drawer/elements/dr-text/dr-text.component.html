@@ -11,10 +11,15 @@
     
         <svg:rect
           [ngClass]="{ clickable: data.clickable }"
-          (click)="onClick(data)"
+          (click)="onClick($event, data)"
+          (mousedown)="onMouseDown($event, data)"
+          (mousemove)="onMouseMove($event, data)"
+          (mouseup)="onMouseUp($event, data)"
+          
           [id]="data.id"
           [attr.x]="data.x"
           [attr.y]="data.y"
+          [attr.stroke-dasharray]="data.dashedLine ? '10 10' : ''"
           [attr.width]="data.width"
           [attr.height]="data.height"
           [attr.fill]="data.showFill ? data.fill : 'transparent'"
@@ -24,6 +29,11 @@
         </svg:rect>
         <svg:g [attr.clip-path]="'url(#' + data.id + 'clip)'">
           <svg:text 
+            (click)="onClick($event, data)"
+            (mousedown)="onMouseDown($event, data)"
+            (mousemove)="onMouseMove($event, data)"
+            (mouseup)="onMouseUp($event, data)"
+
             [attr.x]="getTextX()" 
             [attr.y]="getTextY()"
             [attr.fill]="data.fontColor"

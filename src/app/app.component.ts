@@ -32,19 +32,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     let elements = [];
 
-    let r: DrPolygon = createDrPolygon({
-      id: 1,
-      stroke: 'red',
-      fill: 'white',
-      showFill: false,
-      strokeWidth: 3,
-      points: [
-        { x: 100, y: 100 },
-        { x: 200, y: 100 },
-        { x: 150, y: 200 }
-      ]
-    });
-    elements.push(r);
+    
 
     let t: DrRect = createDrRect({
       id: 2,
@@ -67,6 +55,20 @@ export class AppComponent implements OnInit {
       showFill: false
     });
     elements.push(t2);
+
+    let r: DrPolygon = createDrPolygon({
+      id: 1,
+      stroke: 'green',
+      fill: 'white',
+      showFill: false,
+      strokeWidth: 3,
+      points: [
+        { x: 110, y: 100 },
+        { x: 210, y: 100 },
+        { x: 160, y: 200 }
+      ]
+    });
+    elements.push(r);
 
     this.elements = elements;
 
@@ -127,8 +129,8 @@ export class AppComponent implements OnInit {
 
      setTimeout(() => {
       this.dataStoreService.moveObject(r, { 
-        x: 100,
-        y: 100,
+        x: 140,
+        y: 140,
         width: 200,
         height: 200
        });

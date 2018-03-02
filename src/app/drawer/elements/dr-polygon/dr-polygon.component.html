@@ -1,12 +1,17 @@
 <ng-template #elementTemplate>
     <svg:polygon *ngIf="data" 
       [ngClass]="{ clickable: data.clickable }"
-      (click)="onClick(data)"
+      (click)="onClick($event, data)"
+      (mousedown)="onMouseDown($event, data)"
+      (mousemove)="onMouseMove($event, data)"
+      (mouseup)="onMouseUp($event, data)"
       [id]="data.id"
       [attr.points]="getPoints()"
+      [attr.stroke-dasharray]="data.dashedLine ? '10 10' : ''"
       [attr.fill]="data.showFill ? data.fill : 'transparent'"
       [attr.stroke]="data.showStroke ? data.stroke : 'transparent'"
       [attr.stroke-width]="data.strokeWidth"
       [attr.opacity]="data.opacity">
+      
     </svg:polygon>
 </ng-template>

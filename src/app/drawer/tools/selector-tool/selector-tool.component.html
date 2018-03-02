@@ -1,3 +1,8 @@
-<p>
-  selector-tool works!
-</p>
+
+<svg [ngStyle]="getCssBoundsOfAll()"
+  xmlns="http://www.w3.org/2000/svg">
+  <ng-container *ngFor="let s of (elementState | async)?.present.selectedIds">
+    <ng-container dynamic-svg [componentData]="getObjectById(s)" (click)="onClick($event)"></ng-container>
+    <ng-container dynamic-svg [componentData]="getBoundingObjectById(s)"></ng-container>
+  </ng-container>
+</svg>

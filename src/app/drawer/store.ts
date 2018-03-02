@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -110,7 +110,16 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 selectedIds: state.selectedIds,
                 selectedTool: state.selectedTool
             });
-            
+        case SELECT_OBJECTS:
+            let ids: number[] = [];
+            for(let i of action.items) {
+                ids.push(i.id);
+            }
+            return Object.assign({}, state, {
+                elements: state.elements,
+                selectedIds: ids,
+                selectedTool: state.selectedTool
+            });
         default:
             return state;
     }

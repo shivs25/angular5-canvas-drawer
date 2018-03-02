@@ -10,10 +10,17 @@ import { DrPoint } from '../../models/dr-point';
 })
 export class DrPolygonComponent extends DrObjectComponent {
 
+  constructor() {
+    super();
+
+
+  }
+
   getPoints(): string {
     let returnValue: string = "";
     let r: DrPolygon = <DrPolygon>this.data;
     let p: DrPoint;
+
     for(p of r.points) {
       returnValue += p.x + " " + p.y + " ";
     }

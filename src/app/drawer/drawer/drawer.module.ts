@@ -20,7 +20,6 @@ import { EditorToolComponent } from '../tools/editor-tool.component';
   declarations: [
     DrawerComponent,
     DrRectComponent,
-    DynamicSvgDirective,
     DrObjectComponent,
     DrEllipseComponent,
     DrPolygonComponent,
@@ -28,7 +27,7 @@ import { EditorToolComponent } from '../tools/editor-tool.component';
     DrImageComponent
   ], 
   exports: [DrawerComponent], 
-  providers: [DynamicSvgDirective, DataStoreService],
+  providers: [DataStoreService],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
@@ -39,5 +38,5 @@ import { EditorToolComponent } from '../tools/editor-tool.component';
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DynamicSvgDirective, DrawerObjectHelperService, DataStoreService]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [DrawerObjectHelperService, DataStoreService]}; }
 }

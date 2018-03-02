@@ -1,3 +1,1 @@
-<ng-container>
-  <svg class="absolute-position fill-parent"></svg>
-</ng-container>
+<app-selector-tool *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>

@@ -19,10 +19,36 @@ export class DrObjectComponent implements OnInit {
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
-  onClick(data:DrObject): void {
-    if (data.clickable) {
-      this.click.emit(data);
-    }
+  @Output()
+  public mouseDown: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
+  @Output()
+  public mouseMove: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
+
+  @Output()
+  public mouseUp: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+
+
+  onClick(evt: any, data:DrObject): void {
+    evt.stopPropagation();
+    this.click.emit( data);
+  }
+
+  onMouseDown(evt: any, data:DrObject): void {
+    evt.stopPropagation();
+    console.log(evt);
+    this.mouseDown.emit(data);
+  }
+
+  onMouseMove(evt: any, data:DrObject): void {
+    evt.stopPropagation();
+    this.mouseMove.emit(data);
+  }
+
+  onMouseUp(evt: any, data:DrObject): void {
+    evt.stopPropagation();
+    this.mouseUp.emit(data);
   }
 
   constructor() { }

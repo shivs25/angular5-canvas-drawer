@@ -1,10 +1,24 @@
 
 <div class="absolute-position fill-parent">
-    <app-editor-tool></app-editor-tool>
-    <svg class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
+    
+    <svg (click)="onBackgroundClick($event)" 
+          (mousedown)="onBackgroundMouseDown($event)"
+          (mousemove)="onBackgroundMouseMove($event)" 
+          (mouseUp)="onBackgroundMouseUp($event)"
+          class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
       <ng-container *ngFor="let s of (elementState | async)?.present.elements">
-        <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" (click)="onClick($event)"></ng-container>
+        <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" 
+          (click)="onClick($event)"
+          (mouseDown)="onMouseDown($event)"
+          (mouseMove)="onMouseMove($event)"
+          (mouseUp)="onMouseUp($event)"
+          >
+        </ng-container>
       </ng-container>
+
+
     </svg>
+    <app-editor-tool></app-editor-tool>
+    
 </div>
 

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { Component, OnInit, Input } from '@angular/core';
+import { select, NgRedux } from '@angular-redux/store';
+import { EditorToolType } from '../models/enums';
 
 @Component({
   selector: 'app-editor-tool',
@@ -8,11 +9,14 @@ import { select } from '@angular-redux/store';
 })
 export class EditorToolComponent implements OnInit {
 
+  SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
+
   @select() elementState;
-  
+
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }
