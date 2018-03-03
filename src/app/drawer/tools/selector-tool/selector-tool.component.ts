@@ -20,6 +20,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   @select() elementState;
 
+  //Dummy array to use in the ngFor
+  sizers: number[] = [0,1,2,3,4,5,6,7];
+
   boundingBoxObjectUniqueId: number = 1000000;
 
   boundingBoxObject: DrRect = null;
@@ -106,8 +109,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this._mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       //Moving objects
       Object.assign(this.cssBounds, {
-        left: this.boundingBoxObject.x + (data.location.x - this._mouseDownLocation.x),
-        top: this.boundingBoxObject.y + (data.location.y - this._mouseDownLocation.y)
+        left: this.boundingBoxObject.x - 4 + (data.location.x - this._mouseDownLocation.x),
+        top: this.boundingBoxObject.y - 4 + (data.location.y - this._mouseDownLocation.y)
       });
     }
   }
@@ -116,16 +119,16 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this._mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       //Moving objects
       Object.assign(this.cssBounds, {
-        left: this.boundingBoxObject.x + (data.location.x - this._mouseDownLocation.x),
-        top: this.boundingBoxObject.y + (data.location.y - this._mouseDownLocation.y)
+        left: this.boundingBoxObject.x - 4 + (data.location.x - this._mouseDownLocation.x),
+        top: this.boundingBoxObject.y - 4 + (data.location.y - this._mouseDownLocation.y)
       });
 
       if (1 === this._dataStoreService.selectedObjects.length) {
         this._dataStoreService.moveObject(this._dataStoreService.selectedObjects[0], {
-          x: this.cssBounds.left,
-          y: this.cssBounds.top,
-          width: this.cssBounds.width,
-          height: this.cssBounds.height
+          x: this.cssBounds.left + 4,
+          y: this.cssBounds.top + 4,
+          width: this.cssBounds.width - 8,
+          height: this.cssBounds.height - 8
         });
         this.setupBounds(); 
       }
@@ -134,6 +137,71 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this._dataStoreService.endEdit();
     }
     
+  }
+
+  onResizerMouseDown(index: number): void {
+    console.log("down" + index);
+  }
+
+  onResizerMouseMove(index: number): void {
+    console.log("move" + index);
+  }
+
+  onResizerMouseUp(index: number): void {
+    console.log("up" + index);
+  }
+
+  getResizerX(index: number): number {
+    switch(index) {
+      case 0:
+      case 1:
+      case 2:
+        return this.boundingBoxObject.x - 4;
+      case 3:
+      case 7:
+        return this.boundingBoxObject.x + this.boundingBoxObject.width / 2 - 4
+      case 4:
+      case 5: 
+      case 6:
+        return  this.boundingBoxObject.x + this.boundingBoxObject.width - 4;
+    }
+  }
+
+  getResizerY(index: number): number {
+    switch(index) {
+      case 0:
+      case 6:
+      case 7:
+        return this.boundingBoxObject.y - 4;
+      case 1:
+      case 5:
+        return this.boundingBoxObject.y + this.boundingBoxObject.height / 2 - 4;
+      case 2:
+      case 3:
+      case 4:
+        return  this.boundingBoxObject.y + this.boundingBoxObject.height - 4;
+    }
+  }
+
+  getResizerCursor(index: number): string {
+    switch(index) {
+      case 0:
+      case 4:
+        return 'resizer-diagonal-2';
+      case 2:
+      case 6:
+        return 'resizer-diagonal-1';
+      case 1:
+      case 5:
+        return 'resizer-left-right';
+      case 3:
+      case 7:
+        return 'resizer-top-bottom';
+    }
+  }
+
+  getCursorForSelectedObject(): string {
+    return this._mouseDown ? "grabbing" : "grabber";
   }
 
   private setupBounds(): void {
@@ -150,12 +218,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         stroke: 'red',
         dashedLine: false
       });
-      this.selectionTransform = "translate(" + (b.x * -1) + " " + (b.y * -1) + ")";
+      this.selectionTransform = "translate(" + (b.x * -1 + 4) + " " + (b.y * -1 + 4) + ")";
+
       this.cssBounds = {
-        left: b.x,
-        top: b.y,
-        width: b.width,
-        height: b.height
+        left: b.x - 4,
+        top: b.y - 4,
+        width: b.width + 8,
+        height: b.height + 8
       }
     }
     else {

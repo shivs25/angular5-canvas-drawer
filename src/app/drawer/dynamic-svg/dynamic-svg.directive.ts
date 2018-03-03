@@ -27,10 +27,16 @@ export class DynamicSvgDirective implements OnInit {
   }
 
   @Input() 
-  hoverClass: string;
+  hoverClass: string = 'pointer';
 
   @Input()
   overrideProperties: any;
+
+  @Input()
+  elementId: any;
+
+  @Input()
+  canInteract: boolean = true;
 
   @Output()
   click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
@@ -65,6 +71,8 @@ export class DynamicSvgDirective implements OnInit {
     c.visualData = Object.assign({}, data, this.overrideProperties ? this.overrideProperties : {});
     c.data = data;
     c.hoverClass = this.hoverClass;
+    c.canInteract = this.canInteract;
+
     c.ngOnInit();
     c.click.subscribe((s:any) => {
       this.click.emit(s);
@@ -77,6 +85,7 @@ export class DynamicSvgDirective implements OnInit {
     }); c.mouseUp.subscribe((s:any) => {
       this.mouseUp.emit(s);
     });
+    c.elementId = this.elementId;
 
     this._viewContainerRef.clear();
     this._viewContainerRef.createEmbeddedView(c.elementTemplate);

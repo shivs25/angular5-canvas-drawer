@@ -20,7 +20,13 @@ export class DrObjectComponent implements OnInit {
   public visualData: DrObject;
 
   @Input()
-  public hoverClass: string;
+  public hoverClass: string = 'pointer';
+
+  @Input()
+  public canInteract: boolean = true;
+
+  @Input()
+  public elementId: any;
 
   //@select()
   @Output()

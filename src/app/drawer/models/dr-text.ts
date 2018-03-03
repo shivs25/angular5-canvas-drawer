@@ -20,6 +20,8 @@ export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     text: "",
     bold: false,
     italic: false,
+    showFill: false,
+    showStroke: false,
     size: 16,
     fontFamily: 'Verdana',
     fontColor: 'black',

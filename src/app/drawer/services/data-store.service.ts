@@ -3,7 +3,7 @@ import { NgRedux } from '@angular-redux/store';
 import { IDrawerAppState, IElementState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
-import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS, SELECT_OBJECTS, END_EDIT, BEGIN_EDIT, CHANGE_STYLE } from '../actions';
+import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS, SELECT_OBJECTS, END_EDIT, BEGIN_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, SET_TOOL } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType } from '../models/enums';
 import { DrRect } from '../models/dr-rect';
@@ -53,6 +53,10 @@ export class DataStoreService {
     return  this._ngRedux.getState().elementState.present.selectedTool;
   }
 
+  public set selectedTool(tool: EditorToolType) {
+    this._ngRedux.dispatch({ type: SET_TOOL, tool: tool });
+  }
+
   public get isEditing(): boolean {
     return this._ngRedux.getState().editingState.isEditing;
   }
@@ -85,12 +89,47 @@ export class DataStoreService {
     });
   }
 
-  public setStyle(item: DrObject, newStyle: DrStyle) {
+  public setStyle(item: DrObject, newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_STYLE,
       id: item.id,
       newStyle: newStyle
     });
+  }
+
+  public moveObjectDown(item: DrObject): void {
+    let index: number = this.getObjectIndex(item);
+    if (index > 0) {
+      this._ngRedux.dispatch({
+        type: CHANGE_Z_INDEX,
+        id: item.id,
+        newIndex: index - 1
+      });
+    }
+  }
+
+  public moveObjectUp(item: DrObject): void {
+    let index: number = this.getObjectIndex(item);
+    if (index < this.elements.length - 1) {
+      this._ngRedux.dispatch({
+        type: CHANGE_Z_INDEX,
+        id: item.id,
+        newIndex: index + 1
+      });
+    }
+  }
+
+  public addObject(item: DrObject): void {
+    this._ngRedux.dispatch({
+      type: ADD_OBJECT,
+      newItem: item
+    });
+  }
+
+  private getObjectIndex(item: DrObject): number {
+    let i: DrObject = this.elements.find((t:any) => t.id === item.id);
+    let index = this.elements.indexOf(i);
+    return index;
   }
 
   //=========Selection========

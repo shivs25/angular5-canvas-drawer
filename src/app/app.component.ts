@@ -6,7 +6,7 @@ import { DrRect, DEFAULT_RECT, createDrRect } from './drawer/models/dr-rect';
 import { DrPolygon, createDrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
 import { DrText, createDrText } from './drawer/models/dr-text';
-import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService } from './drawer/drawer-library.module';
+import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService, EditorToolType } from './drawer/drawer-library.module';
 import { DataStoreService } from './drawer/services/data-store.service';
 import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
@@ -33,12 +33,46 @@ export class AppComponent implements OnInit {
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }
 
+  selector(): void {
+    this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
+  }
+
+  ellipse(): void {
+    this.dataStoreService.selectedTool = EditorToolType.ELLIPSE_TOOL;
+  }
+
+  rectangle(): void {
+    this.dataStoreService.selectedTool = EditorToolType.RECTANGLE_TOOL;
+  }
+
+  image(): void {
+    this.dataStoreService.selectedTool = EditorToolType.IMAGE_TOOL;
+  }
+
+  text(): void {
+    this.dataStoreService.selectedTool = EditorToolType.TEXT_TOOL;
+  }
+
+  
+
   undo(): void {
     this.dataStoreService.undo();
   }
 
   redo(): void {
     this.dataStoreService.redo();
+  }
+
+  up(): void {
+    if (this.dataStoreService.selectedObjects.length > 0) {
+      this.dataStoreService.moveObjectUp(this.dataStoreService.selectedObjects[0]);
+    }
+  }
+
+  down(): void {
+    if (this.dataStoreService.selectedObjects.length > 0) {
+      this.dataStoreService.moveObjectDown(this.dataStoreService.selectedObjects[0]);
+    }
   }
 
   ngOnInit() {
@@ -106,29 +140,12 @@ export class AppComponent implements OnInit {
     });
     elements.push(r);
 
-    this.elements = elements;
+    this.elements = [];
+
+    this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 
 
-    setTimeout(() => {
-
-      this.dataStoreService.setStyle(r, Object.assign({}, DEFAULT_STYLE, {
-        fill: 'yellow',
-        stroke: 'blue',
-        strokeWidth: 5
-      }));
-
-    }, 5000);
-
-    setTimeout(() => {
-
-      this.dataStoreService.setStyle(text, createDrTextStyle({
-        vAlignment: DrTextAlignment.FAR,
-        size: 8,
-        fontColor: 'red'
-      }));
-
-    }, 10000);
-
+    
 
     /*let r = this._renderer.createElement('rect', 'svg',);
     this._renderer.setAttribute(r, 'x', '0');

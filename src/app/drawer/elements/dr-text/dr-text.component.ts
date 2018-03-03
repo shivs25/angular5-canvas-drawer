@@ -15,7 +15,7 @@ export class DrTextComponent extends DrObjectComponent {
   }
 
   getTextX(): number {
-    let o: DrText = this.visualData as DrText;
+    let o: DrText = this.data as DrText;
 
     switch(o.hAlignment){
       case DrTextAlignment.NEAR:
@@ -29,7 +29,7 @@ export class DrTextComponent extends DrObjectComponent {
   }
 
   getTextY(): number {
-    let o: DrText = this.visualData as DrText;
+    let o: DrText = this.data as DrText;
 
     switch(o.vAlignment){
       case DrTextAlignment.NEAR:

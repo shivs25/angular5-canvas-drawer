@@ -11,12 +11,20 @@
     <ng-container 
       *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject" dynamic-svg 
       [componentData]="boundingBoxObject"
-      [hoverClass]="'clickable'" 
+      [hoverClass]="getCursorForSelectedObject()" 
 
       (mouseDown)="onMouseDown($event)"
       (mouseMove)="onMouseMove($event)"
       (mouseUp)="onMouseUp($event)"
 
       ></ng-container>
+    <ng-container *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject">
+        <rect *ngFor="let s of sizers; let i = index;" 
+        (mousedown)="onResizerMouseDown(i)" 
+        (mousemove)="onResizerMouseMove(i)"
+        (mouseup)="onResizerMouseUp(i)"
+        [ngClass]="getResizerCursor(i)"
+        width="8" height= "8" fill="green" [attr.x]="getResizerX(i)" [attr.y]="getResizerY(i)"></rect>
+    </ng-container>
   </svg:g>
 </svg>

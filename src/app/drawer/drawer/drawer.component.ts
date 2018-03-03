@@ -30,7 +30,7 @@ export class DrawerComponent implements OnInit {
   overrideProperties: any = null;
 
   @Input()
-  hoverClass: any = null;
+  hoverClass: any = '';
 
   @Input()
   handleMouseEvents: boolean = true;

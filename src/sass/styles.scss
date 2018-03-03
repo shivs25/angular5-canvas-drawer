@@ -1,7 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
 
-.clickable:hover {
+.clickable {
     cursor: pointer;
+}
+
+.pointer {
+    cursor: default;
+}
+
+.grabber {
+    cursor: grab;
+}
+
+.grabbing {
+    cursor: grabbing;
+}
+
+.crosshair {
+    cursor: crosshair;
+}
+
+.resizer-left-right {
+    cursor: ew-resize;
+}
+
+.resizer-top-bottom {
+    cursor: ns-resize;
+}
+
+.resizer-diagonal-1 {
+    cursor: nesw-resize
+}
+
+.resizer-diagonal-2 {
+    cursor: nwse-resize
+}
+
+.no-interact {
+    pointer-events: none;
 }
 
 .fill-parent {

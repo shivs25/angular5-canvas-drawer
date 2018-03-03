@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { EditorToolType } from '../models/enums';
+import { DataStoreService } from '../services/data-store.service';
 
 @Component({
   selector: 'app-editor-tool',
@@ -13,10 +14,21 @@ export class EditorToolComponent implements OnInit {
 
   @select() elementState;
 
-  constructor() { }
+  constructor(private _dataService: DataStoreService) { }
 
   ngOnInit() {
     
+  }
+
+  shouldShowCreationTool(): boolean { 
+    switch(this._dataService.selectedTool) {
+      case EditorToolType.ELLIPSE_TOOL:
+      case EditorToolType.RECTANGLE_TOOL:
+      case EditorToolType.IMAGE_TOOL:
+      case EditorToolType.TEXT_TOOL:
+        return  true;
+    }
+    return  false;
   }
 
 }

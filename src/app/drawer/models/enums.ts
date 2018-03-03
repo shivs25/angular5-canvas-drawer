@@ -20,6 +20,10 @@ export enum DrTextAlignment {
 
 export enum EditorToolType {
     NONE = -1,
-    SELECTOR_TOOL = 1
+    SELECTOR_TOOL = 1,
+    RECTANGLE_TOOL = 2,
+    ELLIPSE_TOOL = 3,
+    IMAGE_TOOL = 4,
+    TEXT_TOOL = 5
 }
 

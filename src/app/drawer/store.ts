@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, REMOVE_OBJECT, SET_TOOL } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -75,12 +75,13 @@ export const editingReducer: Reducer<IEditingState> = (state: IEditingState = IN
 
 export const elementsReducer: Reducer<IElementState> = (state: IElementState = INITIAL_ELEMENT_STATE, action: any) => {
     switch(action.type) {
-        case SET_ELEMENTS:
+        case SET_ELEMENTS: {
             return Object.assign({}, state, {
                 elements: action.elements ? action.elements.slice(0) : [],
                 selectedObject: [],
                 selectedBounds: null
             });
+        }
         case CHANGE_OBJECT_BOUNDS: {
             let item: DrObject = state.elements.find((t: any) => t.id === action.id);
             let index = state.elements.indexOf(item);
@@ -120,17 +121,54 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 ]
             });
         }
-        case SELECT_OBJECTS:
+        case CHANGE_Z_INDEX: {
+            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
+            let index = state.elements.indexOf(item);
+
+            let items: DrObject[] = state.elements.slice(0);
+            items.splice(index, 1);
+            items.splice(action.newIndex, 0, item);
+            return Object.assign({}, state, {
+                elements: items
+            });
+        }
+        case ADD_OBJECT: {
+            return Object.assign({}, state, {
+                elements: [
+                  ...state.elements,
+                  action.newItem
+                ]
+              });
+
+        }
+        case REMOVE_OBJECT: {
+            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
+            let index = state.elements.indexOf(item);
+
+            return Object.assign({}, state, {
+                elements: [
+                    ...state.elements.slice(0, index),
+                    ...state.elements.slice(index + 1)
+                ]
+              });
+        }
+        case SELECT_OBJECTS: {
             return Object.assign({}, state, {
                 selectedBounds: Object.assign({}, action.selectedBounds),
                 selectedObjects: action.items.map(x => Object.assign({}, x))
             });
+        }
+        case SET_TOOL: {
+            return  Object.assign({}, state, {
+                selectedTool: action.tool
+            });
+        }
         default:
             return state;
     }
 }
 
-const ACTIONS_TO_IGNORE = [SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT];
+const ACTIONS_TO_IGNORE = [SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
     filter: excludeAction(ACTIONS_TO_IGNORE),
     limit: 10,

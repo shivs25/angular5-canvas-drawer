@@ -1,11 +1,11 @@
 <ng-template #elementTemplate>
     <svg:polygon *ngIf="data && visualData" 
-      [ngClass]="visualData.clickable ? hoverClass : ''"
+    [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
       (click)="onClick($event, data)"
       (mousedown)="onMouseDown($event, data)"
       (mousemove)="onMouseMove($event, data)"
       (mouseup)="onMouseUp($event, data)"
-      [id]="data.id"
+      [id]="elementId" 
       [attr.points]="getPoints()"
       [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
       [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
