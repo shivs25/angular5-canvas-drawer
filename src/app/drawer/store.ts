@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, REMOVE_OBJECT, SET_TOOL, CHANGE_OBJECTS_BOUNDS } from './actions';
+import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, REMOVE_OBJECT, SET_TOOL, CHANGE_OBJECTS_BOUNDS, GROUP_OBJECTS, UNGROUP_OBJECT } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -11,6 +11,7 @@ import { DrawerObjectHelperService } from './services/drawer-object-helper.servi
 import { BoundingBox } from './models/bounding-box';
 import { DrPolygon } from './models/dr-polygon';
 import { EditorToolType } from './models/enums';
+import { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object';
 
 export interface IHistory<T> {
     past: T[],
@@ -189,6 +190,49 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                     ...state.elements.slice(index + 1)
                 ]
               });
+        }
+        case GROUP_OBJECTS: {
+            let groupedArray: DrObject[] = [];
+            let newElements: DrObject[] = [];
+
+            let groupedObject: DrObject;
+            for(let i of state.elements) {
+                groupedObject = action.items.find((t: any) => i.id === t.id);
+                if (groupedObject) {
+                    groupedArray.push(i);
+                }
+                else {
+                    console.log(i);
+                    newElements.push(i);
+                }
+            }
+
+            let newItem: DrGroupedObject = createDrGroupedObject({
+                id: action.nextId,
+                objects: groupedArray
+            });
+            return Object.assign({}, state, {
+                elements: [
+                    ...newElements,
+                    newItem
+                ],
+                selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
+                selectedObjects: [Object.assign(newItem)]
+            });
+        }
+        case UNGROUP_OBJECT: {
+            let item: DrObject = state.elements.find((t: any) => t.id === action.item.id);
+            let index: number = state.elements.indexOf(item);
+
+            return Object.assign({}, state, {
+                elements: [
+                    ...state.elements.slice(0, index),
+                    ...state.elements.slice(index + 1),
+                    ...(action.item as DrGroupedObject).objects.slice(0)
+                ],
+                selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
+                selectedObjects: (action.item as DrGroupedObject).objects.map(x => Object.assign({}, x))
+            });
         }
         case SELECT_OBJECTS: {
             return Object.assign({}, state, {

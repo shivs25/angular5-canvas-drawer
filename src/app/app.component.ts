@@ -76,6 +76,18 @@ export class AppComponent implements OnInit {
     }
   }
 
+  group(): void {
+    if (this.dataStoreService.selectedObjects.length > 0) {
+      this.dataStoreService.groupObjects(this.dataStoreService.selectedObjects);
+    }
+  }
+
+  ungroup(): void {
+    if (1 === this.dataStoreService.selectedObjects.length && DrType.GROUPED_OBJECT === this.dataStoreService.selectedObjects[0].drType) {
+      this.dataStoreService.ungroupObject(this.dataStoreService.selectedObjects[0] as DrGroupedObject);
+    }
+  }
+
   ngOnInit() {
     let elements = [];
 

@@ -13,7 +13,9 @@ import {
   CHANGE_STYLE, 
   CHANGE_Z_INDEX, 
   ADD_OBJECT, 
-  SET_TOOL 
+  SET_TOOL, 
+  GROUP_OBJECTS,
+  UNGROUP_OBJECT
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType } from '../models/enums';
@@ -22,6 +24,7 @@ import { DrawerObjectHelperService } from '../services/drawer-object-helper.serv
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
+import { DrGroupedObject } from '../models/dr-grouped-object';
 
 @Injectable()
 export class DataStoreService {
@@ -149,10 +152,34 @@ export class DataStoreService {
     this.objectsAdded.emit([item]);
   }
 
+  public groupObjects(items: DrObject[]): void {
+    this._ngRedux.dispatch({
+      type: GROUP_OBJECTS,
+      items: items,
+      selectedBounds: this._objectHelperService.getBoundingBox(items),
+      nextId: this.getNextId()
+    });
+    this.selectionChanged.emit(this.selectedObjects);
+  }
+
+  public ungroupObject(item: DrGroupedObject): void {
+    this._ngRedux.dispatch({
+      type: UNGROUP_OBJECT,
+      item: item,
+      selectedBounds: this._objectHelperService.getBoundingBox(item.objects)
+    });
+    this.selectionChanged.emit(this.selectedObjects);
+  }
+
   private getObjectIndex(item: DrObject): number {
     let i: DrObject = this.elements.find((t:any) => t.id === item.id);
     let index = this.elements.indexOf(i);
     return index;
+  }
+
+  private getNextId(): number {
+    return 0 === this.elements.length ? 1 :
+          Math.max(...this.elements.map(o => o.id)) + 1;
   }
 
   //=========Selection========
