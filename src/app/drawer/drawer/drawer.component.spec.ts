@@ -9,11 +9,14 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 describe('DrawerComponent', () => {
   let component: DrawerComponent;
   let fixture: ComponentFixture<DrawerComponent>;
+  let dataService: any = {};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DrawerComponent, DynamicSvgDirective ],
-      providers: [NgRedux, DataStoreService],
+      providers: [
+        { provide: DataStoreService, useValue: dataService }
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
