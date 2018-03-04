@@ -142,6 +142,10 @@ export class DrawerObjectHelperService {
         boundingBox.width = drObj.width;
         boundingBox.height = drObj.height;
       break;
+      case (DrType.GROUPED_OBJECT): {
+        boundingBox = this.getBoundingBox(drObj.objects);
+        break;
+      }
     }
 
 

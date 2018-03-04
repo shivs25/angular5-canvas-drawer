@@ -1,51 +1,54 @@
 <ng-template #elementTemplate>
   <ng-container *ngIf="data && visualData">
-      <svg:clipPath [id]="elementId">
+    <svg:g>
+        <svg:clipPath [id]="elementId">
+            <svg:rect
+              [attr.x]="data.x"
+              [attr.y]="data.y"
+              [attr.width]="data.width"
+              [attr.height]="data.height">
+            </svg:rect>
+          </svg:clipPath>
+      
           <svg:rect
-            [attr.x]="data.x"
-            [attr.y]="data.y"
-            [attr.width]="data.width"
-            [attr.height]="data.height">
-          </svg:rect>
-        </svg:clipPath>
-    
-        <svg:rect
-        [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
-          (click)="onClick($event, data)"
-          (mousedown)="onMouseDown($event, data)"
-          (mousemove)="onMouseMove($event, data)"
-          (mouseup)="onMouseUp($event, data)"
-          
-          [id]="elementId" 
-          [attr.x]="data.x"
-          [attr.y]="data.y"
-          [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
-          [attr.width]="data.width"
-          [attr.height]="data.height"
-          [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
-          [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
-          [attr.stroke-width]="visualData.strokeWidth"
-          [attr.opacity]="visualData.opacity">
-        </svg:rect>
-        <svg:g [id]="elementId" [attr.clip-path]="'url(#' + elementId + ')'">
-          <svg:text 
-            [id]="elementId" 
+          [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
             (click)="onClick($event, data)"
             (mousedown)="onMouseDown($event, data)"
             (mousemove)="onMouseMove($event, data)"
             (mouseup)="onMouseUp($event, data)"
-            [attr.x]="getTextX()" 
-            [attr.y]="getTextY()"
-            [attr.fill]="visualData.fontColor"
-            [attr.font-size]="visualData.size + 'px'"
-            [attr.font-family]="visualData.fontFamily"
-            [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
-            [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
-            [attr.alignment-baseline]="getVAlignment()"
-            [attr.text-anchor]="getHAlignment()">
-            {{ visualData.text }}
             
-          </svg:text>
-        </svg:g>
+            [id]="elementId" 
+            [attr.x]="data.x"
+            [attr.y]="data.y"
+            [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+            [attr.width]="data.width"
+            [attr.height]="data.height"
+            [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
+            [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
+            [attr.stroke-width]="visualData.strokeWidth"
+            [attr.opacity]="visualData.opacity">
+          </svg:rect>
+          <svg:g [id]="elementId" [attr.clip-path]="'url(#' + elementId + ')'">
+            <svg:text 
+              [id]="elementId" 
+              (click)="onClick($event, data)"
+              (mousedown)="onMouseDown($event, data)"
+              (mousemove)="onMouseMove($event, data)"
+              (mouseup)="onMouseUp($event, data)"
+              [attr.x]="getTextX()" 
+              [attr.y]="getTextY()"
+              [attr.fill]="visualData.fontColor"
+              [attr.font-size]="visualData.size + 'px'"
+              [attr.font-family]="visualData.fontFamily"
+              [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
+              [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
+              [attr.alignment-baseline]="getVAlignment()"
+              [attr.text-anchor]="getHAlignment()">
+              {{ visualData.text }}
+              
+            </svg:text>
+          </svg:g>
+    </svg:g>
+      
   </ng-container>
 </ng-template>

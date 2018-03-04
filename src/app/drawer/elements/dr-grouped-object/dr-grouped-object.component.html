@@ -1,0 +1,15 @@
+<ng-template #elementTemplate>
+    <ng-container *ngIf="data && visualData">
+      <svg:g>
+        <ng-container *ngFor="let s of data.objects; let i = index">
+            <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"
+              [hoverClass]="hoverClass"
+              (mouseDown)="onChildMouseDown($event)"
+              (mouseMove)="onChildMouseMove($event)"
+              (mouseUp)="onChildMouseUp($event)"
+              >
+            </ng-container>
+          </ng-container>
+      </svg:g>
+    </ng-container>
+  </ng-template>

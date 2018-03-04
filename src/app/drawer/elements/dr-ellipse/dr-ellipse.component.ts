@@ -8,7 +8,6 @@ import { DrObjectComponent } from '../dr-object/dr-object.component';
 })
 export class DrEllipseComponent extends DrObjectComponent {
 
-  ngOnInit() {
-  }
+
 
 }

@@ -9,7 +9,6 @@ import { DrObjectComponent } from '../dr-object/dr-object.component';
 export class DrImageComponent extends DrObjectComponent {
 
 
-  ngOnInit() {
-  }
+  
 
 }

@@ -1,49 +1,52 @@
 <ng-template #elementTemplate>
   <ng-container *ngIf="data && visualData">
-      <svg:rect
-      [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
-      (click)="onClick($event, data)"
-      (mousedown)="onMouseDown($event, data)"
-      (mousemove)="onMouseMove($event, data)"
-      (mouseup)="onMouseUp($event, data)"
-      [id]="elementId" 
-      [attr.x]="data.x"
-      [attr.y]="data.y"
-      [attr.width]="data.width"
-      [attr.height]="data.height"
-      [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
-      [attr.opacity]="visualData.opacity">
-    </svg:rect>
-    <svg:image 
-    [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
+    <svg:g>
+        <svg:rect
+        [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
         (click)="onClick($event, data)"
         (mousedown)="onMouseDown($event, data)"
         (mousemove)="onMouseMove($event, data)"
         (mouseup)="onMouseUp($event, data)"
+        [id]="elementId" 
         [attr.x]="data.x"
         [attr.y]="data.y"
         [attr.width]="data.width"
         [attr.height]="data.height"
-        [attr.href]="visualData.url"
+        [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
         [attr.opacity]="visualData.opacity">
-      </svg:image>
-    <svg:rect
-    [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
-      (click)="onClick($event, data)"
-      (mousedown)="onMouseDown($event, data)"
-      (mousemove)="onMouseMove($event, data)"
-      (mouseup)="onMouseUp($event, data)"
-      [id]="data.id"
-      [attr.x]="data.x"
-      [attr.y]="data.y"
-      [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
-      [attr.width]="data.width"
-      [attr.height]="data.height"
-      [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
-      [attr.fill]="'transparent'"
-      [attr.stroke-width]="visualData.strokeWidth"
-      [attr.opacity]="visualData.opacity">
-    </svg:rect>
+      </svg:rect>
+      <svg:image 
+      [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
+          (click)="onClick($event, data)"
+          (mousedown)="onMouseDown($event, data)"
+          (mousemove)="onMouseMove($event, data)"
+          (mouseup)="onMouseUp($event, data)"
+          [attr.x]="data.x"
+          [attr.y]="data.y"
+          [attr.width]="data.width"
+          [attr.height]="data.height"
+          [attr.href]="visualData.url"
+          [attr.opacity]="visualData.opacity">
+        </svg:image>
+      <svg:rect
+      [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
+        (click)="onClick($event, data)"
+        (mousedown)="onMouseDown($event, data)"
+        (mousemove)="onMouseMove($event, data)"
+        (mouseup)="onMouseUp($event, data)"
+        [id]="data.id"
+        [attr.x]="data.x"
+        [attr.y]="data.y"
+        [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+        [attr.width]="data.width"
+        [attr.height]="data.height"
+        [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
+        [attr.fill]="'transparent'"
+        [attr.stroke-width]="visualData.strokeWidth"
+        [attr.opacity]="visualData.opacity">
+      </svg:rect>
+    </svg:g>
+      
   </ng-container>
     
     

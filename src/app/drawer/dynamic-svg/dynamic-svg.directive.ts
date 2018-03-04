@@ -15,6 +15,7 @@ import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DrType } from '../models/dr-type.enum';
 import { MouseEventData } from '../models/mouse-event-data';
 import { StaticInjector } from '@angular/core/src/di/injector';
+import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -82,6 +83,7 @@ export class DynamicSvgDirective implements OnInit {
   
     c.visualData = Object.assign({}, data, this.overrideProperties ? this.overrideProperties : {});
     c.data = data;
+    c.overrideProperties = this.overrideProperties;
     c.hoverClass = this.hoverClass;
     c.canInteract = this.canInteract;
     c.elementId = this.elementId;
@@ -125,6 +127,8 @@ export class DynamicSvgDirective implements OnInit {
         return DrPolygonComponent;
       case DrType.RECTANGLE:
         return  DrRectComponent;
+      case DrType.GROUPED_OBJECT:
+        return DrGroupedObjectComponent;
     }
     return null;
   }

@@ -11,6 +11,7 @@ import { DataStoreService } from './drawer/services/data-store.service';
 import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
+import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
 
 @Component({
   selector: 'app-root',
@@ -121,7 +122,8 @@ export class AppComponent implements OnInit {
       width: 200,
       height: 200,
       strokeWidth: 5,
-      showFill: false,
+      showFill: true,
+      fill: 'blue',
       clickable: true
     });
     elements.push(t2);
@@ -133,14 +135,15 @@ export class AppComponent implements OnInit {
       showFill: false,
       strokeWidth: 3,
       points: [
-        { x: 110, y: 100 },
-        { x: 210, y: 100 },
-        { x: 160, y: 200 }
+        { x: 110, y: 310 },
+        { x: 210, y: 310 },
+        { x: 160, y: 410 }
       ]
     });
     elements.push(r);
 
-    this.elements = elements;
+    let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements });
+    this.elements = [g];
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

@@ -17,7 +17,7 @@ export class DrObjectComponent implements OnInit {
   public data: DrObject;
 
   @Input()
-  public visualData: DrObject;
+  public overrideProperties: any = null;
 
   @Input()
   public hoverClass: string = 'pointer';
@@ -28,7 +28,8 @@ export class DrObjectComponent implements OnInit {
   @Input()
   public elementId: any;
 
-  //@select()
+  public visualData: DrObject;
+
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
@@ -47,6 +48,7 @@ export class DrObjectComponent implements OnInit {
     evt.stopPropagation();
     this.click.emit(data);
   }
+
 
   onMouseDown(evt: any, data:DrObject): void {
     evt.stopPropagation();

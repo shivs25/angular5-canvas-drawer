@@ -11,9 +11,6 @@ import { DrTextAlignment } from '../../models/dr-text-alignment.enum';
 
 export class DrTextComponent extends DrObjectComponent {
 
-  ngOnInit() {
-  }
-
   getTextX(): number {
     let o: DrText = this.data as DrText;
 

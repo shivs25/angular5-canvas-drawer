@@ -10,11 +10,6 @@ import { DrPoint } from '../../models/dr-point';
 })
 export class DrPolygonComponent extends DrObjectComponent {
 
-  constructor() {
-    super();
-
-
-  }
 
   getPoints(): string {
     let returnValue: string = "";
@@ -28,7 +23,5 @@ export class DrPolygonComponent extends DrObjectComponent {
     return returnValue.trim();
   }
 
-  ngOnInit() {
-  }
-
+  
 }

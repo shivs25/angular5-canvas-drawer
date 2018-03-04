@@ -6,6 +6,7 @@ import { DrPoint } from '../models/dr-point';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrRect } from '../models/dr-rect';
 import { DrEllipse } from '../models/dr-ellipse';
+import { DrGroupedObject } from '../models/dr-grouped-object';
 
 @Injectable()
 export class ChangeHelperService {
@@ -67,6 +68,16 @@ export class ChangeHelperService {
           points: pts
         };
       }
+      case DrType.GROUPED_OBJECT: {
+        let newObjects: DrObject[] = [];
+        for(let o of (item as DrGroupedObject).objects) {
+          newObjects.push(Object.assign({}, o, this.getBoundsChanges(o, newBounds, oldBounds)));
+        }
+        return  {
+          objects: newObjects
+        };
+      }
+      
     }
   }
 }

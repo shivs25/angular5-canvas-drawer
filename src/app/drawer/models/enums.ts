@@ -6,8 +6,8 @@ export enum DrType {
     POLYGON = 2,
     ELLIPSE = 3,
     TEXT= 4,
-    IMAGE = 5
-
+    IMAGE = 5,
+    GROUPED_OBJECT = 100
 }
 
 export enum DrTextAlignment {

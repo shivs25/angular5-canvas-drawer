@@ -12,6 +12,7 @@ import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DataStoreService } from '../services/data-store.service';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
 import { ChangeHelperService } from '../services/change-helper.service';
+import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -24,6 +25,7 @@ import { ChangeHelperService } from '../services/change-helper.service';
     DrPolygonComponent,
     DrTextComponent,
     DrImageComponent,
+    DrGroupedObjectComponent,
     DynamicSvgDirective
   ], 
   exports: [DrawerComponent, DynamicSvgDirective], 
@@ -33,7 +35,8 @@ import { ChangeHelperService } from '../services/change-helper.service';
     DrEllipseComponent,
     DrPolygonComponent,
     DrTextComponent,
-    DrImageComponent
+    DrImageComponent,
+    DrGroupedObjectComponent
   ]
 })
 
