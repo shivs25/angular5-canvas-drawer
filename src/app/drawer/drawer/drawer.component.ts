@@ -73,15 +73,39 @@ export class DrawerComponent implements OnInit {
   }
 
   onBackgroundMouseDown(evt): void {
-    this.handleMouseEvents && this.mouseDownObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseDownObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseMove(evt): void {
-    this.handleMouseEvents && this.mouseMoveObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseMoveObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseUp(evt): void {
-    this.handleMouseEvents && this.mouseUpObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseUpObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onClick(data: DrObject): void {

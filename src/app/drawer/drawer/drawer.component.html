@@ -1,7 +1,7 @@
 
 <div class="absolute-position fill-parent">
     
-    <svg (click)="onBackgroundClick($event)" 
+    <svg 
           (mousedown)="onBackgroundMouseDown($event)"
           (mousemove)="onBackgroundMouseMove($event)" 
           (mouseup)="onBackgroundMouseUp($event)"
@@ -9,7 +9,6 @@
       <ng-container *ngFor="let s of (elementState | async)?.present.elements; let i = index">
         <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"
           [hoverClass]="hoverClass"
-          (click)="onClick($event)"
           (mouseDown)="onMouseDown($event)"
           (mouseMove)="onMouseMove($event)"
           (mouseUp)="onMouseUp($event)"

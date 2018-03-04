@@ -50,17 +50,41 @@ export class DrObjectComponent implements OnInit {
 
   onMouseDown(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseDown.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseDown.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onMouseMove(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseMove.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseMove.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onMouseUp(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseUp.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseUp.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   constructor() { }

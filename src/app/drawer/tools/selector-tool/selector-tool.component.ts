@@ -76,42 +76,77 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseDown(evt): void {
-    this.onMouseDown({ location: { x: evt.clientX, y: evt.clientY }, data: this.boundingBoxObject });
+    this.onMouseDown({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: this.boundingBoxObject,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseMove(evt): void {
-    this.onMouseMove({ location: { x: evt.clientX, y: evt.clientY }, data: this.boundingBoxObject });
+    this.onMouseMove({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: this.boundingBoxObject,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseUp(evt): void {
-    this.onMouseUp({ location: { x: evt.clientX, y: evt.clientY }, data: this.boundingBoxObject });
+    this.onMouseUp({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: this.boundingBoxObject,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onMouseDown(data: MouseEventData): void {
-    
     if (null === data.data || !data.data.clickable) {
       this._dataStoreService.selectObjects([]);
       this.setupBounds();
     }
-    else {
+    else if (data.data) {
       if (data.data.id !== this.boundingBoxObjectUniqueId) {
         //Not the selected bounds object
-        if (1 === this._dataStoreService.selectedObjects.length) {
-          if (this._dataStoreService.selectedObjects[0].id !== data.data.id) {
-            this._dataStoreService.selectObjects([data.data]);
+        let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === data.data.id);
+        if (selected) {
+          let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
+          if (data.shiftKey) {
+            //Remove from selection
+            this._dataStoreService.selectObjects([
+              ...this._dataStoreService.selectedObjects.slice(0, index),
+              ...this._dataStoreService.selectedObjects.slice(index + 1)
+            ]);
           }
         }
         else {
-          this._dataStoreService.selectObjects([data.data]);
-        }
-  
-        if (null !== this._dataStoreService.selectedBounds) {
-          this.setupBounds();
+          if (data.shiftKey) {
+            //Add to selection.
+            this._dataStoreService.selectObjects([
+              ...this._dataStoreService.selectedObjects,
+              data.data
+            ]);
+          }
+          else {
+            //Select new
+            this._dataStoreService.selectObjects([data.data]);
+          }
         }
       }
-      
     }
     
+    this.setupBounds();
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.beginEdit();
       this._mouseDownLocation = data.location;
@@ -152,15 +187,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         //Resizing Objects
         this.resizeObjects(data.location);
       }
-      if (1 === this._dataStoreService.selectedObjects.length) {
-        this._dataStoreService.moveObject(this._dataStoreService.selectedObjects[0], {
-          x: this.cssBounds.left + HALF_SIZER,
-          y: this.cssBounds.top + HALF_SIZER,
-          width: this.cssBounds.width - SIZER_SIZE,
-          height: this.cssBounds.height - SIZER_SIZE
-        });
-        this.setupBounds(); 
-      }
+      this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+        x: this.cssBounds.left + HALF_SIZER,
+        y: this.cssBounds.top + HALF_SIZER,
+        width: this.cssBounds.width - SIZER_SIZE,
+        height: this.cssBounds.height - SIZER_SIZE
+      });
+      this.setupBounds();
 
       this.cursor = "grabber";
       this._mouseDown = false;
@@ -195,8 +228,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     evt.stopPropagation();
 
     this.resizeObjects({ x: evt.clientX, y: evt.clientY });
-    if (1 === this._dataStoreService.selectedObjects.length) {
-      this._dataStoreService.moveObject(this._dataStoreService.selectedObjects[0], {
+    if (this._dataStoreService.selectedObjects.length > 0) {
+      this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
         x: this.cssBounds.left + HALF_SIZER,
         y: this.cssBounds.top + HALF_SIZER,
         width: this.cssBounds.width - SIZER_SIZE,
@@ -356,7 +389,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     if (location.y < threshold) {
       top = currentY - HALF_SIZER;
-      height = threshold + SIZER_SIZE - top;
+      height = threshold + HALF_SIZER - top;
       elementHeight = threshold - currentY;
     }
     else {
@@ -378,11 +411,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private applyResizeChanges(): void {
+    let clone: DrObject;
     for(let s of this.selectedObjects) {
+      clone = this._mouseDownClones.find((t: any) => t.id === s.id);
+
       Object.assign(s, this._changeService.getBoundsChanges(
-        s, 
+        clone,
         this._objectHelperService.getBoundingBox([this.boundingBoxObject]), 
-        this._objectHelperService.getBoundingBox([this._mouseDownClones.find((t: any) => t.id === s.id)])
+        this._dataStoreService.selectedBounds
       ));
     }
   }

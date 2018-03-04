@@ -23,11 +23,7 @@ describe('SelectorToolComponent', () => {
   };
   let objectService: any = {};
   let changeService: any = {};
-
- // private _dataStoreService: DataStoreService,
-    //private _objectHelperService: DrawerObjectHelperService,
-    //private  _changeService: ChangeHelperService
-
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SelectorToolComponent ],

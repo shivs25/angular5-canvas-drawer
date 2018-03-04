@@ -3,7 +3,18 @@ import { NgRedux } from '@angular-redux/store';
 import { IDrawerAppState, IElementState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
-import { CHANGE_OBJECT_BOUNDS, SET_ELEMENTS, SELECT_OBJECTS, END_EDIT, BEGIN_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, SET_TOOL } from '../actions';
+import { 
+  CHANGE_OBJECT_BOUNDS, 
+  CHANGE_OBJECTS_BOUNDS, 
+  SET_ELEMENTS, 
+  SELECT_OBJECTS, 
+  END_EDIT, 
+  BEGIN_EDIT, 
+  CHANGE_STYLE, 
+  CHANGE_Z_INDEX, 
+  ADD_OBJECT, 
+  SET_TOOL 
+} from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType } from '../models/enums';
 import { DrRect } from '../models/dr-rect';
@@ -71,6 +82,29 @@ export class DataStoreService {
         type: CHANGE_OBJECT_BOUNDS, 
         id: item.id, 
         changes: this._changeService.getBoundsChanges(item, newBounds, this.selectedBounds),
+        newBounds: newBounds
+      });
+    }
+    
+  }
+
+  public moveObjects(items: DrObject[], newBounds: BoundingBox): void {
+    let b: BoundingBox = this.selectedBounds;
+
+    if (null === b || (
+      b.x !== newBounds.x ||
+      b.y !== newBounds.y ||
+      b.width !== newBounds.width ||
+      b.height !== newBounds.height
+    )) {
+
+      let changes: any[] = [];
+      for(let i of items) {
+        changes.push({ id: i.id, changes: this._changeService.getBoundsChanges(i, newBounds, this.selectedBounds) });
+      }
+      this._ngRedux.dispatch({ 
+        type: CHANGE_OBJECTS_BOUNDS, 
+        changes: changes,
         newBounds: newBounds
       });
     }

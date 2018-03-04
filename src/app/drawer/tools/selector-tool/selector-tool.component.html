@@ -15,9 +15,7 @@
   [ngClass]="cursor"
   >
   <svg:g [attr.transform]="selectionTransform">
-    <ng-container *ngFor="let s of selectedObjects">
-      <ng-container dynamic-svg [componentData]="s" [overrideProperties]="selectionStyle" (click)="onClick($event)" [elementId]="1000000"></ng-container>
-    </ng-container>
+    
     <ng-container 
       *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject" dynamic-svg 
       [elementId]="1000001"
@@ -29,6 +27,12 @@
       (mouseUp)="onMouseUp($event)"
 
       ></ng-container>
+    <ng-container  *ngFor="let s of selectedObjects" dynamic-svg [componentData]="s" [overrideProperties]="selectionStyle" [elementId]="s.id"
+      (mouseDown)="onMouseDown($event)"
+      (mouseMove)="onMouseMove($event)"
+      (mouseUp)="onMouseUp($event)"
+    ></ng-container>
+    
     <ng-container *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject">
         <rect *ngFor="let s of sizers; let i = index;" 
         (mousedown)="onResizerMouseDown($event, i)" 

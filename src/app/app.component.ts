@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
         { x: 160, y: 200 }
       ]
     });
-    //elements.push(r);
+    elements.push(r);
 
     this.elements = elements;
 
