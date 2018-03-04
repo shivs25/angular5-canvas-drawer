@@ -78,7 +78,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         case SET_ELEMENTS: {
             return Object.assign({}, state, {
                 elements: action.elements ? action.elements.slice(0) : [],
-                selectedObject: [],
+                selectedObjects: [],
                 selectedBounds: null
             });
         }
@@ -154,7 +154,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         }
         case SELECT_OBJECTS: {
             return Object.assign({}, state, {
-                selectedBounds: Object.assign({}, action.selectedBounds),
+                selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
                 selectedObjects: action.items.map(x => Object.assign({}, x))
             });
         }

@@ -1,4 +1,4 @@
-import { Directive, OnInit, ViewContainerRef, ComponentFactoryResolver, Input, ReflectiveInjector, EventEmitter, Output } from '@angular/core';
+import { Directive, OnInit, ViewContainerRef, ComponentFactoryResolver, Input, Injector, EventEmitter, Output } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DrRect } from '../models/dr-rect';
 import { DrEllipse } from '../models/dr-ellipse';
@@ -14,6 +14,7 @@ import { DrImage } from '../models/dr-image';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DrType } from '../models/dr-type.enum';
 import { MouseEventData } from '../models/mouse-event-data';
+import { StaticInjector } from '@angular/core/src/di/injector';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -55,8 +56,19 @@ export class DynamicSvgDirective implements OnInit {
         return;
     }*/
     
+    //Cant get this to work
+    /*let providers = [
+      { provide: 'visualData', useValue: Object.assign({}, data, this.overrideProperties ? this.overrideProperties : {}) },
+      { provide: 'data', useValue: data },
+      { provide: 'hoverClass', useValue: this.hoverClass },
+      { provide: 'canInteract', useValue: this.canInteract },
+      { provide: 'elementId', useValue: this.elementId }
+    ];*/
+
+    let injector = Injector.create([], this._viewContainerRef.parentInjector);
+
     // We create an injector out of the data we want to pass down and this components injector
-    let injector = ReflectiveInjector.fromResolvedProviders([], this._viewContainerRef.parentInjector);
+    //let injector = ReflectiveInjector.fromResolvedProviders(resolvedInputs, this._viewContainerRef.parentInjector);
 
     // We create a factory out of the component we want to create
     let factory = this._resolver.resolveComponentFactory(this.buildComponent(data));
@@ -67,13 +79,13 @@ export class DynamicSvgDirective implements OnInit {
     // We insert the component into the dom container
 
     let c: DrObjectComponent = <DrObjectComponent>component.instance;
-    
+  
     c.visualData = Object.assign({}, data, this.overrideProperties ? this.overrideProperties : {});
     c.data = data;
     c.hoverClass = this.hoverClass;
     c.canInteract = this.canInteract;
+    c.elementId = this.elementId;
 
-    c.ngOnInit();
     c.click.subscribe((s:any) => {
       this.click.emit(s);
     });
@@ -85,11 +97,11 @@ export class DynamicSvgDirective implements OnInit {
     }); c.mouseUp.subscribe((s:any) => {
       this.mouseUp.emit(s);
     });
-    c.elementId = this.elementId;
+    c.ngOnInit();
 
     this._viewContainerRef.clear();
     this._viewContainerRef.createEmbeddedView(c.elementTemplate);
-
+    
     // We can destroy the old component is we like by calling destroy
     if (this._currentComponent) {
         this._currentComponent.destroy();

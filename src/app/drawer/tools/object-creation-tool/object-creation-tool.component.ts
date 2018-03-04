@@ -107,38 +107,36 @@ export class ObjectCreationToolComponent implements OnInit {
             let r: DrRect = this.currentObject as DrRect;
             switch(this._dataService.selectedTool) {
                 case EditorToolType.IMAGE_TOOL: {
-                  this._dataService.addObject(createDrImage({
-                    id: this.getNextId(),
-                    x: r.x,
-                    y: r.y,
-                    width: r.width,
-                    height: r.height,
-                    url: "/assets/pexels-photo-705792.jpeg"
-                   }));
-                   
-                }
-                break;
-                case EditorToolType.TEXT_TOOL: {
-                  this._dataService.addObject(createDrText({
-                    id: this.getNextId(),
-                    x: r.x,
-                    y: r.y,
-                    width: r.width,
-                    height: r.height,
-                    text: "Billy Shivers"
-                   }));
-                   
-                }
-                break;
-                case EditorToolType.RECTANGLE_TOOL: {
-
-                  this._dataService.addObject(createDrRect({
+                  objectToAdd = createDrImage({
                     id: this.getNextId(),
                     x: r.x,
                     y: r.y,
                     width: r.width,
                     height: r.height
-                   }));
+                   });
+                   
+                }
+                break;
+                case EditorToolType.TEXT_TOOL: {
+                  objectToAdd = createDrText({
+                    id: this.getNextId(),
+                    x: r.x,
+                    y: r.y,
+                    width: r.width,
+                    height: r.height
+                   });
+                   
+                }
+                break;
+                case EditorToolType.RECTANGLE_TOOL: {
+
+                  objectToAdd = createDrRect({
+                    id: this.getNextId(),
+                    x: r.x,
+                    y: r.y,
+                    width: r.width,
+                    height: r.height
+                   });
                 }
                 break;
             }
@@ -156,22 +154,27 @@ export class ObjectCreationToolComponent implements OnInit {
               });
 
               let r: DrEllipse = this.currentObject as DrEllipse;
-              this._dataService.addObject(createDrEllipse({
+              objectToAdd = createDrEllipse({
                 id: this.getNextId(),
                 x: r.x,
                 y: r.y,
                 rx: r.rx,
                 ry: r.ry
-               }));
+               });
             }
             break;
         }
         
+        this._dataService.addObject(objectToAdd);
+        this._dataService.selectObjects([objectToAdd]);
+
       }
       
       this.currentObject = null;
       this._mouseDown = false;
       this._mouseDownLocation = null;
+
+      
     }
   }
 

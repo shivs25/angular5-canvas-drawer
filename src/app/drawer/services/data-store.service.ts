@@ -18,13 +18,9 @@ export class DataStoreService {
   undid: EventEmitter<void> = new EventEmitter<void>();
   redid: EventEmitter<void> = new EventEmitter<void>();
 
-  clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
-  mouseDownObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
-  mouseMoveObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
-  mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
-
   selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
 
   constructor(
     private _ngRedux: NgRedux<IDrawerAppState>, 
@@ -60,33 +56,25 @@ export class DataStoreService {
   public get isEditing(): boolean {
     return this._ngRedux.getState().editingState.isEditing;
   }
-  //=========Events=========
-
-  handleClickedObject(clickedObject: DrObject) {
-    this.clickedObject.emit(clickedObject);
-  }
-
-  handleMouseDownObject(clickedObject: MouseEventData) {
-    this.mouseDownObject.emit(clickedObject);
-  }
-
-  handleMouseMoveObject(clickedObject: MouseEventData) {
-    this.mouseMoveObject.emit(clickedObject);
-  }
-
-  handleMouseUpObject(clickedObject: MouseEventData) {
-    this.mouseUpObject.emit(clickedObject);
-  }
-
 
   //=========Actions=========
   public moveObject(item: DrObject, newBounds: BoundingBox): void {
-    this._ngRedux.dispatch({ 
-      type: CHANGE_OBJECT_BOUNDS, 
-      id: item.id, 
-      changes: this._changeService.getBoundsChanges(item, newBounds, this.selectedBounds),
-      newBounds: newBounds
-    });
+    let b: BoundingBox = this.selectedBounds;
+
+    if (null === b || (
+      b.x !== newBounds.x ||
+      b.y !== newBounds.y ||
+      b.width !== newBounds.width ||
+      b.height !== newBounds.height
+    )) {
+      this._ngRedux.dispatch({ 
+        type: CHANGE_OBJECT_BOUNDS, 
+        id: item.id, 
+        changes: this._changeService.getBoundsChanges(item, newBounds, this.selectedBounds),
+        newBounds: newBounds
+      });
+    }
+    
   }
 
   public setStyle(item: DrObject, newStyle: DrStyle): void {
@@ -124,6 +112,7 @@ export class DataStoreService {
       type: ADD_OBJECT,
       newItem: item
     });
+    this.objectsAdded.emit([item]);
   }
 
   private getObjectIndex(item: DrObject): number {
@@ -137,7 +126,7 @@ export class DataStoreService {
     this._ngRedux.dispatch({ 
       type: SELECT_OBJECTS, 
       items: items, 
-      selectedBounds: this._objectHelperService.getBoundingBox(items) 
+      selectedBounds: items.length > 0 ? this._objectHelperService.getBoundingBox(items) : null
     });
     this.selectionChanged.emit(this.selectedObjects);
   }

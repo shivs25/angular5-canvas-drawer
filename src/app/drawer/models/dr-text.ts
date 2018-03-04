@@ -17,7 +17,7 @@ export interface DrText extends DrRect {
 
 
 export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
-    text: "",
+    text: "TEXT",
     bold: false,
     italic: false,
     showFill: false,

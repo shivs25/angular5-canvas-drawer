@@ -10,7 +10,5 @@ import { DrObjectComponent } from '../dr-object/dr-object.component';
 export class DrRectComponent extends DrObjectComponent {
 
 
-  ngOnInit() {
-  }
-
+ 
 }

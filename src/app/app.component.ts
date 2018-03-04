@@ -100,7 +100,7 @@ export class AppComponent implements OnInit {
       text: "Boom SHAKA-laka",
       id: 6
     });
-    elements.push(text);
+    //elements.push(text);
     
     let e: DrEllipse = createDrEllipse({
       id: 4,
@@ -113,7 +113,7 @@ export class AppComponent implements OnInit {
       stroke: 'black',
       strokeWidth: 3
     });
-    elements.push(e);
+    //elements.push(e);
     let t2: DrRect = createDrRect({
       id: 3,
       x: 100,
@@ -122,10 +122,10 @@ export class AppComponent implements OnInit {
       height: 200,
       strokeWidth: 5,
       showFill: false,
-      clickable: false
+      clickable: true
     });
     elements.push(t2);
-    elements.push(t);
+    //elements.push(t);
     let r: DrPolygon = createDrPolygon({
       id: 1,
       stroke: 'green',
@@ -138,9 +138,9 @@ export class AppComponent implements OnInit {
         { x: 160, y: 200 }
       ]
     });
-    elements.push(r);
+    //elements.push(r);
 
-    this.elements = [];
+    this.elements = elements;
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

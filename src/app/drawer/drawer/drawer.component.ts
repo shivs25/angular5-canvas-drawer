@@ -36,7 +36,18 @@ export class DrawerComponent implements OnInit {
   handleMouseEvents: boolean = true;
 
   @Output()
-  public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  
+  @Output()
+  mouseDownObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+
+  @Output()
+  mouseMoveObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  
+  @Output()
+  mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  
+
 
   @Input()
   set elements(elements: DrObject[]) {
@@ -58,46 +69,46 @@ export class DrawerComponent implements OnInit {
  
 
   onBackgroundClick(evt): void {
-    this.handleMouseEvents && this._dataService.handleClickedObject(null);
+    this.handleMouseEvents && this.clickedObject.emit(null);
   }
 
   onBackgroundMouseDown(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseDownObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseDownObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
   }
 
   onBackgroundMouseMove(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseMoveObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseMoveObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
   }
 
   onBackgroundMouseUp(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseUpObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseUpObject.emit({ location: { x: evt.clientX, y: evt.clientY }, data: null });
   }
 
   onClick(data: DrObject): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleClickedObject(data);
+      this.clickedObject.emit(data);
     }
   }
 
   onMouseDown(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseDownObject(data);
+      this.mouseDownObject.emit(data);
     }
   }
 
   onMouseMove(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseMoveObject(data);
+      this.mouseMoveObject.emit(data);
     }
   }
 
   onMouseUp(data:MouseEventData): void {
     if(data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseUpObject(data);
+      this.mouseUpObject.emit(data);
     }
   }
 }

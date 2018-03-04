@@ -23,8 +23,8 @@ export class ChangeHelperService {
         };
       case DrType.ELLIPSE:
         return {
-          x: newBounds.x + newBounds.width / 2,
-          y: newBounds.y + newBounds.height / 2,
+          x: Math.round(newBounds.x + newBounds.width / 2),
+          y: Math.round(newBounds.y + newBounds.height / 2),
           rx: newBounds.width / 2,
           ry: newBounds.height / 2
         };

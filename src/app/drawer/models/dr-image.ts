@@ -8,7 +8,10 @@ export interface DrImage extends DrRect {
 }
 
 export const DEFAULT_IMAGE: DrImage = Object.assign({}, DEFAULT_RECT, {
-    url: "",
+    url: "/assets/image-placeholder-dark.png",
+    showStroke: false,
+    showFill: true,
+    fill: "white",
     drType: DrType.IMAGE
 });
 
