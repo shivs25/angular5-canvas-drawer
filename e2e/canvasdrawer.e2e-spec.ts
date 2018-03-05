@@ -1,9 +1,12 @@
 import { } from './jasmine';
 import { promise, browser, element, by, protractor } from 'protractor';
+import { Utilities } from './helpers/Utilities';
 const protractorImageComparison = require('protractor-image-comparison');
 
 describe('Maps', function () {
-  
+
+  let utilities: Utilities = new Utilities();
+
     beforeAll(() => {
         //browser.ignoreSynchronization = true;
 
