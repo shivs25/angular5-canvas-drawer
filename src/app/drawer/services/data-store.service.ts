@@ -1,30 +1,33 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
+import * as _ from "lodash";
 import { IDrawerAppState, IElementState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
-import { 
-  CHANGE_OBJECT_BOUNDS, 
-  CHANGE_OBJECTS_BOUNDS, 
+import {
+  CHANGE_OBJECTS_PROPERTIES, 
   SET_ELEMENTS, 
   SELECT_OBJECTS, 
   END_EDIT, 
-  BEGIN_EDIT, 
-  CHANGE_STYLE, 
+  BEGIN_EDIT,
   CHANGE_Z_INDEX, 
-  ADD_OBJECT, 
+  ADD_OBJECTS, 
   SET_TOOL, 
   GROUP_OBJECTS,
-  UNGROUP_OBJECT
+  UNGROUP_OBJECT,
+  REMOVE_OBJECTS,
+  CLEAR_OBJECTS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
-import { EditorToolType } from '../models/enums';
+import { EditorToolType, DrType } from '../models/enums';
 import { DrRect } from '../models/dr-rect';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
+
+const DUPLICATE_OFFSET_AMOUNT = 10;
 
 @Injectable()
 export class DataStoreService {
@@ -35,6 +38,8 @@ export class DataStoreService {
   selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+
+  private _duplicateOffset: number = 1;
 
   constructor(
     private _ngRedux: NgRedux<IDrawerAppState>, 
@@ -72,25 +77,6 @@ export class DataStoreService {
   }
 
   //=========Actions=========
-  public moveObject(item: DrObject, newBounds: BoundingBox): void {
-    let b: BoundingBox = this.selectedBounds;
-
-    if (null === b || (
-      b.x !== newBounds.x ||
-      b.y !== newBounds.y ||
-      b.width !== newBounds.width ||
-      b.height !== newBounds.height
-    )) {
-      this._ngRedux.dispatch({ 
-        type: CHANGE_OBJECT_BOUNDS, 
-        id: item.id, 
-        changes: this._changeService.getBoundsChanges(item, newBounds, this.selectedBounds),
-        newBounds: newBounds
-      });
-    }
-    
-  }
-
   public moveObjects(items: DrObject[], newBounds: BoundingBox): void {
     let b: BoundingBox = this.selectedBounds;
 
@@ -106,20 +92,21 @@ export class DataStoreService {
         changes.push({ id: i.id, changes: this._changeService.getBoundsChanges(i, newBounds, this.selectedBounds) });
       }
       this._ngRedux.dispatch({ 
-        type: CHANGE_OBJECTS_BOUNDS, 
+        type: CHANGE_OBJECTS_PROPERTIES, 
         changes: changes,
         newBounds: newBounds
       });
     }
-    
+    this._duplicateOffset = 1;
   }
 
   public setStyle(item: DrObject, newStyle: DrStyle): void {
     this._ngRedux.dispatch({
-      type: CHANGE_STYLE,
-      id: item.id,
-      newStyle: newStyle
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: [{ id: item.id, changes: newStyle }],
+      newBounds: this.selectedBounds
     });
+    this._duplicateOffset = 1;
   }
 
   public moveObjectDown(item: DrObject): void {
@@ -130,6 +117,7 @@ export class DataStoreService {
         id: item.id,
         newIndex: index - 1
       });
+      this._duplicateOffset = 1;
     }
   }
 
@@ -141,15 +129,17 @@ export class DataStoreService {
         id: item.id,
         newIndex: index + 1
       });
+      this._duplicateOffset = 1;
     }
   }
 
-  public addObject(item: DrObject): void {
+  public addObjects(items: DrObject[]): void {
     this._ngRedux.dispatch({
-      type: ADD_OBJECT,
-      newItem: item
+      type: ADD_OBJECTS,
+      newItems: items
     });
-    this.objectsAdded.emit([item]);
+    this._duplicateOffset = 1;
+    this.objectsAdded.emit(items);
   }
 
   public groupObjects(items: DrObject[]): void {
@@ -159,7 +149,7 @@ export class DataStoreService {
       selectedBounds: this._objectHelperService.getBoundingBox(items),
       nextId: this.getNextId()
     });
-    this.selectionChanged.emit(this.selectedObjects);
+    this._duplicateOffset = 1;
   }
 
   public ungroupObject(item: DrGroupedObject): void {
@@ -168,13 +158,61 @@ export class DataStoreService {
       item: item,
       selectedBounds: this._objectHelperService.getBoundingBox(item.objects)
     });
-    this.selectionChanged.emit(this.selectedObjects);
+    this._duplicateOffset = 1;
+  }
+
+  public removeObjects(items: DrObject[]): void {
+    this._ngRedux.dispatch({
+      type: REMOVE_OBJECTS,
+      items: items,
+    });
+    this._duplicateOffset = 1;
+  }
+
+  public duplicateObjects(items: DrObject[]): void {
+    let newItems: DrObject[] = [];
+    let b: BoundingBox;
+    let newB: BoundingBox;
+
+    let nextId: number = this.getNextId();
+    let newItem: DrObject;
+
+    for(let i of items) {
+      b = this._objectHelperService.getBoundingBox([i]);
+
+      newB = Object.assign({}, b, {
+        x: b.x + (this._duplicateOffset * DUPLICATE_OFFSET_AMOUNT),
+        y: b.y + (this._duplicateOffset * DUPLICATE_OFFSET_AMOUNT)
+      });
+
+      newItem = Object.assign({}, _.cloneDeep(i), this._changeService.getBoundsChanges(i, newB, b), { id: nextId++ });
+      nextId = this.updateChildItemIds(newItem, nextId);
+
+      newItems.push(newItem);
+    }
+
+    this._ngRedux.dispatch({ type: ADD_OBJECTS, newItems: newItems })
+    this._duplicateOffset++;
+  }
+
+  public clearObjects(): void {
+    this._ngRedux.dispatch({ type: CLEAR_OBJECTS });
   }
 
   private getObjectIndex(item: DrObject): number {
     let i: DrObject = this.elements.find((t:any) => t.id === item.id);
     let index = this.elements.indexOf(i);
     return index;
+  }
+
+  private updateChildItemIds(newItem: DrObject, nextId: number): number {
+    if (DrType.GROUPED_OBJECT === newItem.drType){
+      for(let o of (newItem as DrGroupedObject).objects){
+        o.id = nextId++;
+        this.updateChildItemIds(o, nextId);
+      }
+    }
+    return nextId;
   }
 
   private getNextId(): number {

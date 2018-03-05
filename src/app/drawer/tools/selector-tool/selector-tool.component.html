@@ -7,7 +7,7 @@
   >
 </app-drawer>
 
-<svg *ngIf="cssBounds" [ngStyle]="cssBounds" style="border: blue 1px solid"
+<svg *ngIf="cssBounds" [ngStyle]="cssBounds"
   xmlns="http://www.w3.org/2000/svg"
   (mousedown)="onBackgroundMouseDown($event)"
   (mousemove)="onBackgroundMouseMove($event)"
@@ -32,7 +32,7 @@
       (mouseMove)="onMouseMove($event)"
       (mouseUp)="onMouseUp($event)"
     ></ng-container>
-    
+
     <ng-container *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject">
         <rect *ngFor="let s of sizers; let i = index;" 
         (mousedown)="onResizerMouseDown($event, i)" 
