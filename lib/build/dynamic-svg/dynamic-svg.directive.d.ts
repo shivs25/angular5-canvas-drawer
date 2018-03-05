@@ -9,6 +9,8 @@ export declare class DynamicSvgDirective implements OnInit {
     ngOnInit(): void;
     hoverClass: string;
     overrideProperties: any;
+    elementId: any;
+    canInteract: boolean;
     click: EventEmitter<DrObject>;
     mouseDown: EventEmitter<MouseEventData>;
     mouseMove: EventEmitter<MouseEventData>;

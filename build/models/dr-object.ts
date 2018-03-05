@@ -11,13 +11,7 @@ export interface DrObject {
     scaleX: number;
     scaleY: number;
     clickable: boolean;
-    showFill: boolean;
-    showStroke: boolean;
-    fill: string;
-    stroke: string;
-    strokeWidth: number;
-    opacity: number;
-    dashedLine: boolean;
+
     
 }
 
@@ -31,11 +25,5 @@ export const DEFAULT_OBJECT: DrObject = {
     scaleX: 1,
     scaleY: 1,
     clickable: true,
-    showFill: true,
-    showStroke: true,
-    fill: "white",
-    stroke: "black",
-    strokeWidth: 1,
-    opacity: 1,
-    dashedLine: false
+
 }

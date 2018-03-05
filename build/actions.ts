@@ -1,8 +1,13 @@
 export const SET_ELEMENTS = "SET_ELEMENTS";
 export const CHANGE_OBJECT_BOUNDS = "CHANGE_OBJECT_BOUNDS";
+export const CHANGE_OBJECTS_BOUNDS = "CHANGE_OBJECTS_BOUNDS";
 export const SELECT_OBJECTS = "SELECT_OBJECTS";
 export const CHANGE_STYLE = "CHANGE_STYLE";
-
-
+export const CHANGE_Z_INDEX = "CHANGE_Z_INDEX";
+export const ADD_OBJECT = "ADD_OBJECT";
+export const REMOVE_OBJECT = "REMOVE_OBJECT";
+export const GROUP_OBJECTS = "GROUP_OBJECTS";
+export const UNGROUP_OBJECT = "UNGROUP_OBJECT";
+export const SET_TOOL = "SET_TOOL";
 export const BEGIN_EDIT = "BEGIN_EDIT";
 export const END_EDIT = "END_EDIT";

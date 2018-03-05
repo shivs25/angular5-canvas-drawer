@@ -1,6 +1,6 @@
-import { DrObject } from "./dr-object";
 import { DrPoint } from './dr-point';
-export interface DrPolygon extends DrObject {
+import { DrStyledObject } from "./dr-styled-object";
+export interface DrPolygon extends DrStyledObject {
     points: DrPoint[];
 }
 export declare const DEFAULT_POLYGON: DrPolygon;

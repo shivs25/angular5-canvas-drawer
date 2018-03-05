@@ -9,6 +9,9 @@ export declare class DrawerComponent implements OnInit {
     hoverClass: any;
     handleMouseEvents: boolean;
     clickedObject: EventEmitter<DrObject>;
+    mouseDownObject: EventEmitter<MouseEventData>;
+    mouseMoveObject: EventEmitter<MouseEventData>;
+    mouseUpObject: EventEmitter<MouseEventData>;
     elements: DrObject[];
     constructor(_dataService: DataStoreService);
     ngOnInit(): void;

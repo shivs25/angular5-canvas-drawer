@@ -4,8 +4,11 @@ import { MouseEventData } from '../../models/mouse-event-data';
 export declare class DrObjectComponent implements OnInit {
     elementTemplate: TemplateRef<any>;
     data: DrObject;
-    visualData: DrObject;
+    overrideProperties: any;
     hoverClass: string;
+    canInteract: boolean;
+    elementId: any;
+    visualData: DrObject;
     click: EventEmitter<DrObject>;
     mouseDown: EventEmitter<MouseEventData>;
     mouseMove: EventEmitter<MouseEventData>;

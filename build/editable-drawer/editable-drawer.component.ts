@@ -15,6 +15,9 @@ export class EditableDrawerComponent implements OnInit {
   @Output()
   public editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  @Output()
+  public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+
   @Input()
   set elements(elements: DrObject[]) {
     this._dataService.elements = elements;
@@ -32,6 +35,9 @@ export class EditableDrawerComponent implements OnInit {
     this._dataService.editingChanged.subscribe((isEditing: boolean) => {
       this.editingChanged.emit(isEditing);
     })
+    this._dataService.objectsAdded.subscribe((addedObjects:DrObject[]) => {
+      this.objectsAdded.emit(addedObjects);
+    });
   }
 
 }

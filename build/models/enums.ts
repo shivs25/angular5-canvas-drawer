@@ -6,8 +6,8 @@ export enum DrType {
     POLYGON = 2,
     ELLIPSE = 3,
     TEXT= 4,
-    IMAGE = 5
-
+    IMAGE = 5,
+    GROUPED_OBJECT = 100
 }
 
 export enum DrTextAlignment {
@@ -20,6 +20,10 @@ export enum DrTextAlignment {
 
 export enum EditorToolType {
     NONE = -1,
-    SELECTOR_TOOL = 1
+    SELECTOR_TOOL = 1,
+    RECTANGLE_TOOL = 2,
+    ELLIPSE_TOOL = 3,
+    IMAGE_TOOL = 4,
+    TEXT_TOOL = 5
 }
 

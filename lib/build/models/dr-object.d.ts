@@ -9,12 +9,5 @@ export interface DrObject {
     scaleX: number;
     scaleY: number;
     clickable: boolean;
-    showFill: boolean;
-    showStroke: boolean;
-    fill: string;
-    stroke: string;
-    strokeWidth: number;
-    opacity: number;
-    dashedLine: boolean;
 }
 export declare const DEFAULT_OBJECT: DrObject;

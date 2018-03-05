@@ -4,11 +4,12 @@ import { SelectorToolComponent } from './selector-tool/selector-tool.component';
 import { DrawerModule } from '../drawer/drawer.module';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { EditableDrawerComponent } from '../editable-drawer/editable-drawer.component';
+import { ObjectCreationToolComponent } from './object-creation-tool/object-creation-tool.component';
 
 @NgModule({
   imports: [CommonModule, DrawerModule.forRoot()],
 
-  declarations: [EditorToolComponent, SelectorToolComponent], 
+  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent], 
   exports: [DrawerComponent, EditorToolComponent], 
   providers: [],
   entryComponents: [

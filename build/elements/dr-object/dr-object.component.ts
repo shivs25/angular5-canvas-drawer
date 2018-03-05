@@ -17,12 +17,19 @@ export class DrObjectComponent implements OnInit {
   public data: DrObject;
 
   @Input()
-  public visualData: DrObject;
+  public overrideProperties: any = null;
 
   @Input()
-  public hoverClass: string;
+  public hoverClass: string = 'pointer';
 
-  //@select()
+  @Input()
+  public canInteract: boolean = true;
+
+  @Input()
+  public elementId: any;
+
+  public visualData: DrObject;
+
   @Output()
   public click: EventEmitter<DrObject> = new EventEmitter<DrObject>();
 
@@ -42,19 +49,44 @@ export class DrObjectComponent implements OnInit {
     this.click.emit(data);
   }
 
+
   onMouseDown(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseDown.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseDown.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onMouseMove(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseMove.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseMove.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onMouseUp(evt: any, data:DrObject): void {
     evt.stopPropagation();
-    this.mouseUp.emit({ location: { x: evt.clientX, y: evt.clientY }, data: data });
+    this.mouseUp.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: data,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   constructor() { }

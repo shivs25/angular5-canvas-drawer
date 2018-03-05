@@ -17,7 +17,7 @@ import { MouseEventData } from '../models/mouse-event-data';
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <div class=\"absolute-position fill-parent\">\n    \n        <svg (click)=\"onBackgroundClick($event)\" \n              (mousedown)=\"onBackgroundMouseDown($event)\"\n              (mousemove)=\"onBackgroundMouseMove($event)\" \n              (mouseUp)=\"onBackgroundMouseUp($event)\"\n              class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\">\n          <ng-container *ngFor=\"let s of (elementState | async)?.present.elements\">\n            <ng-container *ngIf=\"s.visible\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"overrideProperties\"\n              [hoverClass]=\"hoverClass\"\n              (click)=\"onClick($event)\"\n              (mouseDown)=\"onMouseDown($event)\"\n              (mouseMove)=\"onMouseMove($event)\"\n              (mouseUp)=\"onMouseUp($event)\"\n              >\n            </ng-container>\n          </ng-container>\n        </svg>\n    </div>\n  ",
+  template: "\n\n    <div class=\"absolute-position fill-parent\">\n    \n        <svg \n              (mousedown)=\"onBackgroundMouseDown($event)\"\n              (mousemove)=\"onBackgroundMouseMove($event)\" \n              (mouseup)=\"onBackgroundMouseUp($event)\"\n              class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\">\n          <ng-container *ngFor=\"let s of (elementState | async)?.present.elements; let i = index\">\n            <ng-container *ngIf=\"s.visible\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"overrideProperties\" [elementId]=\"i + 1\"\n              [hoverClass]=\"hoverClass\"\n              (mouseDown)=\"onMouseDown($event)\"\n              (mouseMove)=\"onMouseMove($event)\"\n              (mouseUp)=\"onMouseUp($event)\"\n              >\n            </ng-container>\n          </ng-container>\n        </svg>\n    </div>\n  ",
   styles: ["\n\n  "],
   entryComponents: []
 })
@@ -30,13 +30,24 @@ export class DrawerComponent implements OnInit {
   overrideProperties: any = null;
 
   @Input()
-  hoverClass: any = null;
+  hoverClass: any = '';
 
   @Input()
   handleMouseEvents: boolean = true;
 
   @Output()
-  public clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
+  
+  @Output()
+  mouseDownObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+
+  @Output()
+  mouseMoveObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  
+  @Output()
+  mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  
+
 
   @Input()
   set elements(elements: DrObject[]) {
@@ -58,46 +69,70 @@ export class DrawerComponent implements OnInit {
  
 
   onBackgroundClick(evt): void {
-    this.handleMouseEvents && this._dataService.handleClickedObject(null);
+    this.handleMouseEvents && this.clickedObject.emit(null);
   }
 
   onBackgroundMouseDown(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseDownObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseDownObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseMove(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseMoveObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseMoveObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onBackgroundMouseUp(evt): void {
-    this.handleMouseEvents && this._dataService.handleMouseUpObject({ location: { x: evt.clientX, y: evt.clientY }, data: null });
+    this.handleMouseEvents && this.mouseUpObject.emit({ 
+      location: { 
+        x: evt.clientX, y: evt.clientY 
+      }, 
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
+    });
   }
 
   onClick(data: DrObject): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleClickedObject(data);
+      this.clickedObject.emit(data);
     }
   }
 
   onMouseDown(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseDownObject(data);
+      this.mouseDownObject.emit(data);
     }
   }
 
   onMouseMove(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseMoveObject(data);
+      this.mouseMoveObject.emit(data);
     }
   }
 
   onMouseUp(data:MouseEventData): void {
     if(data !== null && typeof data !== 'undefined'){
       //this.clickedObject.emit(data);
-      this._dataService.handleMouseUpObject(data);
+      this.mouseUpObject.emit(data);
     }
   }
 }

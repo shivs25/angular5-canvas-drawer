@@ -4,6 +4,9 @@ import { BoundingBox } from '../models/bounding-box';
 import { DrType } from '../models/enums';
 import { DrPoint } from '../models/dr-point';
 import { DrPolygon } from '../models/dr-polygon';
+import { DrRect } from '../models/dr-rect';
+import { DrEllipse } from '../models/dr-ellipse';
+import { DrGroupedObject } from '../models/dr-grouped-object';
 
 @Injectable()
 export class ChangeHelperService {
@@ -11,46 +14,70 @@ export class ChangeHelperService {
   constructor() { }
 
   getBoundsChanges(item: DrObject, newBounds: BoundingBox, oldBounds: BoundingBox): any {
+    
     switch(item.drType) {
       case DrType.IMAGE:
       case DrType.TEXT:
-      case DrType.RECTANGLE:
-        return {
-          x: newBounds.x,
-          y: newBounds.y,
-          width: newBounds.width,
-          height: newBounds.height
-        };
-      case DrType.ELLIPSE:
-        return {
-          x: newBounds.x + newBounds.width / 2,
-          y: newBounds.y + newBounds.height / 2,
-          rx: newBounds.width / 2,
-          ry: newBounds.height / 2
-        };
-      case DrType.POLYGON:
-        let scaleX: number = newBounds.width / oldBounds.width;
-        let scaleY: number = newBounds.height / oldBounds.height;
+      case DrType.RECTANGLE: {
+        let r: DrRect = item as DrRect;
 
+        let pctX = (r.x - oldBounds.x) / oldBounds.width;
+        let pctY = (r.y - oldBounds.y) / oldBounds.height;
+        let pctWidth = r.width / oldBounds.width;
+        let pctHeight = r.height / oldBounds.height;
+
+        return {
+          x: newBounds.x + newBounds.width * pctX,
+          y: newBounds.y + newBounds.height * pctY,
+          width: newBounds.width * pctWidth,
+          height: newBounds.height * pctHeight
+        };
+      }
+      case DrType.ELLIPSE: {
+        let e: DrEllipse = item as DrEllipse;
+
+        let pctX = (e.x - oldBounds.x) / oldBounds.width;
+        let pctY = (e.y - oldBounds.y) / oldBounds.height;
+        let pctWidth = e.rx * 2 / oldBounds.width;
+        let pctHeight = e.ry * 2 / oldBounds.height;
+
+        return {
+          x: newBounds.x + newBounds.width * pctX,
+          y: newBounds.y + newBounds.height * pctY,
+          rx: newBounds.width * pctWidth / 2,
+          ry: newBounds.height * pctHeight / 2
+        };
+      }
+      case DrType.POLYGON: {
         let pts: DrPoint[] = [];
         let p: DrPoint;
+        let pct;
 
         for(let pt of (item as DrPolygon).points) {
           p = { x: 0, y: 0 };
 
-          p.x = pt.x - (oldBounds.x + oldBounds.width / 2);
-          p.x = p.x * scaleX;
-          p.x = p.x + newBounds.x + newBounds.width / 2;
+          pct = (pt.x - oldBounds.x) / (oldBounds.width);
+          p.x = newBounds.x + (newBounds.width * pct);
 
-          p.y = pt.y - (oldBounds.y + oldBounds.height / 2);
-          p.y = p.y * scaleY;
-          p.y = p.y + newBounds.y + newBounds.height / 2;
+          pct = (pt.y - oldBounds.y) / (oldBounds.height);
+          p.y = newBounds.y + (newBounds.height * pct);
 
           pts.push(p);
         }
         return  {
           points: pts
         };
+      }
+      case DrType.GROUPED_OBJECT: {
+        let newObjects: DrObject[] = [];
+        for(let o of (item as DrGroupedObject).objects) {
+          newObjects.push(Object.assign({}, o, this.getBoundsChanges(o, newBounds, oldBounds)));
+        }
+        return  {
+          objects: newObjects
+        };
+      }
+      
     }
   }
 }

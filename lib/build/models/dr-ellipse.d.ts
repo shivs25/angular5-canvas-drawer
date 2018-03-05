@@ -1,5 +1,5 @@
-import { DrObject } from "./dr-object";
-export interface DrEllipse extends DrObject {
+import { DrStyledObject } from "./dr-styled-object";
+export interface DrEllipse extends DrStyledObject {
     x: number;
     y: number;
     rx: number;
