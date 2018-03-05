@@ -24,6 +24,12 @@ export enum EditorToolType {
     RECTANGLE_TOOL = 2,
     ELLIPSE_TOOL = 3,
     IMAGE_TOOL = 4,
-    TEXT_TOOL = 5
+    TEXT_TOOL = 5,
+    PEN_TOOL = 6,
+    ARROW_TOOL = 7,
+    STAR_TOOL = 8,
+    CALLOUT_SQUARE_TOOL = 9,
+    CALLOUT_ROUNDED_TOOL = 10,
+    TRIANGLE_TOOL = 11
 }
 
