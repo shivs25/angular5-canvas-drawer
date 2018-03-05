@@ -26,6 +26,7 @@ import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
+import { cloneDeep, updateChildItemIds } from '../utilities';
 
 const DUPLICATE_OFFSET_AMOUNT = 10;
 
@@ -177,7 +178,9 @@ export class DataStoreService {
     let nextId: number = this.getNextId();
     let newItem: DrObject;
 
-    for(let i of items) {
+    let i: DrObject;
+
+    for(i of items) {
       b = this._objectHelperService.getBoundingBox([i]);
 
       newB = Object.assign({}, b, {
@@ -185,8 +188,8 @@ export class DataStoreService {
         y: b.y + (this._duplicateOffset * DUPLICATE_OFFSET_AMOUNT)
       });
 
-      newItem = Object.assign({}, _.cloneDeep(i), this._changeService.getBoundsChanges(i, newB, b), { id: nextId++ });
-      nextId = this.updateChildItemIds(newItem, nextId);
+      newItem = Object.assign({}, cloneDeep(i), this._changeService.getBoundsChanges(i, newB, b), { id: nextId++ });
+      nextId = updateChildItemIds(newItem, nextId);
 
       newItems.push(newItem);
     }
@@ -205,15 +208,7 @@ export class DataStoreService {
     return index;
   }
 
-  private updateChildItemIds(newItem: DrObject, nextId: number): number {
-    if (DrType.GROUPED_OBJECT === newItem.drType){
-      for(let o of (newItem as DrGroupedObject).objects){
-        o.id = nextId++;
-        this.updateChildItemIds(o, nextId);
-      }
-    }
-    return nextId;
-  }
+  
 
   private getNextId(): number {
     return 0 === this.elements.length ? 1 :

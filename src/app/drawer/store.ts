@@ -12,8 +12,7 @@ import { BoundingBox } from './models/bounding-box';
 import { DrPolygon } from './models/dr-polygon';
 import { EditorToolType } from './models/enums';
 import { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object';
-
-import * as _ from "lodash";
+import { cloneDeep } from './utilities';
 
 export interface IHistory<T> {
     past: T[],
@@ -96,7 +95,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             for(let i of state.elements) {
                 changes = action.changes.find((t: any) => t.id === i.id);
                 if (changes) {
-                    newItem = Object.assign({}, _.cloneDeep(i), changes.changes);
+                    newItem = Object.assign({}, cloneDeep(i), changes.changes);
                 }
                 else {
                     newItem = i;
@@ -110,7 +109,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                     selectedIndex = newSelectedObjects.indexOf(selectedItem);
                     newSelectedObjects = [
                         ...newSelectedObjects.slice(0, selectedIndex),
-                        _.cloneDeep(newItem),
+                        cloneDeep(newItem),
                         ...newSelectedObjects.slice(selectedIndex + 1)
                     ];
                 }
@@ -138,7 +137,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             return Object.assign({}, state, {
                 elements: [
                   ...state.elements,
-                  ...action.newItems.map(x => _.cloneDeep(x))
+                  ...action.newItems.map((x: DrObject) => cloneDeep(x))
                 ]
               });
 
@@ -158,7 +157,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 groupedObject = action.items.find((t: any) => i.id === t.id);
                 if (groupedObject) {
                     highZIndex = newElements.length;
-                    groupedArray.push(_.cloneDeep(i));
+                    groupedArray.push(cloneDeep(i));
                 }
                 else {
                     newElements.push(i);
@@ -184,7 +183,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             return Object.assign({}, state, {
                 elements: [
                     ...state.elements.slice(0, index),
-                    ...(action.item as DrGroupedObject).objects.map((x: any) => _.cloneDeep(x)),
+                    ...(action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x)),
                     ...state.elements.slice(index + 1),
                 ]
             });

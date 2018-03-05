@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, CHANGE_OBJECT_BOUNDS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_STYLE, CHANGE_Z_INDEX, ADD_OBJECT, REMOVE_OBJECT, SET_TOOL, CHANGE_OBJECTS_BOUNDS, GROUP_OBJECTS, UNGROUP_OBJECT } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_Z_INDEX, SET_TOOL, GROUP_OBJECTS, UNGROUP_OBJECT, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -12,6 +12,7 @@ import { BoundingBox } from './models/bounding-box';
 import { DrPolygon } from './models/dr-polygon';
 import { EditorToolType } from './models/enums';
 import { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object';
+import { cloneDeep } from './utilities';
 
 export interface IHistory<T> {
     past: T[],
@@ -83,34 +84,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 selectedBounds: null
             });
         }
-        case CHANGE_OBJECT_BOUNDS: {
-            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
-            let index = state.elements.indexOf(item);
-            let newItem: DrObject = Object.assign({}, item, action.changes);
-
-            let newSelectedObjects: DrObject[] = null;
-            let selectedItem: DrObject = state.selectedObjects ? state.selectedObjects.find((t: any) => t.id === action.id) : null;
-            if (null !== selectedItem) {
-                //item was in the selection
-                let selectedIndex = state.selectedObjects.indexOf(selectedItem);
-                newSelectedObjects = [
-                    ...state.selectedObjects.slice(0, selectedIndex),
-                    Object.assign({}, newItem),
-                    ...state.selectedObjects.slice(selectedIndex + 1)
-                ];
-            }
-
-            return Object.assign({}, state, {
-                elements: [
-                    ...state.elements.slice(0, index),
-                    newItem,
-                    ...state.elements.slice(index + 1)
-                ],
-                selectedBounds: Object.assign({}, action.newBounds),
-                selectedObjects: newSelectedObjects ? newSelectedObjects : state.selectedObjects
-            });
-        }
-        case CHANGE_OBJECTS_BOUNDS: {
+        case CHANGE_OBJECTS_PROPERTIES: {
             
             let newArray: DrObject[] = [];
             let newItem: DrObject;
@@ -121,7 +95,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             for(let i of state.elements) {
                 changes = action.changes.find((t: any) => t.id === i.id);
                 if (changes) {
-                    newItem = Object.assign({}, i, changes.changes);
+                    newItem = Object.assign({}, cloneDeep(i), changes.changes);
                 }
                 else {
                     newItem = i;
@@ -135,7 +109,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                     selectedIndex = newSelectedObjects.indexOf(selectedItem);
                     newSelectedObjects = [
                         ...newSelectedObjects.slice(0, selectedIndex),
-                        Object.assign({}, newItem),
+                        cloneDeep(newItem),
                         ...newSelectedObjects.slice(selectedIndex + 1)
                     ];
                 }
@@ -146,18 +120,6 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 elements: newArray,
                 selectedBounds: Object.assign({}, action.newBounds),
                 selectedObjects: newSelectedObjects ? newSelectedObjects : state.selectedObjects
-            });
-        }
-        case CHANGE_STYLE: {
-            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
-            let index = state.elements.indexOf(item);
-            let newItem: DrObject = Object.assign({}, item, action.newStyle);
-            return Object.assign({}, state, {
-                elements: [
-                    ...state.elements.slice(0, index),
-                    newItem,
-                    ...state.elements.slice(index + 1)
-                ]
             });
         }
         case CHANGE_Z_INDEX: {
@@ -171,38 +133,33 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 elements: items
             });
         }
-        case ADD_OBJECT: {
+        case ADD_OBJECTS: {
             return Object.assign({}, state, {
                 elements: [
                   ...state.elements,
-                  action.newItem
+                  ...action.newItems.map((x: DrObject) => cloneDeep(x))
                 ]
               });
 
         }
-        case REMOVE_OBJECT: {
-            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
-            let index = state.elements.indexOf(item);
-
+        case REMOVE_OBJECTS: {
             return Object.assign({}, state, {
-                elements: [
-                    ...state.elements.slice(0, index),
-                    ...state.elements.slice(index + 1)
-                ]
-              });
+                elements: state.elements.filter((t: any) => action.itemIds.indexOf(t.id) < 0)
+            });
         }
         case GROUP_OBJECTS: {
             let groupedArray: DrObject[] = [];
             let newElements: DrObject[] = [];
 
             let groupedObject: DrObject;
+            let highZIndex: number = 0;
             for(let i of state.elements) {
                 groupedObject = action.items.find((t: any) => i.id === t.id);
                 if (groupedObject) {
-                    groupedArray.push(i);
+                    highZIndex = newElements.length;
+                    groupedArray.push(cloneDeep(i));
                 }
                 else {
-                    console.log(i);
                     newElements.push(i);
                 }
             }
@@ -213,11 +170,10 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             });
             return Object.assign({}, state, {
                 elements: [
-                    ...newElements,
-                    newItem
-                ],
-                selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
-                selectedObjects: [Object.assign(newItem)]
+                    ...newElements.slice(0, highZIndex),
+                    newItem,
+                    ...newElements.slice(highZIndex + 1)
+                ]
             });
         }
         case UNGROUP_OBJECT: {
@@ -227,17 +183,22 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             return Object.assign({}, state, {
                 elements: [
                     ...state.elements.slice(0, index),
+                    ...(action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x)),
                     ...state.elements.slice(index + 1),
-                    ...(action.item as DrGroupedObject).objects.slice(0)
-                ],
-                selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
-                selectedObjects: (action.item as DrGroupedObject).objects.map(x => Object.assign({}, x))
+                ]
             });
         }
         case SELECT_OBJECTS: {
             return Object.assign({}, state, {
                 selectedBounds: null !== action.selectedBounds ? Object.assign({}, action.selectedBounds) : null,
                 selectedObjects: action.items.map(x => Object.assign({}, x))
+            });
+        }
+        case CLEAR_OBJECTS: {
+            return Object.assign({}, state, {
+                elements: [],
+                selectedObjects: [],
+                selectedBounds: null
             });
         }
         case SET_TOOL: {

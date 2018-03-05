@@ -34,7 +34,7 @@
     ></ng-container>
 
     <ng-container *ngIf="(elementState | async)?.present.selectedBounds && boundingBoxObject">
-        <rect *ngFor="let s of sizers; let i = index;" 
+        <rect [id]="'resizer-' + i" *ngFor="let s of sizers; let i = index;" 
         (mousedown)="onResizerMouseDown($event, i)" 
         (mousemove)="onResizerMouseMove($event, i)"
         (mouseup)="onResizerMouseUp($event, i)"
