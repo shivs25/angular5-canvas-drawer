@@ -27,6 +27,7 @@ To use this library in your newly generated component, add the `app-drawer` to y
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
+DATE: `2018-03-05` VERSION: `1.0.33-beta.15`
 DATE: `2018-03-05` VERSION: `1.0.33-beta.14`
 - Added DrGroupedObject
 - Added Object Creation Tools

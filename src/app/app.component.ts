@@ -88,6 +88,20 @@ export class AppComponent implements OnInit {
     }
   }
 
+  remove(): void {
+    if (this.dataStoreService.selectedObjects.length > 0) {
+      this.dataStoreService.removeObjects(this.dataStoreService.selectedObjects);
+    }
+  }
+
+  duplicate(): void {
+    this.dataStoreService.duplicateObjects(this.dataStoreService.selectedObjects);
+  }
+
+  clear(): void {
+    this.dataStoreService.clearObjects();
+  }
+
   ngOnInit() {
     let elements = [];
 

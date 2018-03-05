@@ -165,9 +165,8 @@ export class ObjectCreationToolComponent implements OnInit {
             break;
         }
         
-        this._dataService.addObject(objectToAdd);
+        this._dataService.addObjects([objectToAdd]);
         this._dataService.selectObjects([objectToAdd]);
-
       }
       
       this.currentObject = null;
