@@ -186,7 +186,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
 
             return Object.assign({}, state, {
                 elements: elements,
-                selectedObjects: elements.map((t: DrObject) => cloneDeep(t))
+                selectedObjects: (action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x))
             });
         }
         case SELECT_OBJECTS: {
