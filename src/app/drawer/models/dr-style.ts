@@ -13,8 +13,8 @@ export interface DrStyle {
 export const DEFAULT_STYLE: DrStyle = {
     showFill: true,
     showStroke: true,
-    fill: "white",
-    stroke: "black",
+    fill: "#ffffff",
+    stroke: "#000000",
     strokeWidth: 1,
     opacity: 1
 }
