@@ -11,7 +11,6 @@ import { MouseEventData } from '../../models/mouse-event-data';
 import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
 
-
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 
@@ -52,6 +51,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private _subRedid: any;
   private _subUndid: any;
+  private _subSelectionChanged: any;
+  private _subSelectedBoundsChanged: any;
 
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
@@ -72,6 +73,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.setupBounds();
     });
 
+    this._subSelectionChanged = this._dataStoreService.selectionChanged.subscribe((selectedObjects:DrObject[]) => {
+      this.setupBounds();
+    });
+    this._subSelectedBoundsChanged = this._dataStoreService.selectedBoundsChanged.subscribe((selectedBounds: BoundingBox) => {
+      this.setupBounds();
+    })
     this.setupBounds();
   }
 
@@ -430,6 +437,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
     if (this._subUndid) {
       this._subUndid.unsubscribe();
+    }
+    if (this._subSelectionChanged){
+      this._subSelectionChanged.unsubscribe();
+    }
+    if (this._subSelectedBoundsChanged) {
+      this._subSelectedBoundsChanged.unsubscribe();
     }
   }
 }

@@ -11,13 +11,12 @@ import { MouseEventData } from '../../models/mouse-event-data';
 import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
 
-
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 
 @Component({
   selector: 'app-selector-tool',
-  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <ng-container \n          *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n          [elementId]=\"1000001\"\n          [componentData]=\"boundingBoxObject\"\n          [hoverClass]=\"cursor\" \n\n          (mouseDown)=\"onMouseDown($event)\"\n          (mouseMove)=\"onMouseMove($event)\"\n          (mouseUp)=\"onMouseUp($event)\"\n\n          ></ng-container>\n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onMouseDown($event)\"\n          (mouseMove)=\"onMouseMove($event)\"\n          (mouseUp)=\"onMouseUp($event)\"\n        ></ng-container>\n\n        <ng-container *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\">\n            <rect *ngFor=\"let s of sizers; let i = index;\" \n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            width=\"8\" height= \"8\" fill=\"green\" [attr.x]=\"getResizerX(i)\" [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n  ",
+  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <ng-container \n          *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n          [elementId]=\"1000001\"\n          [componentData]=\"boundingBoxObject\"\n          [hoverClass]=\"cursor\" \n\n          (mouseDown)=\"onMouseDown($event)\"\n          (mouseMove)=\"onMouseMove($event)\"\n          (mouseUp)=\"onMouseUp($event)\"\n\n          ></ng-container>\n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onMouseDown($event)\"\n          (mouseMove)=\"onMouseMove($event)\"\n          (mouseUp)=\"onMouseUp($event)\"\n        ></ng-container>\n\n        <ng-container *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\">\n            <rect [id]=\"'resizer-' + i\" *ngFor=\"let s of sizers; let i = index;\" \n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            width=\"8\" height= \"8\" fill=\"green\" [attr.x]=\"getResizerX(i)\" [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n  ",
   styles: ["\n\n  "]
 })
 export class SelectorToolComponent implements OnInit, OnDestroy {
@@ -52,6 +51,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private _subRedid: any;
   private _subUndid: any;
+  private _subSelectionChanged: any;
+  private _subSelectedBoundsChanged: any;
 
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
@@ -72,6 +73,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.setupBounds();
     });
 
+    this._subSelectionChanged = this._dataStoreService.selectionChanged.subscribe((selectedObjects:DrObject[]) => {
+      this.setupBounds();
+    });
+    this._subSelectedBoundsChanged = this._dataStoreService.selectedBoundsChanged.subscribe((selectedBounds: BoundingBox) => {
+      this.setupBounds();
+    })
     this.setupBounds();
   }
 
@@ -430,6 +437,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
     if (this._subUndid) {
       this._subUndid.unsubscribe();
+    }
+    if (this._subSelectionChanged){
+      this._subSelectionChanged.unsubscribe();
+    }
+    if (this._subSelectedBoundsChanged) {
+      this._subSelectedBoundsChanged.unsubscribe();
     }
   }
 }

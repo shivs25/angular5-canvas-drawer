@@ -37,6 +37,7 @@ export class DataStoreService {
   redid: EventEmitter<void> = new EventEmitter<void>();
 
   selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  selectedBoundsChanged: EventEmitter<BoundingBox> = new EventEmitter<BoundingBox>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
 
@@ -78,6 +79,42 @@ export class DataStoreService {
   }
 
   //=========Actions=========
+  public alignObjectsLeft(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 0);
+    }
+  }
+
+  public alignObjectsRight(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 2);
+    }
+  }
+
+  public alignObjectsCenter(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 1);
+    }
+  }
+
+  public alignObjectsTop(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 3);
+    }
+  }
+
+  public alignObjectsMiddle(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 4);
+    }
+  }
+
+  public alignObjectsBottom(items: DrObject[]):void {
+    if (items.length > 1) {
+      this.alignObjects(items, 5);
+    }
+  }
+
   public moveObjects(items: DrObject[], newBounds: BoundingBox): void {
     let b: BoundingBox = this.selectedBounds;
 
@@ -101,37 +138,75 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
-  public setStyle(item: DrObject, newStyle: DrStyle): void {
+  public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
-      changes: [{ id: item.id, changes: newStyle }],
+      changes: items.map((x: DrObject) => { 
+        return { id: x.id, changes: Object.assign({}, newStyle) }; 
+      }),
       newBounds: this.selectedBounds
     });
     this._duplicateOffset = 1;
   }
 
-  public moveObjectDown(item: DrObject): void {
-    let index: number = this.getObjectIndex(item);
-    if (index > 0) {
+  public moveObjectsDown(items: DrObject[]): void {
+
+    let indices: any[] = [];
+    
+    for(let o of items) {
+      indices.push({
+        id: o.id,
+        index: this.getObjectIndex(o),
+        item: o
+      });
+    }
+    
+    let min: number = Math.min(...indices.map((b: any) => b.index)) - 1;
+    
+    if (min >= 0) {
+      let idsToExclude = indices.map((x: any) => x.id);
+      let elements: DrObject[] = [
+        ...this.elements.slice(0, min).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+        ...this.elements.slice(min).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+      ];
+  
       this._ngRedux.dispatch({
         type: CHANGE_Z_INDEX,
-        id: item.id,
-        newIndex: index - 1
+        elements: elements
       });
-      this._duplicateOffset = 1;
     }
+    this._duplicateOffset = 1;
   }
 
-  public moveObjectUp(item: DrObject): void {
-    let index: number = this.getObjectIndex(item);
-    if (index < this.elements.length - 1) {
+  public moveObjectsUp(items: DrObject[]): void {
+    let indices: any[] = [];
+    
+    for(let o of items) {
+      indices.push({
+        id: o.id,
+        index: this.getObjectIndex(o),
+        item: o
+      });
+    }
+    
+    let max: number = Math.max(...indices.map((b: any) => b.index)) + 1;
+    if (max < this.elements.length) {
+      let idsToExclude = indices.map((x: any) => x.id);
+    
+      let elements: DrObject[] = [
+        ...this.elements.slice(0, max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+        ...this.elements.slice(max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+      ];
+  
       this._ngRedux.dispatch({
         type: CHANGE_Z_INDEX,
-        id: item.id,
-        newIndex: index + 1
+        elements: elements
       });
-      this._duplicateOffset = 1;
     }
+    
+    this._duplicateOffset = 1;
   }
 
   public addObjects(items: DrObject[]): void {
@@ -151,6 +226,7 @@ export class DataStoreService {
       nextId: this.getNextId()
     });
     this._duplicateOffset = 1;
+    this.selectionChanged.emit(this.selectedObjects);
   }
 
   public ungroupObject(item: DrGroupedObject): void {
@@ -160,14 +236,22 @@ export class DataStoreService {
       selectedBounds: this._objectHelperService.getBoundingBox(item.objects)
     });
     this._duplicateOffset = 1;
+    this.selectionChanged.emit(this.selectedObjects);
   }
 
   public removeObjects(items: DrObject[]): void {
+    let ids: number[] = items.map((x:DrObject) => x.id);
+    let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
+    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
     this._ngRedux.dispatch({
       type: REMOVE_OBJECTS,
-      items: items,
+      ids: items.map((x: any) => x.id),
+      newBounds: b,
+      selectedObjects: newSelectedObjects
     });
     this._duplicateOffset = 1;
+    this.selectedBoundsChanged.emit(b);
+    this.selectionChanged.emit(newSelectedObjects);
   }
 
   public duplicateObjects(items: DrObject[]): void {
@@ -208,11 +292,93 @@ export class DataStoreService {
     return index;
   }
 
-  
-
   private getNextId(): number {
     return 0 === this.elements.length ? 1 :
           Math.max(...this.elements.map(o => o.id)) + 1;
+  }
+
+  private alignObjects(items: DrObject[], alignment: number) {
+    let boundingBoxes: any = [];
+
+    for(let i of items) {
+      boundingBoxes.push({
+        item: i,
+        bounds: this._objectHelperService.getBoundingBox([i])
+      });
+    }
+
+    let changes: any = [];
+    switch(alignment) {
+      case 0: {
+          let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
+
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { x: left });
+          }
+        }
+        break;
+      case 1: {
+          let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
+          let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
+          let middle: number = (left + right) / 2;
+
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { x: middle - o.bounds.width / 2});
+          }
+        }
+        break;
+      case 2: {
+          let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
+    
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { x: right - o.bounds.width });
+          }
+        }
+        break;
+      case 3: {
+          let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
+    
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { y: top });
+          }
+        }
+        break;
+      case 4: {
+          let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
+          let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
+          let middle: number = (top + bottom) / 2;
+
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { y: middle - o.bounds.height / 2 });
+          }
+        }
+        break;
+      case 5: {
+          let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
+    
+          for(let o of boundingBoxes) {
+            o.newBounds = Object.assign({}, o.bounds, { y: bottom - o.bounds.height });
+          }
+        }
+        break;
+    }
+
+    for(let o of boundingBoxes) {
+      changes.push({
+        id: o.item.id,
+        changes: this._changeService.getBoundsChanges(o.item, o.newBounds, o.bounds)
+      });
+    }
+
+    let newBounds: BoundingBox = this._objectHelperService.getBoundingBoxForBounds(boundingBoxes.map((x:any) => x.newBounds));
+
+    this._ngRedux.dispatch({ 
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: changes,
+      newBounds: newBounds
+    });
+
+    this.selectedBoundsChanged.emit(newBounds);
   }
 
   //=========Selection========

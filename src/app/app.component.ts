@@ -66,13 +66,13 @@ export class AppComponent implements OnInit {
 
   up(): void {
     if (this.dataStoreService.selectedObjects.length > 0) {
-      this.dataStoreService.moveObjectUp(this.dataStoreService.selectedObjects[0]);
+      this.dataStoreService.moveObjectsUp(this.dataStoreService.selectedObjects);
     }
   }
 
   down(): void {
     if (this.dataStoreService.selectedObjects.length > 0) {
-      this.dataStoreService.moveObjectDown(this.dataStoreService.selectedObjects[0]);
+      this.dataStoreService.moveObjectsDown(this.dataStoreService.selectedObjects);
     }
   }
 
@@ -100,6 +100,48 @@ export class AppComponent implements OnInit {
 
   clear(): void {
     this.dataStoreService.clearObjects();
+    this.dataStoreService.selectObjects([]);
+  }
+
+  alignLeft(): void {
+    this.dataStoreService.alignObjectsLeft(this.dataStoreService.selectedObjects);
+
+  }
+
+  alignCenter(): void {
+    this.dataStoreService.alignObjectsCenter(this.dataStoreService.selectedObjects);
+    
+  }
+
+  alignRight(): void {
+    this.dataStoreService.alignObjectsRight(this.dataStoreService.selectedObjects);
+    
+  }
+
+  alignTop(): void {
+    this.dataStoreService.alignObjectsTop(this.dataStoreService.selectedObjects);
+
+  }
+
+  alignMiddle(): void {
+    this.dataStoreService.alignObjectsMiddle(this.dataStoreService.selectedObjects);
+    
+  }
+
+  alignBottom(): void {
+    this.dataStoreService.alignObjectsBottom(this.dataStoreService.selectedObjects);
+    
+  }
+
+  setStyles(): void {
+    this.dataStoreService.setStyles(this.dataStoreService.selectedObjects, {
+      showFill: true,
+      showStroke: true,
+      fill: 'red',
+      stroke: 'yellow',
+      strokeWidth: 3,
+      opacity: 1
+    });
   }
 
   ngOnInit() {

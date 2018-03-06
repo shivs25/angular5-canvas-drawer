@@ -123,14 +123,8 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
             });
         }
         case CHANGE_Z_INDEX: {
-            let item: DrObject = state.elements.find((t: any) => t.id === action.id);
-            let index = state.elements.indexOf(item);
-
-            let items: DrObject[] = state.elements.slice(0);
-            items.splice(index, 1);
-            items.splice(action.newIndex, 0, item);
             return Object.assign({}, state, {
-                elements: items
+                elements: action.elements.slice(0)
             });
         }
         case ADD_OBJECTS: {
@@ -143,8 +137,11 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
 
         }
         case REMOVE_OBJECTS: {
+            
             return Object.assign({}, state, {
-                elements: state.elements.filter((t: any) => action.itemIds.indexOf(t.id) < 0)
+                elements: state.elements.filter((t: any) => action.ids.indexOf(t.id) < 0),
+                selectedBounds: null !== action.newBounds ? Object.assign({}, action.newBounds) : null,
+                selectedObjects: action.selectedObjects.slice(0)
             });
         }
         case GROUP_OBJECTS: {
@@ -173,19 +170,23 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                     ...newElements.slice(0, highZIndex),
                     newItem,
                     ...newElements.slice(highZIndex + 1)
-                ]
+                ],
+                selectedObjects: [cloneDeep(newItem)]
             });
         }
         case UNGROUP_OBJECT: {
             let item: DrObject = state.elements.find((t: any) => t.id === action.item.id);
             let index: number = state.elements.indexOf(item);
 
+            let elements: DrObject[] = [
+                ...state.elements.slice(0, index),
+                ...(action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x)),
+                ...state.elements.slice(index + 1),
+            ];
+
             return Object.assign({}, state, {
-                elements: [
-                    ...state.elements.slice(0, index),
-                    ...(action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x)),
-                    ...state.elements.slice(index + 1),
-                ]
+                elements: elements,
+                selectedObjects: elements.map((t: DrObject) => cloneDeep(t))
             });
         }
         case SELECT_OBJECTS: {
@@ -196,9 +197,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         }
         case CLEAR_OBJECTS: {
             return Object.assign({}, state, {
-                elements: [],
-                selectedObjects: [],
-                selectedBounds: null
+                elements: []
             });
         }
         case SET_TOOL: {

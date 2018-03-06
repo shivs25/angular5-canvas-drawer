@@ -8,7 +8,7 @@ import { DrRect } from '../models/dr-rect';
 import { DrText } from '../models/dr-text';
 import { DrType } from '../models/dr-type.enum';
 import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/bounding-box';
-import { BoundDirectivePropertyAst } from '@angular/compiler';
+import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/compiler';
 
 @Injectable()
 export class DrawerObjectHelperService {
@@ -40,6 +40,21 @@ export class DrawerObjectHelperService {
 
         p.points = pts;
         break;
+    }
+  }
+
+  public getBoundingBoxForBounds(boundingBoxes: BoundingBox[]) {
+
+    let left: number = Math.min(...boundingBoxes.map((b: any) => b.x));
+    let right: number = Math.max(...boundingBoxes.map((b: any) => b.x + b.width));
+    let top: number = Math.min(...boundingBoxes.map((b: any) => b.y));
+    let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.y + b.height));
+
+    return {
+      x: left,
+      y: top,
+      width: right - left,
+      height: bottom - top
     }
   }
 

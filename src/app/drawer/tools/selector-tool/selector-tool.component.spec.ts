@@ -6,6 +6,7 @@ import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 import { NO_ERRORS_SCHEMA, EventEmitter } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
+import { BoundingBox } from '../../models/bounding-box';
 
 
 describe('SelectorToolComponent', () => {
@@ -16,6 +17,7 @@ describe('SelectorToolComponent', () => {
     selectionChanged: new EventEmitter<DrObject[]>(),
     editingChanged: new EventEmitter<boolean>(),
     objectsAdded: new EventEmitter<DrObject[]>(),
+    selectedBoundsChanged: new EventEmitter<BoundingBox>(),
     redid: new EventEmitter<any>(),
     undid: new EventEmitter<any>(),
     selectedObjects: [],
@@ -23,7 +25,7 @@ describe('SelectorToolComponent', () => {
   };
   let objectService: any = {};
   let changeService: any = {};
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SelectorToolComponent ],

@@ -15,6 +15,7 @@ export declare class DataStoreService {
     undid: EventEmitter<void>;
     redid: EventEmitter<void>;
     selectionChanged: EventEmitter<DrObject[]>;
+    selectedBoundsChanged: EventEmitter<BoundingBox>;
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
     private _duplicateOffset;
@@ -24,10 +25,16 @@ export declare class DataStoreService {
     readonly selectedBounds: BoundingBox;
     selectedTool: EditorToolType;
     readonly isEditing: boolean;
+    alignObjectsLeft(items: DrObject[]): void;
+    alignObjectsRight(items: DrObject[]): void;
+    alignObjectsCenter(items: DrObject[]): void;
+    alignObjectsTop(items: DrObject[]): void;
+    alignObjectsMiddle(items: DrObject[]): void;
+    alignObjectsBottom(items: DrObject[]): void;
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
-    setStyle(item: DrObject, newStyle: DrStyle): void;
-    moveObjectDown(item: DrObject): void;
-    moveObjectUp(item: DrObject): void;
+    setStyles(items: DrObject[], newStyle: DrStyle): void;
+    moveObjectsDown(items: DrObject[]): void;
+    moveObjectsUp(items: DrObject[]): void;
     addObjects(items: DrObject[]): void;
     groupObjects(items: DrObject[]): void;
     ungroupObject(item: DrGroupedObject): void;
@@ -36,6 +43,7 @@ export declare class DataStoreService {
     clearObjects(): void;
     private getObjectIndex(item);
     private getNextId();
+    private alignObjects(items, alignment);
     selectObjects(items: DrObject[]): void;
     beginEdit(): void;
     endEdit(): void;

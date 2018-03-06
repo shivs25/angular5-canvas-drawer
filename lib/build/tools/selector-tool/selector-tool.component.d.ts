@@ -21,6 +21,8 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     selectionStyle: any;
     private _subRedid;
     private _subUndid;
+    private _subSelectionChanged;
+    private _subSelectedBoundsChanged;
     private _mouseDownClones;
     private _mouseDownLocation;
     private _mouseDown;

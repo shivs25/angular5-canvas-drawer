@@ -9,5 +9,6 @@ export const UNGROUP_OBJECT = "UNGROUP_OBJECT";
 export const CLEAR_OBJECTS = "CLEAR_OBJECTS";
 export const SET_TOOL = "SET_TOOL";
 
+
 export const BEGIN_EDIT = "BEGIN_EDIT";
 export const END_EDIT = "END_EDIT";
