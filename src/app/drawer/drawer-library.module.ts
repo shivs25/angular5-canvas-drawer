@@ -23,7 +23,7 @@ export { DataStoreService } from './services/data-store.service';
 export { EditorToolType } from './models/enums';
 export { DrStyle, createDrStyle } from './models/dr-style';
 export { DrTextStyle, createDrTextStyle } from './models/dr-text-style';
-
+export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object'
 
 @NgModule({
   imports: [
