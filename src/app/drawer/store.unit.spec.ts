@@ -1,11 +1,13 @@
 import { editingReducer, INITIAL_ELEMENT_STATE, elementsReducer, IDrawerAppState, rootReducer, INITIAL_STATE } from "./store";
-import { SET_ELEMENTS, REPLACE_OBJECTS, ADD_OBJECTS } from "./actions";
+import { SET_ELEMENTS, REPLACE_OBJECTS, ADD_OBJECTS, CHANGE_OBJECTS_PROPERTIES, REMOVE_OBJECTS } from "./actions";
 import { createDrRect } from "./models/dr-rect";
 import { createDrEllipse } from "./models/dr-ellipse";
-import { createDrGroupedObject } from "./models/dr-grouped-object";
+import { createDrGroupedObject, DrGroupedObject } from "./models/dr-grouped-object";
 import { NgRedux } from "@angular-redux/store";
 import { createStore } from "redux";
 import { ActionCreators } from "redux-undo";
+import { DrStyledObject } from "./models/dr-styled-object";
+import { Action } from "rxjs/scheduler/Action";
 
 
 
@@ -114,5 +116,82 @@ describe('Store Tests', () => {
 
         store.dispatch(ActionCreators.undo());
         expect(store.getState().elementState.present.elements.length).toEqual(4);
+    });
+
+    it('Should change properties on nested object', () => {
+        let state = INITIAL_STATE;
+
+        state.elementState.present.elements = [
+            createDrRect({ id: 1}), 
+            createDrEllipse({ id: 2 }),
+            createDrRect({ id: 3}),
+            createDrGroupedObject({ id: 4, objects: [
+                createDrRect({ id: 5 }),
+                createDrRect({ id: 6 })
+            ]})
+        ];
+        let store = createStore(rootReducer, state);
+        
+        let currentState = store.getState();
+
+        store.dispatch({
+            type: CHANGE_OBJECTS_PROPERTIES,
+            changes: [{ id: 5, changes: { fill: 'yellow' }}]
+        });
+        
+        currentState = store.getState();
+        expect(((store.getState().elementState.present.elements[3] as DrGroupedObject).objects[0] as DrStyledObject).fill).toEqual('yellow');
+    });
+
+    it('Should remove on nested object', () => {
+        let state = INITIAL_STATE;
+
+        state.elementState.present.elements = [
+            createDrRect({ id: 1}), 
+            createDrEllipse({ id: 2 }),
+            createDrRect({ id: 3}),
+            createDrGroupedObject({ id: 4, objects: [
+                createDrRect({ id: 5 }),
+                createDrRect({ id: 6 })
+            ]})
+        ];
+        let store = createStore(rootReducer, state);
+        
+        let currentState = store.getState();
+
+        store.dispatch({
+            type: REMOVE_OBJECTS,
+            ids: [5]
+        });
+        
+        currentState = store.getState();
+        expect((store.getState().elementState.present.elements[3] as DrGroupedObject).objects.length).toEqual(1);
+    });
+
+    it('Should remove on nested object and put back on undo', () => {
+        let state = INITIAL_STATE;
+
+        state.elementState.present.elements = [
+            createDrRect({ id: 1}), 
+            createDrEllipse({ id: 2 }),
+            createDrRect({ id: 3}),
+            createDrGroupedObject({ id: 4, objects: [
+                createDrRect({ id: 5 }),
+                createDrRect({ id: 6 })
+            ]})
+        ];
+        let store = createStore(rootReducer, state);
+        
+        let currentState = store.getState();
+
+        store.dispatch({
+            type: REMOVE_OBJECTS,
+            ids: [5]
+        });
+
+        store.dispatch(ActionCreators.undo());
+        
+        currentState = store.getState();
+        expect((store.getState().elementState.present.elements[3] as DrGroupedObject).objects.length).toEqual(2);
     });
 });

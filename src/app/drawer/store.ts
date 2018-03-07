@@ -89,28 +89,9 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         }
         case CHANGE_OBJECTS_PROPERTIES: {
             
-            let newArray: DrObject[] = [];
-            let newItem: DrObject;
-            let newSelectedObjects: DrObject[] = state.selectedObjects.slice(0);
-            let changes: any;
-            let selectedItem: DrObject;
-            let selectedIndex: number;
-            for(let i of state.elements) {
-                changes = action.changes.find((t: any) => t.id === i.id);
-                if (changes) {
-                    newItem = Object.assign({}, cloneDeep(i), changes.changes);
-                }
-                else {
-                    if (DrType.GROUPED_OBJECT === i.drType) {
-                        findAndReplaceNestedItem(i as DrGroupedObject);
-                    }
-                    newItem = i;
-                }
-
-                newArray.push(newItem);
-            }
+            
             return Object.assign({}, state, {
-                elements: newArray
+                elements: findAndReplaceNestedItems(state.elements, action.changes)
             });
         }
         case ADD_OBJECTS: {
@@ -124,7 +105,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         }
         case REMOVE_OBJECTS: {
             return Object.assign({}, state, {
-                elements: state.elements.filter((t: any) => action.ids.indexOf(t.id) < 0)
+                elements: findAndRemoveNestedObjects(state.elements, action.ids)
             });
         }
         case REPLACE_OBJECTS: {
@@ -159,9 +140,49 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
     }
 }
 
-function findAndReplaceNestedItem(item: DrGroupedObject): void {
+function findAndRemoveNestedObjects(items: DrObject[], ids: number[]): DrObject[] {
+    let returnValue: DrObject[] = [];
 
+    for(let o of items) {
+        if (ids.indexOf(o.id) < 0) {
+            if (DrType.GROUPED_OBJECT === o.drType) {
+                returnValue.push(Object.assign({}, o, { objects: findAndRemoveNestedObjects((o as DrGroupedObject).objects, ids) }));
+            }
+            else {
+                returnValue.push(o);
+            }
+        }
+    }
+
+    return returnValue;
 }
+
+
+function findAndReplaceNestedItems(items: DrObject[], changes: any[]): DrObject[] {
+    let newArray: DrObject[] = [];
+    let newItem: DrObject;
+    let itemChanges: any;
+    let selectedItem: DrObject;
+    let selectedIndex: number;
+    for(let i of items) {
+        itemChanges = changes.find((t: any) => t.id === i.id);
+        if (itemChanges) {
+            newItem = Object.assign({}, cloneDeep(i), itemChanges.changes);
+        }
+        else {
+            if (DrType.GROUPED_OBJECT === i.drType) {
+                newItem = Object.assign({}, cloneDeep(i));
+                Object.assign(newItem, { objects: findAndReplaceNestedItems((newItem as DrGroupedObject).objects, changes) });
+            }
+            else {
+                newItem = i;
+            }
+        }
+
+        newArray.push(newItem);
+    }
+    return newArray;
+}   
 
 const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
 export const undoableElementsReducer: any = undoable(elementsReducer, {

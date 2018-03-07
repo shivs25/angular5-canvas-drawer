@@ -36,14 +36,16 @@ export declare class DataStoreService {
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
     addObjects(items: DrObject[]): void;
+    removeObjects(items: DrObject[]): void;
     groupObjects(items: DrObject[]): void;
     ungroupObject(item: DrGroupedObject): void;
-    removeObjects(items: DrObject[]): void;
     duplicateObjects(items: DrObject[]): void;
     clearObjects(): void;
     private getObjectIndex(item);
     private getNextId();
+    private areElementArraysTheSameOrder(arr1, arr2);
     private alignObjects(items, alignment);
+    private resetSelection();
     selectObjects(items: DrObject[]): void;
     beginEdit(): void;
     endEdit(): void;

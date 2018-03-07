@@ -10,13 +10,12 @@ import {
   SELECT_OBJECTS, 
   END_EDIT, 
   BEGIN_EDIT,
-  CHANGE_Z_INDEX, 
   ADD_OBJECTS, 
   SET_TOOL, 
-  GROUP_OBJECTS,
-  UNGROUP_OBJECT,
   REMOVE_OBJECTS,
-  CLEAR_OBJECTS
+  CLEAR_OBJECTS,
+  REPLACE_OBJECTS,
+  INIT_ELEMENTS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -25,7 +24,7 @@ import { DrawerObjectHelperService } from '../services/drawer-object-helper.serv
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
-import { DrGroupedObject } from '../models/dr-grouped-object';
+import { DrGroupedObject, createDrGroupedObject } from '../models/dr-grouped-object';
 import { cloneDeep, updateChildItemIds } from '../utilities';
 
 const DUPLICATE_OFFSET_AMOUNT = 10;
@@ -55,7 +54,8 @@ export class DataStoreService {
   }
 
   public set elements(elements: DrObject[]) {
-    this._ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
+    this._ngRedux.dispatch({ type: INIT_ELEMENTS, elements: elements });
+    this._ngRedux.dispatch({ type: SELECT_OBJECTS, items: [], selectedBounds: null });
   }
 
   public get selectedObjects(): DrObject[] { 
@@ -131,9 +131,9 @@ export class DataStoreService {
       }
       this._ngRedux.dispatch({ 
         type: CHANGE_OBJECTS_PROPERTIES, 
-        changes: changes,
-        newBounds: newBounds
+        changes: changes
       });
+      this.resetSelection();
     }
     this._duplicateOffset = 1;
   }
@@ -143,9 +143,9 @@ export class DataStoreService {
       type: CHANGE_OBJECTS_PROPERTIES,
       changes: items.map((x: DrObject) => { 
         return { id: x.id, changes: Object.assign({}, newStyle) }; 
-      }),
-      newBounds: this.selectedBounds
+      })
     });
+    this.resetSelection();
     this._duplicateOffset = 1;
   }
 
@@ -162,20 +162,21 @@ export class DataStoreService {
     }
     
     let min: number = Math.min(...indices.map((b: any) => b.index)) - 1;
-    
-    if (min >= 0) {
-      let idsToExclude = indices.map((x: any) => x.id);
-      let elements: DrObject[] = [
-        ...this.elements.slice(0, min).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
-        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
-        ...this.elements.slice(min).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
-      ];
-  
+    if (min < 0) { min = 0 };
+    let idsToExclude = indices.map((x: any) => x.id);
+    let elements: DrObject[] = [
+      ...this.elements.slice(0, min).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+      ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+      ...this.elements.slice(min).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+    ];
+
+    if (!this.areElementArraysTheSameOrder(elements, this.elements)) {
       this._ngRedux.dispatch({
-        type: CHANGE_Z_INDEX,
+        type: SET_ELEMENTS,
         elements: elements
       });
     }
+    
     this._duplicateOffset = 1;
   }
 
@@ -191,20 +192,24 @@ export class DataStoreService {
     }
     
     let max: number = Math.max(...indices.map((b: any) => b.index)) + 1;
-    if (max < this.elements.length) {
-      let idsToExclude = indices.map((x: any) => x.id);
-    
-      let elements: DrObject[] = [
-        ...this.elements.slice(0, max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
-        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
-        ...this.elements.slice(max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
-      ];
-  
+    if (max > this.elements.length - 1) {
+      max = this.elements.length - 1;
+    }
+
+    let idsToExclude = indices.map((x: any) => x.id);
+    let elements: DrObject[] = [
+      ...this.elements.slice(0, max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+      ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+      ...this.elements.slice(max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+    ];
+
+    if (!this.areElementArraysTheSameOrder(elements, this.elements)) {
       this._ngRedux.dispatch({
-        type: CHANGE_Z_INDEX,
+        type: SET_ELEMENTS,
         elements: elements
       });
     }
+    
     
     this._duplicateOffset = 1;
   }
@@ -214,29 +219,8 @@ export class DataStoreService {
       type: ADD_OBJECTS,
       newItems: items
     });
-    this._duplicateOffset = 1;
     this.objectsAdded.emit(items);
-  }
-
-  public groupObjects(items: DrObject[]): void {
-    this._ngRedux.dispatch({
-      type: GROUP_OBJECTS,
-      items: items,
-      selectedBounds: this._objectHelperService.getBoundingBox(items),
-      nextId: this.getNextId()
-    });
     this._duplicateOffset = 1;
-    this.selectionChanged.emit(this.selectedObjects);
-  }
-
-  public ungroupObject(item: DrGroupedObject): void {
-    this._ngRedux.dispatch({
-      type: UNGROUP_OBJECT,
-      item: item,
-      selectedBounds: this._objectHelperService.getBoundingBox(item.objects)
-    });
-    this._duplicateOffset = 1;
-    this.selectionChanged.emit(this.selectedObjects);
   }
 
   public removeObjects(items: DrObject[]): void {
@@ -245,15 +229,56 @@ export class DataStoreService {
     let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
     this._ngRedux.dispatch({
       type: REMOVE_OBJECTS,
-      ids: items.map((x: any) => x.id),
-      newBounds: b,
-      selectedObjects: newSelectedObjects
+      ids: items.map((x: any) => x.id)
     });
+    this.selectObjects(newSelectedObjects);
     this._duplicateOffset = 1;
-    this.selectedBoundsChanged.emit(b);
-    this.selectionChanged.emit(newSelectedObjects);
   }
 
+
+  public groupObjects(items: DrObject[]): void {
+    let itemToAdd: DrGroupedObject = createDrGroupedObject({
+      id: this.getNextId(),
+      objects: items
+    });
+
+
+    let groupedObject: DrObject;
+    let highZIndex: number = 0;
+    let indexOf: number;
+    for(let i of items) {
+        groupedObject = this.elements.find((t: any) => i.id === t.id);
+        if (groupedObject) {
+            indexOf = this.elements.indexOf(groupedObject);
+            if (indexOf > highZIndex) {
+              highZIndex = indexOf;
+            }
+        }
+    }
+
+    this._ngRedux.dispatch({
+      type: REPLACE_OBJECTS,
+      itemsToRemove: items,
+      itemsToAdd: [itemToAdd],
+      zIndex: highZIndex
+    });
+    this.selectObjects([itemToAdd]);
+    this._duplicateOffset = 1;
+  }
+
+  public ungroupObject(item: DrGroupedObject): void {
+
+    this._ngRedux.dispatch({
+      type: REPLACE_OBJECTS,
+      itemsToRemove: [item],
+      itemsToAdd: item.objects,
+      zIndex: this.elements.indexOf(item)
+    });
+    this.selectObjects(item.objects);
+    this._duplicateOffset = 1;
+  }
+
+ 
   public duplicateObjects(items: DrObject[]): void {
     let newItems: DrObject[] = [];
     let b: BoundingBox;
@@ -278,12 +303,13 @@ export class DataStoreService {
       newItems.push(newItem);
     }
 
-    this._ngRedux.dispatch({ type: ADD_OBJECTS, newItems: newItems })
+    this._ngRedux.dispatch({ type: ADD_OBJECTS, newItems: newItems });
     this._duplicateOffset++;
   }
 
   public clearObjects(): void {
     this._ngRedux.dispatch({ type: CLEAR_OBJECTS });
+    this.selectObjects([]);
   }
 
   private getObjectIndex(item: DrObject): number {
@@ -295,6 +321,24 @@ export class DataStoreService {
   private getNextId(): number {
     return 0 === this.elements.length ? 1 :
           Math.max(...this.elements.map(o => o.id)) + 1;
+  }
+
+  private areElementArraysTheSameOrder(arr1: DrObject[], arr2: DrObject[]) {
+    let returnValue: boolean = true;
+
+    if (arr1.length === arr2.length) {
+      for(let i = 0; i < arr1.length; i++) {
+        if (arr1[i].id !== arr2[i].id) {
+          returnValue = false;
+          break;
+        }
+      }
+    }
+    else {
+      returnValue = false;
+    }
+
+    return  returnValue;
   }
 
   private alignObjects(items: DrObject[], alignment: number) {
@@ -374,11 +418,24 @@ export class DataStoreService {
 
     this._ngRedux.dispatch({ 
       type: CHANGE_OBJECTS_PROPERTIES,
-      changes: changes,
-      newBounds: newBounds
+      changes: changes
     });
 
-    this.selectedBoundsChanged.emit(newBounds);
+    this.resetSelection();
+    this._duplicateOffset = 1;
+  }
+
+  private resetSelection(): void {
+    let newArray: DrObject[] = [];
+    for(let o of this.selectedObjects) {
+      newArray.push(this.elements.find((t: DrObject) => t.id === o.id));
+    }
+    this._ngRedux.dispatch({
+      type: SELECT_OBJECTS,
+      items: newArray,
+      selectedBounds: this._objectHelperService.getBoundingBox(newArray)
+    });
+    this.selectedBoundsChanged.emit(this.selectedBounds);
   }
 
   //=========Selection========
