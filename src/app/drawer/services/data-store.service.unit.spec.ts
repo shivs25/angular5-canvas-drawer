@@ -9,7 +9,8 @@ import { rootReducer, INITIAL_STATE, IDrawerAppState } from '../store';
 import { MockRedux, MockChangeHelperService, MockDrawerObjectHelperService } from '../helpers/mocks';
 import { createDrRect, DrRect } from '../models/dr-rect';
 import { DrObject } from '../models/dr-object';
-import { SET_ELEMENTS } from '../actions';
+import { SET_ELEMENTS, SELECT_OBJECTS } from '../actions';
+import { CHANGE_OBJECTS_PROPERTIES } from '../actions';
 
 
 describe('DataStoreService', () => {
@@ -339,6 +340,43 @@ describe('DataStoreService', () => {
     ]);
 
     expect(redux.dispatch).not.toHaveBeenCalled();
+    
+  });
+
+
+  it('should set visibility on objects', () => {
+    let items = [
+      createDrRect({ id: 1}),
+      createDrRect({ id: 2}),
+      createDrRect({ id: 3}),
+      createDrRect({ id: 4}),
+    ];
+
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items,
+          selectedObjects: []
+        }
+      }
+    }));
+    spyOn(redux, "dispatch");
+
+    service.setVisibility([
+      Object.assign({}, items[0]) as DrObject,
+      Object.assign({}, items[3]) as DrObject
+    ]
+    , false);
+
+    expect(redux.dispatch).toHaveBeenCalledWith({
+        type: CHANGE_OBJECTS_PROPERTIES,
+        changes: [
+          { id: 1, changes: { visible: false } },
+          { id: 4, changes: { visible: false } }
+        ]
+      }
+    );
+      
     
   });
 
