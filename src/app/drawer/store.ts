@@ -101,6 +101,9 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                     newItem = Object.assign({}, cloneDeep(i), changes.changes);
                 }
                 else {
+                    if (DrType.GROUPED_OBJECT === i.drType) {
+                        findAndReplaceNestedItem(i as DrGroupedObject);
+                    }
                     newItem = i;
                 }
 
@@ -154,6 +157,10 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         default:
             return state;
     }
+}
+
+function findAndReplaceNestedItem(item: DrGroupedObject): void {
+
 }
 
 const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
