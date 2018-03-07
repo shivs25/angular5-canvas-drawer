@@ -24,7 +24,7 @@ export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     showStroke: false,
     size: 16,
     fontFamily: 'Verdana',
-    fontColor: 'black',
+    fontColor: '#000000',
     hAlignment: DrTextAlignment.NEAR,
     vAlignment: DrTextAlignment.NEAR,
     drType: DrType.TEXT

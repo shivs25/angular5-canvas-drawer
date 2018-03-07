@@ -15,8 +15,8 @@ export interface DrStyledObject extends DrObject {
 export const DEFAULT_STYLED_OBJECT: DrStyledObject = Object.assign({}, DEFAULT_OBJECT, {
     showFill: true,
     showStroke: true,
-    fill: "white",
-    stroke: "black",
+    fill: "#ffffff",
+    stroke: "#000000",
     strokeWidth: 1,
     opacity: 1,
     dashedLine: false

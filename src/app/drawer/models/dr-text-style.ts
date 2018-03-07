@@ -18,7 +18,7 @@ export const DEFAULT_TEXT_STYLE: DrTextStyle = Object.assign({}, DEFAULT_STYLE, 
     italic: false,
     size: 16,
     fontFamily: 'Verdana',
-    fontColor: 'black',
+    fontColor: '#000000',
     hAlignment: DrTextAlignment.NEAR,
     vAlignment: DrTextAlignment.NEAR
 });
