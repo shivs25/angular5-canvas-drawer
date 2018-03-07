@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, CHANGE_Z_INDEX, SET_TOOL, GROUP_OBJECTS, UNGROUP_OBJECT, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -79,9 +79,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
     switch(action.type) {
         case SET_ELEMENTS: {
             return Object.assign({}, state, {
-                elements: action.elements ? action.elements.slice(0) : [],
-                selectedObjects: [],
-                selectedBounds: null
+                elements: action.elements ? action.elements.slice(0) : []
             });
         }
         case CHANGE_OBJECTS_PROPERTIES: {
@@ -102,29 +100,9 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 }
 
                 newArray.push(newItem);
-
-                selectedItem = newSelectedObjects ? newSelectedObjects.find((t: any) => t.id === newItem.id) : null;
-                if (selectedItem && null !== selectedItem) {
-                    //item was in the selection
-                    selectedIndex = newSelectedObjects.indexOf(selectedItem);
-                    newSelectedObjects = [
-                        ...newSelectedObjects.slice(0, selectedIndex),
-                        cloneDeep(newItem),
-                        ...newSelectedObjects.slice(selectedIndex + 1)
-                    ];
-                }
             }
-
-
             return Object.assign({}, state, {
-                elements: newArray,
-                selectedBounds: Object.assign({}, action.newBounds),
-                selectedObjects: newSelectedObjects ? newSelectedObjects : state.selectedObjects
-            });
-        }
-        case CHANGE_Z_INDEX: {
-            return Object.assign({}, state, {
-                elements: action.elements.slice(0)
+                elements: newArray
             });
         }
         case ADD_OBJECTS: {
@@ -137,56 +115,19 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
 
         }
         case REMOVE_OBJECTS: {
-            
             return Object.assign({}, state, {
-                elements: state.elements.filter((t: any) => action.ids.indexOf(t.id) < 0),
-                selectedBounds: null !== action.newBounds ? Object.assign({}, action.newBounds) : null,
-                selectedObjects: action.selectedObjects.slice(0)
+                elements: state.elements.filter((t: any) => action.ids.indexOf(t.id) < 0)
             });
         }
-        case GROUP_OBJECTS: {
-            let groupedArray: DrObject[] = [];
-            let newElements: DrObject[] = [];
-
-            let groupedObject: DrObject;
-            let highZIndex: number = 0;
-            for(let i of state.elements) {
-                groupedObject = action.items.find((t: any) => i.id === t.id);
-                if (groupedObject) {
-                    highZIndex = newElements.length;
-                    groupedArray.push(cloneDeep(i));
-                }
-                else {
-                    newElements.push(i);
-                }
-            }
-
-            let newItem: DrGroupedObject = createDrGroupedObject({
-                id: action.nextId,
-                objects: groupedArray
-            });
-            return Object.assign({}, state, {
-                elements: [
-                    ...newElements.slice(0, highZIndex),
-                    newItem,
-                    ...newElements.slice(highZIndex + 1)
-                ],
-                selectedObjects: [cloneDeep(newItem)]
-            });
-        }
-        case UNGROUP_OBJECT: {
-            let item: DrObject = state.elements.find((t: any) => t.id === action.item.id);
-            let index: number = state.elements.indexOf(item);
-
-            let elements: DrObject[] = [
-                ...state.elements.slice(0, index),
-                ...(action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x)),
-                ...state.elements.slice(index + 1),
+        case REPLACE_OBJECTS: {
+            let newElements: DrObject[] = [
+                ...state.elements.slice(0, action.zIndex),
+                ...action.itemsToAdd,
+                ...state.elements.slice(action.zIndex)
             ];
-
-            return Object.assign({}, state, {
-                elements: elements,
-                selectedObjects: (action.item as DrGroupedObject).objects.map((x: any) => cloneDeep(x))
+            let idsToRemove: number[] = action.itemsToRemove.map((x: DrObject) => x.id);
+            return  Object.assign({}, state, {
+                elements: newElements.filter((x: DrObject) => idsToRemove.indexOf(x.id) < 0)
             });
         }
         case SELECT_OBJECTS: {
