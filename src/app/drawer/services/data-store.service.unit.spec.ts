@@ -306,11 +306,39 @@ describe('DataStoreService', () => {
         items[0],
         items[1],
         items[3],
-        items[2],
         items[4],
+        items[2],
         items[5]
       ]}
     );
+    
+  });
+
+  it('should not move multiplethat cant move', () => {
+    let items = [
+      createDrRect({ id: 1}),
+      createDrRect({ id: 2}),
+      createDrRect({ id: 3}),
+      createDrRect({ id: 4}),
+      createDrRect({ id: 5}),
+      createDrRect({ id: 6})
+    ];
+
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    spyOn(redux, "dispatch");
+
+    service.moveObjectsUp([
+      Object.assign({}, items[4]) as DrObject,
+      Object.assign({}, items[5]) as DrObject
+    ]);
+
+    expect(redux.dispatch).not.toHaveBeenCalled();
     
   });
 

@@ -14,7 +14,8 @@ import {
   SET_TOOL, 
   REMOVE_OBJECTS,
   CLEAR_OBJECTS,
-  REPLACE_OBJECTS
+  REPLACE_OBJECTS,
+  INIT_ELEMENTS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -53,7 +54,7 @@ export class DataStoreService {
   }
 
   public set elements(elements: DrObject[]) {
-    this._ngRedux.dispatch({ type: SET_ELEMENTS, elements: elements });
+    this._ngRedux.dispatch({ type: INIT_ELEMENTS, elements: elements });
     this._ngRedux.dispatch({ type: SELECT_OBJECTS, items: [], selectedBounds: null });
   }
 
@@ -161,20 +162,21 @@ export class DataStoreService {
     }
     
     let min: number = Math.min(...indices.map((b: any) => b.index)) - 1;
-    
-    if (min >= 0) {
-      let idsToExclude = indices.map((x: any) => x.id);
-      let elements: DrObject[] = [
-        ...this.elements.slice(0, min).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
-        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
-        ...this.elements.slice(min).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
-      ];
-  
+    if (min < 0) { min = 0 };
+    let idsToExclude = indices.map((x: any) => x.id);
+    let elements: DrObject[] = [
+      ...this.elements.slice(0, min).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+      ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+      ...this.elements.slice(min).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+    ];
+
+    if (!this.areElementArraysTheSameOrder(elements, this.elements)) {
       this._ngRedux.dispatch({
         type: SET_ELEMENTS,
         elements: elements
       });
     }
+    
     this._duplicateOffset = 1;
   }
 
@@ -190,20 +192,24 @@ export class DataStoreService {
     }
     
     let max: number = Math.max(...indices.map((b: any) => b.index)) + 1;
-    if (max < this.elements.length) {
-      let idsToExclude = indices.map((x: any) => x.id);
-    
-      let elements: DrObject[] = [
-        ...this.elements.slice(0, max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
-        ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
-        ...this.elements.slice(max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
-      ];
-  
+    if (max > this.elements.length - 1) {
+      max = this.elements.length - 1;
+    }
+
+    let idsToExclude = indices.map((x: any) => x.id);
+    let elements: DrObject[] = [
+      ...this.elements.slice(0, max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0),
+      ...indices.sort((a, b) => a.index - b.index).map((x: any) => x.item),
+      ...this.elements.slice(max + 1).filter((x: any) => idsToExclude.indexOf(x.id) < 0)
+    ];
+
+    if (!this.areElementArraysTheSameOrder(elements, this.elements)) {
       this._ngRedux.dispatch({
         type: SET_ELEMENTS,
         elements: elements
       });
     }
+    
     
     this._duplicateOffset = 1;
   }
@@ -317,7 +323,7 @@ export class DataStoreService {
           Math.max(...this.elements.map(o => o.id)) + 1;
   }
 
-  private areElementArraysTheSame(arr1: DrObject[], arr2: DrObject[]) {
+  private areElementArraysTheSameOrder(arr1: DrObject[], arr2: DrObject[]) {
     let returnValue: boolean = true;
 
     if (arr1.length === arr2.length) {

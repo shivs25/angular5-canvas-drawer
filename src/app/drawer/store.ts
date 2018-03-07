@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -77,6 +77,11 @@ export const editingReducer: Reducer<IEditingState> = (state: IEditingState = IN
 
 export const elementsReducer: Reducer<IElementState> = (state: IElementState = INITIAL_ELEMENT_STATE, action: any) => {
     switch(action.type) {
+        case INIT_ELEMENTS: {
+            return Object.assign({}, state, {
+                elements: action.elements ? action.elements.slice(0) : []
+            });
+        }
         case SET_ELEMENTS: {
             return Object.assign({}, state, {
                 elements: action.elements ? action.elements.slice(0) : []
@@ -151,7 +156,7 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
     }
 }
 
-const ACTIONS_TO_IGNORE = [SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
+const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
     filter: excludeAction(ACTIONS_TO_IGNORE),
     limit: 10,

@@ -1,8 +1,11 @@
-import { editingReducer, INITIAL_ELEMENT_STATE, elementsReducer } from "./store";
-import { SET_ELEMENTS, REPLACE_OBJECTS } from "./actions";
+import { editingReducer, INITIAL_ELEMENT_STATE, elementsReducer, IDrawerAppState, rootReducer, INITIAL_STATE } from "./store";
+import { SET_ELEMENTS, REPLACE_OBJECTS, ADD_OBJECTS } from "./actions";
 import { createDrRect } from "./models/dr-rect";
 import { createDrEllipse } from "./models/dr-ellipse";
 import { createDrGroupedObject } from "./models/dr-grouped-object";
+import { NgRedux } from "@angular-redux/store";
+import { createStore } from "redux";
+import { ActionCreators } from "redux-undo";
 
 
 
@@ -75,5 +78,41 @@ describe('Store Tests', () => {
         });
         expect(res.elements.length).toEqual(4);
         expect(res.elements.map((t) => t.id)).toEqual([1, 4, 5, 3]);
+    });
+
+
+    it('Should restore state on undo after move up', () => {
+        let state = INITIAL_STATE;
+
+        state.elementState.present.elements = [
+            createDrRect({ id: 1}), 
+            createDrEllipse({ id: 2 }),
+            createDrRect({ id: 3})
+        ];
+        let store = createStore(rootReducer, state);
+        
+        let currentState = store.getState();
+
+        store.dispatch({
+            type: ADD_OBJECTS,
+            newItems: [createDrRect({ id: 4})]
+        });
+        
+        currentState = store.getState();
+        //SIMULATE A MOVE_OBJECTS_DOWN
+        store.dispatch({
+            type: SET_ELEMENTS,
+            elements: [
+                currentState.elementState.present.elements[0],
+                currentState.elementState.present.elements[1],
+                currentState.elementState.present.elements[3],
+                currentState.elementState.present.elements[2]
+            ]
+        });
+
+        currentState = store.getState();
+
+        store.dispatch(ActionCreators.undo());
+        expect(store.getState().elementState.present.elements.length).toEqual(4);
     });
 });
