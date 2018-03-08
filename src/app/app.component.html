@@ -23,18 +23,20 @@
     <button (click)="setStyles()">Styles</button>
     <button (click)="setInvisible()">Visibility</button>
     <button (click)="imageUrl()">Image</button>
+    <button (click)="showPreview()">Preview</button>
 </div>
 <div style="position:relative; width: 600px; height: 600px; border: 1px solid red">
 
-    <app-editable-drawer
-        [elements]="elements">
+    <app-editable-drawer>
     </app-editable-drawer>
 
 </div>
 
-<div style="position: absolute; right: 0; top: 0; width: 300px; white-space:normal;">
-   
-</div>
+<div style="position:relative; width: 600px; height: 600px; border: 1px solid blue">
 
+    <app-preview>
+    </app-preview>
+
+</div>
 
 

@@ -1,25 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PenToolComponent } from './pen-tool.component';
+import { PreviewComponent } from './preview.component';
 
-describe('PenToolComponent', () => {
-  let component: PenToolComponent;
-  let fixture: ComponentFixture<PenToolComponent>;
+describe('PreviewComponent', () => {
+  let component: PreviewComponent;
+  let fixture: ComponentFixture<PreviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PenToolComponent ]
+      declarations: [ PreviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PenToolComponent);
+    fixture = TestBed.createComponent(PreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  /*it('should create', () => {
+ /* it('should create', () => {
     expect(component).toBeTruthy();
   });*/
 });

@@ -12,7 +12,6 @@ export declare class DrawerComponent implements OnInit {
     mouseDownObject: EventEmitter<MouseEventData>;
     mouseMoveObject: EventEmitter<MouseEventData>;
     mouseUpObject: EventEmitter<MouseEventData>;
-    elements: DrObject[];
     constructor(_dataService: DataStoreService);
     ngOnInit(): void;
     onBackgroundClick(evt: any): void;

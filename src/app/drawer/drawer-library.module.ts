@@ -9,6 +9,7 @@ import { EditorModule } from './tools/editor.module';
 import { EditableDrawerComponent } from './editable-drawer/editable-drawer.component';
 import { EditableDrawerModule } from './editable-drawer/editable-drawer.module';
 import { DrawerComponent } from './drawer/drawer.component';
+import { PreviewComponent } from './preview/preview.component';
 
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
@@ -35,9 +36,9 @@ export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-obje
   exports: [
     NgReduxModule,
     EditableDrawerComponent,
-    DrawerComponent
+    DrawerComponent,
+    PreviewComponent
   ],
-  declarations: [],
 })
 export class DrawerLibraryRootModule {
   constructor(ngRedux: NgRedux<IDrawerAppState>) {

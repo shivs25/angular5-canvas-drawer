@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -30,6 +30,7 @@ export interface IElementState {
 
 export interface IEditingState {
     isEditing: boolean;
+    previewElements: DrObject[] 
 }
 
 export interface IDrawerAppState {
@@ -45,7 +46,8 @@ export const INITIAL_ELEMENT_STATE: IElementState = {
 }
 
 export const INITIAL_EDITING_STATE: IEditingState = {
-    isEditing: false
+    isEditing: false,
+    previewElements: []
 }
 
 export const INITIAL_STATE: IDrawerAppState = {
@@ -55,7 +57,8 @@ export const INITIAL_STATE: IDrawerAppState = {
         future: []
     },
     editingState: {
-        isEditing: false
+        isEditing: false,
+        previewElements: []
     }
 }
 
@@ -70,6 +73,11 @@ export const editingReducer: Reducer<IEditingState> = (state: IEditingState = IN
             return  Object.assign({}, state, {
                 isEditing: false
             });
+        case SET_PREVIEW_ELEMENTS:
+            return Object.assign({}, state, {
+                previewElements: action.elements ? action.elements.slice(0) : []
+            });
+            
     }
     
     return state;

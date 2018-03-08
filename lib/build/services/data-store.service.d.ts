@@ -51,6 +51,7 @@ export declare class DataStoreService {
     selectObjects(items: DrObject[]): void;
     beginEdit(): void;
     endEdit(): void;
+    setPreviewElements(items: DrObject[]): void;
     undo(): void;
     redo(): void;
     getObjects(ids: number[]): DrObject[];

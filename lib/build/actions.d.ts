@@ -9,3 +9,4 @@ export declare const CLEAR_OBJECTS = "CLEAR_OBJECTS";
 export declare const SET_TOOL = "SET_TOOL";
 export declare const BEGIN_EDIT = "BEGIN_EDIT";
 export declare const END_EDIT = "END_EDIT";
+export declare const SET_PREVIEW_ELEMENTS = "SET_PREVIEW_ELEMENTS";

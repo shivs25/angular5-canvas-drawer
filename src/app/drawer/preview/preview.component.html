@@ -1,0 +1,13 @@
+
+<div class="absolute-position fill-parent">
+    
+  <svg 
+        class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
+    <ng-container *ngFor="let s of (editingState | async)?.previewElements; let i = index">
+      <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"
+        [hoverClass]="hoverClass"
+        >
+      </ng-container>
+    </ng-container>
+  </svg>
+</div>

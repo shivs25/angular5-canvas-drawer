@@ -15,6 +15,7 @@ export interface IElementState {
 }
 export interface IEditingState {
     isEditing: boolean;
+    previewElements: DrObject[];
 }
 export interface IDrawerAppState {
     elementState: IHistory<IElementState>;

@@ -11,3 +11,4 @@ export const SET_TOOL = "SET_TOOL";
 
 export const BEGIN_EDIT = "BEGIN_EDIT";
 export const END_EDIT = "END_EDIT";
+export const SET_PREVIEW_ELEMENTS = "SET_PREVIEW_ELEMENTS";

@@ -17,15 +17,7 @@ export class EditableDrawerComponent implements OnInit {
 
   @Output()
   public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-
-  @Input()
-  set elements(elements: DrObject[]) {
-    this._dataService.elements = elements;
-  }
-  get elements(): DrObject[] { 
-    return  this._dataService.elements;
-  }
-
+  
   constructor(private _dataService: DataStoreService) { }
 
   ngOnInit() {

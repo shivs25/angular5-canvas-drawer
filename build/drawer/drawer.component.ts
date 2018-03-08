@@ -48,15 +48,6 @@ export class DrawerComponent implements OnInit {
   mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   
 
-
-  @Input()
-  set elements(elements: DrObject[]) {
-    this._dataService.elements = elements;
-  }
-  get elements(): DrObject[] { 
-    return  this._dataService.elements;
-  }
-
   constructor(
     private _dataService: DataStoreService
     

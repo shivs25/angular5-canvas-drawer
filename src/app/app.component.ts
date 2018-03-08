@@ -55,6 +55,10 @@ export class AppComponent implements OnInit {
   }
 
   
+  showPreview(): void {
+    this.dataStoreService.setPreviewElements(this.dataStoreService.selectedObjects);
+
+  }
 
   undo(): void {
     this.dataStoreService.undo();
@@ -228,6 +232,7 @@ export class AppComponent implements OnInit {
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 
+    this.dataStoreService.elements = this.elements;
 
     
 

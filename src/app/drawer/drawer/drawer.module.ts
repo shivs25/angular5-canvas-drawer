@@ -13,6 +13,7 @@ import { DataStoreService } from '../services/data-store.service';
 import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
 import { ChangeHelperService } from '../services/change-helper.service';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
+import { PreviewComponent } from '../preview/preview.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -26,9 +27,10 @@ import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-group
     DrTextComponent,
     DrImageComponent,
     DrGroupedObjectComponent,
-    DynamicSvgDirective
+    DynamicSvgDirective,
+    PreviewComponent
   ], 
-  exports: [DrawerComponent, DynamicSvgDirective], 
+  exports: [DrawerComponent, PreviewComponent, DynamicSvgDirective], 
   providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective],
   entryComponents: [
     DrRectComponent,

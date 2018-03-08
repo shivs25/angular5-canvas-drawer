@@ -15,7 +15,8 @@ import {
   REMOVE_OBJECTS,
   CLEAR_OBJECTS,
   REPLACE_OBJECTS,
-  INIT_ELEMENTS
+  INIT_ELEMENTS,
+  SET_PREVIEW_ELEMENTS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -486,6 +487,13 @@ export class DataStoreService {
   public endEdit(): void {
     this._ngRedux.dispatch({ type: END_EDIT });
     this.editingChanged.emit(this.isEditing);
+  }
+
+  public setPreviewElements(items: DrObject[]): void {
+    this._ngRedux.dispatch({
+      type: SET_PREVIEW_ELEMENTS,
+      elements: items
+    });
   }
 
   //=========History=========
