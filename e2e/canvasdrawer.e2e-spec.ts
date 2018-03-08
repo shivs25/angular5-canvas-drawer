@@ -231,8 +231,8 @@ fdescribe('Maps', function () {
       canvas.selectButton("Duplicate");
       utilities.shortPause();
 
-      element.all(by.css("app-drawer svg.fill-parent g")).then(function (elements) {
-        expect(elements.length / 2).toEqual(2);
+      element.all(by.css("app-selector-tool app-drawer svg.fill-parent g")).then(function (elements) {
+        expect(elements.length).toEqual(2);
       });
     });
     it('CanvasDrawer_RemoveObject_ExpectObjectToBeRemovedFromCanvas', () => {
@@ -278,7 +278,7 @@ fdescribe('Maps', function () {
     });
 
     //Directionals
-    xit('CanvasDrawer_DownButton_ExpectObjectToBeLayeredBelowAnother', () => {
+    it('CanvasDrawer_DownButton_ExpectObjectToBeLayeredBelowAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -305,7 +305,296 @@ fdescribe('Maps', function () {
       canvas.selectButton("Down");
       utilities.shortPause();
 
-      //figure out how to tell that the ellipse is behind the square
-      //expect(element(by.css("ellipse")).isDisplayed()).toBeFalsy();
+      //click away from the object
+      browser.actions().
+        mouseMove(element(by.css("ellipse"))).
+        mouseMove({ x: -200, y: 0 }).
+        click().
+        perform();
+      utilities.normalPause();
+
+      //the order of the children elements determines the "layer" they rest on
+      element.all(by.css("app-selector-tool svg.fill-parent > *")).each(function (element, index) {
+        if (index == 0) {
+          expect(element.getTagName()).toEqual("ellipse");
+        } else if (index == 1) {
+          expect(element.getTagName()).toEqual("rect");
+        }
+      });
+    });
+    it('CanvasDrawer_UpButton_ExpectObjectToBeLayeredAboveAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      element(by.css("app-selector-tool svg.fill-parent rect")).click();
+      utilities.normalPause();
+
+      canvas.selectButton("Up");
+      utilities.normalPause();
+
+      //click away from the object
+      browser.actions().
+        mouseMove(element(by.css("rect"))).
+        mouseMove({ x: -200, y: 0 }).
+        click().
+        perform();
+      utilities.normalPause();
+
+      //the order of the children elements determines the "layer" they rest on
+      element.all(by.css("app-selector-tool svg.fill-parent > *")).each(function (element, index) {
+        if (index == 0) {
+          expect(element.getTagName()).toEqual("ellipse");
+        } else if (index == 1) {
+          expect(element.getTagName()).toEqual("rect");
+        }
+      });
+    });
+    it('CanvasDrawer_LeftButton_ExpectObjectToBeLeftAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Left");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cx")).toEqual("340px");
+    });
+    it('CanvasDrawer_RightButton_ExpectObjectToBeRightAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Right");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cx")).toEqual("460px");
+    });
+    it('CanvasDrawer_CenterButton_ExpectObjectToBeCenterAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.normalPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Center");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cx")).toEqual("400px");
+    });
+    it('CanvasDrawer_TopButton_ExpectObjectToBeTopAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Top");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cy")).toEqual("340px");
+    });
+    it('CanvasDrawer_MiddleButton_ExpectObjectToBeMiddleAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.normalPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Middle");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cy")).toEqual("400px");
+    });
+    it('CanvasDrawer_BottomButton_ExpectObjectToBeBottomAlignedToAnother', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css("rect"))).
+        mouseUp().
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Bottom");
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getCssValue("cy")).toEqual("460px");
     });
 });
