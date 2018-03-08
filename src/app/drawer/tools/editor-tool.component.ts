@@ -11,6 +11,7 @@ import { DataStoreService } from '../services/data-store.service';
 export class EditorToolComponent implements OnInit {
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
+  PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;
 
   @select() elementState;
 

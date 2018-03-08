@@ -1,0 +1,18 @@
+<div class="absolute-position fill-parent">
+    
+  <svg (click)="onBackgroundClick($event)" (mousemove)="onBackgroundMouseMove($event)" 
+        [ngClass]="'crosshair'"
+        class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
+      <ng-container *ngIf="currentObject && currentObject.points.length > 1" dynamic-svg 
+        [componentData]="currentObject" 
+        [overrideProperties]="objectStyle" 
+        [canInteract]="false" elementId="1000000">
+      </ng-container>
+
+      <rect [id]="'resizer-pen'" 
+        *ngIf="currentObject && currentObject.points.length > 1"
+        (click)="onResizerClick($event)"
+        width="8" height= "8" fill="green" [attr.x]="getResizerX()" [attr.y]="getResizerY()"></rect>
+  </svg>
+
+ </div>

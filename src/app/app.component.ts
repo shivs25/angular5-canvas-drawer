@@ -133,6 +133,11 @@ export class AppComponent implements OnInit {
     
   }
 
+  imageUrl(): void {
+    
+    this.dataStoreService.setUrls(this.dataStoreService.selectedObjects, "https://static.pexels.com/photos/175718/pexels-photo-175718.jpeg");
+  }
+
   setStyles(): void {
     this.dataStoreService.setStyles(this.dataStoreService.selectedObjects, {
       showFill: true,
@@ -142,6 +147,14 @@ export class AppComponent implements OnInit {
       strokeWidth: 3,
       opacity: 1
     });
+  }
+
+  setInvisible(): void {
+    this.dataStoreService.setVisibility(this.dataStoreService.selectedObjects, false);
+  }
+
+  pen(): void {
+    this.dataStoreService.selectedTool = EditorToolType.PEN_TOOL;
   }
 
   ngOnInit() {

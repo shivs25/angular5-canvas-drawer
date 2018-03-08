@@ -33,6 +33,7 @@ export declare class DataStoreService {
     alignObjectsBottom(items: DrObject[]): void;
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
     setVisibility(items: DrObject[], visibility: boolean): void;
+    setUrls(items: DrObject[], url: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;

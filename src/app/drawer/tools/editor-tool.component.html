@@ -1,2 +1,3 @@
 <app-selector-tool *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
+<app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool"></app-pen-tool>
 <app-object-creation-tool *ngIf="shouldShowCreationTool()"></app-object-creation-tool>

@@ -26,6 +26,7 @@ import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject, createDrGroupedObject } from '../models/dr-grouped-object';
 import { cloneDeep, updateChildItemIds } from '../utilities';
+import { DrImage } from '../models/dr-image';
 
 const DUPLICATE_OFFSET_AMOUNT = 10;
 
@@ -153,6 +154,17 @@ export class DataStoreService {
       changes: changes
     });
     this.selectObjects(newSelectedObjects);
+    this._duplicateOffset = 1;
+  }
+
+  public setUrls(items: DrObject[], url: string) {
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: items.map((x: DrObject) => { 
+        return { id: x.id, changes: { url: url } }; 
+      })
+    });
+    this.resetSelection();
     this._duplicateOffset = 1;
   }
 

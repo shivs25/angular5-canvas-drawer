@@ -5,12 +5,13 @@ import { DataStoreService } from '../services/data-store.service';
 
 @Component({
   selector: 'app-editor-tool',
-  template: "\n    <app-selector-tool *ngIf=\"SELECTOR_TOOL === (elementState | async)?.present.selectedTool\"></app-selector-tool>\n    <app-object-creation-tool *ngIf=\"shouldShowCreationTool()\"></app-object-creation-tool>\n  ",
+  template: "\n    <app-selector-tool *ngIf=\"SELECTOR_TOOL === (elementState | async)?.present.selectedTool\"></app-selector-tool>\n    <app-pen-tool *ngIf=\"PEN_TOOL === (elementState | async)?.present.selectedTool\"></app-pen-tool>\n    <app-object-creation-tool *ngIf=\"shouldShowCreationTool()\"></app-object-creation-tool>\n  ",
   styles: ["\n\n  "]
 })
 export class EditorToolComponent implements OnInit {
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
+  PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;
 
   @select() elementState;
 
