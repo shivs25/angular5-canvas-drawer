@@ -8,6 +8,7 @@ import { IDrawerAppState, rootReducer, INITIAL_STATE, undoableElementsReducer } 
 import { EditorModule } from './tools/editor.module';
 import { EditableDrawerComponent } from './editable-drawer/editable-drawer.component';
 import { EditableDrawerModule } from './editable-drawer/editable-drawer.module';
+import { DrawerComponent } from './drawer/drawer.component';
 
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
@@ -28,11 +29,13 @@ export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-obje
 @NgModule({
   imports: [
     CommonModule,
-    EditableDrawerModule.forRoot()
+    EditableDrawerModule.forRoot(),
+    DrawerModule.forRoot(),
   ],
   exports: [
     NgReduxModule,
-    EditableDrawerComponent
+    EditableDrawerComponent,
+    DrawerComponent
   ],
   declarations: [],
 })
