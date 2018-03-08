@@ -3,6 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { DrawerObjectHelperService } from './drawer-object-helper.service';
 import { DrEllipse, DEFAULT_ELLIPSE } from '../models/dr-ellipse';
 import { DrImage, DEFAULT_IMAGE } from '../models/dr-image';
+import { DrGroupedObject, DEFAULT_GROUPED_OBJECT } from '../models/dr-grouped-object'
 import { DrObject } from '../models/dr-object';
 import { DrPoint } from '../models/dr-point';
 import { DrPolygon, DEFAULT_POLYGON } from '../models/dr-polygon';
@@ -167,5 +168,147 @@ describe('DrawerObjectHelperService', () => {
     expect(bb.x).toEqual(15);
     expect(bb.height).toEqual(540);
     expect(bb.width).toEqual(705);
+  }));
+
+  it('should return one selected object from the passed in arays', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
+    let t:DrText = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 40,
+      id: 2
+    });
+    let i: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213,
+      id: 3
+    });
+    let r1: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 4,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
+    let t1:DrText = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 40,
+      id: 5
+    });
+    let i1: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213,
+      id: 6
+    });
+    let g: DrGroupedObject = Object.assign({}, DEFAULT_IMAGE, {
+      objects: [t1,r1,i1],
+      id: 7
+    });
+
+    let expectedArray: DrObject[] = [];
+    expectedArray.push(t);
+    
+    let returnValues: DrObject[] = service.getObjects([2],[r,i,t,g]);
+    expect(returnValues.length).toEqual(1);
+    expect(returnValues[0].id).toEqual(2);
+  }));
+
+
+  it('should return all selected objects from the passed in arays', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
+    let t:DrText = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 40,
+      id: 2
+    });
+    let i: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213,
+      id: 3
+    });
+    let r1: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 4,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
+    let t1:DrText = Object.assign({}, DEFAULT_TEXT, {
+      x: 300,
+      y: 10,
+      width: 100,
+      height: 40,
+      id: 5
+    });
+    let i1: DrImage = Object.assign({}, DEFAULT_IMAGE, {
+      x: 400,
+      y: 200,
+      width: 320,
+      height: 213,
+      id: 6
+    });
+    let g: DrGroupedObject = Object.assign({}, DEFAULT_IMAGE, {
+      objects: [t1,r1,i1],
+      id: 7
+    });
+
+    let expectedArray: DrObject[] = [];
+    expectedArray.push(t);
+    
+    let returnValues: DrObject[] = service.getObjects([2,7],[r,i,t,g]);
+    expect(returnValues.length).toEqual(2);
+    expect(returnValues[0].id).toEqual(2);
+    expect(returnValues[1].id).toEqual(7);
   }));
 });

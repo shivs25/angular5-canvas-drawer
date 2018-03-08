@@ -52,4 +52,5 @@ export declare class DataStoreService {
     endEdit(): void;
     undo(): void;
     redo(): void;
+    getObjects(ids: number[]): DrObject[];
 }

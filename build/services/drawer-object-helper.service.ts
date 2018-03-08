@@ -6,6 +6,7 @@ import { DrPoint } from '../models/dr-point';
 import { DrPolygon } from '../models/dr-polygon';
 import { DrRect } from '../models/dr-rect';
 import { DrText } from '../models/dr-text';
+import { DrGroupedObject } from '../models/dr-grouped-object';
 import { DrType } from '../models/dr-type.enum';
 import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/bounding-box';
 import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/compiler';
@@ -14,6 +15,24 @@ import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/com
 export class DrawerObjectHelperService {
 
   constructor() { }
+
+  public getObjects(ids: number[],availableElements: DrObject[]): DrObject[]{
+    let objs: DrObject[] = [];
+    
+    for(let i = 0; i < availableElements.length; i++){
+      if(ids.indexOf(availableElements[i].id) > -1){
+        objs.push(availableElements[i]);
+      }
+      if(availableElements[i].drType === DrType.GROUPED_OBJECT){
+        let g: DrGroupedObject = availableElements[i] as DrGroupedObject;
+        let childObjs: DrObject[] = this.getObjects(ids,g.objects);
+        for(let j = 0; j < childObjs.length; j++){
+          objs.push(childObjs[j]);
+        }
+      }
+    }
+    return objs;
+  } 
 
   public projectObject(item: DrObject, bounds: BoundingBox, offsetX: number, offsetY: number): void {
     switch(item.drType) {

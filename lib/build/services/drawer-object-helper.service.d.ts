@@ -2,6 +2,7 @@ import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
 export declare class DrawerObjectHelperService {
     constructor();
+    getObjects(ids: number[], availableElements: DrObject[]): DrObject[];
     projectObject(item: DrObject, bounds: BoundingBox, offsetX: number, offsetY: number): void;
     getBoundingBoxForBounds(boundingBoxes: BoundingBox[]): {
         x: number;

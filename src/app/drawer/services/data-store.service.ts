@@ -486,4 +486,9 @@ export class DataStoreService {
     this._ngRedux.dispatch(ActionCreators.redo());
     this.redid.emit();
   }
+
+  //=========Supporting Functions=========
+  public getObjects(ids: number[]): DrObject[] {
+    return this._objectHelperService.getObjects(ids, this.elements);
+  }
 }
