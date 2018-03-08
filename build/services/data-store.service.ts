@@ -138,6 +138,24 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
+  public setVisibility(items: DrObject[], visibility: boolean): void {
+    let ids: number[] = items.map((x:DrObject) => x.id);
+    let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
+    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
+
+    let changes: any[] = [];
+    for(let o of items) {
+      changes.push({ id: o.id, changes: { visible: visibility }});
+    }
+
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: changes
+    });
+    this.selectObjects(newSelectedObjects);
+    this._duplicateOffset = 1;
+  }
+
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,

@@ -32,6 +32,7 @@ export declare class DataStoreService {
     alignObjectsMiddle(items: DrObject[]): void;
     alignObjectsBottom(items: DrObject[]): void;
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
+    setVisibility(items: DrObject[], visibility: boolean): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
