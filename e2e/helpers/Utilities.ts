@@ -46,6 +46,16 @@ export class Utilities {
         this.shortPause();
     };
 
+    newSmartPause(cssToWaitfor, reverse) {
+      if (reverse) {
+        browser.wait(browser.findElement(cssToWaitfor).isDisplayed(), 60000, reverse);
+      } else {
+        browser.wait(browser.findElement(cssToWaitfor).isDisplayed());
+      }
+
+      this.shortPause();
+    };
+
     debugPause() {
         browser.sleep(300000);
     };
