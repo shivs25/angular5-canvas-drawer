@@ -6,11 +6,12 @@ import { DrawerComponent } from '../drawer/drawer.component';
 import { EditableDrawerComponent } from '../editable-drawer/editable-drawer.component';
 import { ObjectCreationToolComponent } from './object-creation-tool/object-creation-tool.component';
 import { PenToolComponent } from './pen-tool/pen-tool.component';
+import { TextEditToolComponent } from './text-edit-tool/text-edit-tool.component';
 
 @NgModule({
   imports: [CommonModule, DrawerModule.forRoot()],
 
-  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent], 
+  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent, TextEditToolComponent], 
   exports: [DrawerComponent, EditorToolComponent], 
   providers: [],
   entryComponents: [

@@ -79,6 +79,7 @@ export class ObjectCreationToolComponent implements OnInit {
               this.createArrow(evt);
               this._mouseDownClone = Object.assign({}, this.currentObject);
               this._mouseDownBounds = this._drawerObjectService.getBoundingBox([this._mouseDownClone]);
+              break;
             case EditorToolType.CALLOUT_SQUARE_TOOL:
               this.createCallout(evt);
               this._mouseDownClone = Object.assign({}, this.currentObject);
@@ -314,7 +315,7 @@ export class ObjectCreationToolComponent implements OnInit {
       fill: 'rgba(255,0,0,0.3)',
       stroke: 'red',
       points: [
-        { x: b.x + b.width * 0.526, y: b.y + b.height * 0.112 },   //Top of star
+        { x: b.x + b.width * 0.526, y: b.y + b.height * 0.112 },
         { x: b.x + b.width, y: b.y + b.height * 0.5 },
         { x: b.x + b.width * 0.526, y: b.y + b.height * 0.888 },
         { x: b.x + b.width * 0.522, y: b.y + b.height * 0.688 },

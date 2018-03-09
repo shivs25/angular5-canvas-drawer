@@ -1,0 +1,9 @@
+<div class="absolute-position fill-parent">
+    
+  <svg
+        [ngClass]="'text'"
+        class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
+      <ng-container *ngIf="currentObject" dynamic-svg [componentData]="currentObject" [canInteract]="false" elementId="1000000">
+      </ng-container>
+  </svg>
+</div>

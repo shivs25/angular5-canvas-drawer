@@ -12,6 +12,7 @@ export class EditorToolComponent implements OnInit {
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
   PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;
+  TEXT_EDIT_TOOL: EditorToolType = EditorToolType.TEXT_EDIT_TOOL;
 
   @select() elementState;
 

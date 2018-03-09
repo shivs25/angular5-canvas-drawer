@@ -41,6 +41,10 @@ export class AppComponent implements OnInit {
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
   }
 
+  textEdit(): void {
+    this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL;
+  }
+
   ellipse(): void {
     this.dataStoreService.selectedTool = EditorToolType.ELLIPSE_TOOL;
   }
