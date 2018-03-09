@@ -30,6 +30,7 @@ export enum EditorToolType {
     STAR_TOOL = 8,
     CALLOUT_SQUARE_TOOL = 9,
     CALLOUT_ROUNDED_TOOL = 10,
-    TRIANGLE_TOOL = 11
+    TRIANGLE_TOOL = 11,
+    ROUNDED_RECTANGLE_TOOL = 12
 }
 
