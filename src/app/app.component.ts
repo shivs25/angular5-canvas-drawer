@@ -49,6 +49,14 @@ export class AppComponent implements OnInit {
     this.dataStoreService.selectedTool = EditorToolType.RECTANGLE_TOOL;
   }
 
+  roundedRectangle(): void {
+    this.dataStoreService.selectedTool = EditorToolType.ROUNDED_RECTANGLE_TOOL;
+  }
+
+  callout(): void {
+    this.dataStoreService.selectedTool = EditorToolType.CALLOUT_SQUARE_TOOL;
+  }
+
   image(): void {
     this.dataStoreService.selectedTool = EditorToolType.IMAGE_TOOL;
   }
@@ -57,6 +65,18 @@ export class AppComponent implements OnInit {
     this.dataStoreService.selectedTool = EditorToolType.TEXT_TOOL;
   }
 
+  triangle(): void {
+    this.dataStoreService.selectedTool = EditorToolType.TRIANGLE_TOOL;
+  }
+
+  star(): void {
+    this.dataStoreService.selectedTool = EditorToolType.STAR_TOOL;
+  }
+
+  arrow(): void {
+    this.dataStoreService.selectedTool = EditorToolType.ARROW_TOOL;
+  }
+  
   
   showPreview(): void {
     this.dataStoreService.setPreviewElements(this.dataStoreService.selectedObjects);

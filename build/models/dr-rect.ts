@@ -8,6 +8,7 @@ export interface DrRect extends DrStyledObject {
     y: number;
     width: number;
     height: number;
+    rounded: boolean;
     
 }
 
@@ -16,6 +17,7 @@ export const DEFAULT_RECT: DrRect = Object.assign({}, DEFAULT_STYLED_OBJECT, {
    y: 0,
    width: 0,
    height: 0,
+   rounded: false,
    drType: DrType.RECTANGLE
 });
 

@@ -11,6 +11,8 @@
       [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
       [attr.width]="data.width" 
       [attr.height]="data.height"
+      [attr.rx]="data.rounded ? 16 : 0"
+      [attr.ry]="data.rounded ? 16 : 0"
       [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
       [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
       [attr.stroke-width]="visualData.strokeWidth"

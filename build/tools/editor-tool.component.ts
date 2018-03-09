@@ -27,6 +27,11 @@ export class EditorToolComponent implements OnInit {
       case EditorToolType.RECTANGLE_TOOL:
       case EditorToolType.IMAGE_TOOL:
       case EditorToolType.TEXT_TOOL:
+      case EditorToolType.TRIANGLE_TOOL:
+      case EditorToolType.STAR_TOOL:
+      case EditorToolType.ARROW_TOOL:
+      case EditorToolType.ROUNDED_RECTANGLE_TOOL:
+      case EditorToolType.CALLOUT_SQUARE_TOOL:
         return  true;
     }
     return  false;
