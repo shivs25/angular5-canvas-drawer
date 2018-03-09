@@ -8,7 +8,7 @@ fdescribe('Maps', function () {
 
   let utilities: Utilities = new Utilities();
   let canvas: CanvasPage = new CanvasPage();
-  let containerCss = "app-selector-tool app-drawer ";
+  let containerCss = "app-editable-drawer app-drawer ";
 
     beforeAll(() => {
         //browser.ignoreSynchronization = true;
@@ -234,7 +234,7 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       element.all(by.css(containerCss + "svg.fill-parent g")).then(function (elements) {
-        expect(elements.length).toEqual(2);
+        expect(elements.length / 2).toEqual(2);
       });
     });
     it('CanvasDrawer_RemoveObject_ExpectObjectToBeRemovedFromCanvas', () => {
@@ -258,7 +258,7 @@ fdescribe('Maps', function () {
     });
 
     //Styles
-    xit('CanvasDrawer_StyleButton_ExpectObjectStyleToChange', () => {
+    it('CanvasDrawer_StyleButton_ExpectObjectStyleToChange', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -266,7 +266,7 @@ fdescribe('Maps', function () {
 
       canvas.selectButton("Rectangle");
       utilities.shortPause();
-
+      
       canvas.drawSquareSize(200);
       utilities.longPause();
 
@@ -276,7 +276,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Styles");
       utilities.shortPause();
 
-      expect(element(by.css(containerCss + "rect")).getCssValue("stroke")).toEqual("rgba(0, 0, 0, 0)");
+      expect(element(by.css(containerCss + "rect")).getCssValue("stroke")).toEqual("rgb(255, 255, 0)");
     });
 
     //Directionals
@@ -348,7 +348,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      element(by.css(containerCss + "svg.fill-parent rect")).click();
+      element(by.css(containerCss + "svg.fill-parent rect.clickable")).click();
       utilities.normalPause();
 
       canvas.selectButton("Up");
@@ -356,7 +356,7 @@ fdescribe('Maps', function () {
 
       //click away from the object
       browser.actions().
-        mouseMove(element(by.css(containerCss + "rect"))).
+        mouseMove(element(by.css(containerCss + "rect.clickable"))).
         mouseMove({ x: -200, y: 0 }).
         click().
         perform();
