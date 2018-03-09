@@ -16,7 +16,8 @@ import {
   CLEAR_OBJECTS,
   REPLACE_OBJECTS,
   INIT_ELEMENTS,
-  SET_PREVIEW_ELEMENTS
+  SET_PREVIEW_ELEMENTS,
+  CHANGE_PREVIEW_STYLES
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -266,7 +267,6 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
-
   public groupObjects(items: DrObject[]): void {
     let itemToAdd: DrGroupedObject = createDrGroupedObject({
       id: this.getNextId(),
@@ -341,6 +341,10 @@ export class DataStoreService {
   public clearObjects(): void {
     this._ngRedux.dispatch({ type: CLEAR_OBJECTS });
     this.selectObjects([]);
+  }
+
+  public setPreviewStyle(style: DrStyle) {
+    this._ngRedux.dispatch({ type: CHANGE_PREVIEW_STYLES, changes: style });
   }
 
   private getObjectIndex(item: DrObject): number {

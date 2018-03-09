@@ -12,6 +12,7 @@ import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
+import { createDrStyle } from '../../build/models/dr-style';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,8 @@ export class AppComponent implements OnInit {
   viewLeft: string = "0";
   viewHeight: string = "560";
   viewWidth: string = "1000";
+
+ 
 
   @select() elementState;
 
@@ -66,6 +69,86 @@ export class AppComponent implements OnInit {
 
   redo(): void {
     this.dataStoreService.redo();
+  }
+
+  setTextStyleNC(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.CENTER,
+        hAlignment: DrTextAlignment.NEAR
+      }));
+    }
+  }
+
+  setTextStyleNF(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.FAR,
+        hAlignment: DrTextAlignment.NEAR
+      }));
+    }
+  }
+
+  setTextStyleCN(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.NEAR,
+        hAlignment: DrTextAlignment.CENTER
+      }));
+    }
+  }
+
+  setTextStyleCC(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.CENTER,
+        hAlignment: DrTextAlignment.CENTER
+      }));
+    }
+  }
+
+  setTextStyleCF(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.FAR,
+        hAlignment: DrTextAlignment.CENTER
+      }));
+    }
+  }
+
+  setTextStyleFN(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.NEAR,
+        hAlignment: DrTextAlignment.FAR
+      }));
+    }
+  }
+
+  setTextStyleFC(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.CENTER,
+        hAlignment: DrTextAlignment.FAR
+      }));
+    }
+  }
+
+  setTextStyleFF(): void {
+    if (this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.setStyles([this.dataStoreService.selectedObjects[0]], createDrTextStyle({
+        vAlignment: DrTextAlignment.FAR,
+        hAlignment: DrTextAlignment.FAR
+      }));
+    }
+  }
+
+  setPreviewStyle(): void {
+    this.dataStoreService.setPreviewStyle(createDrStyle({
+      fill: 'red',
+      stroke: 'purple',
+      strokeWidth: 5
+    }));
   }
 
   up(): void {

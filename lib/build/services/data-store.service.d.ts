@@ -43,6 +43,7 @@ export declare class DataStoreService {
     ungroupObject(item: DrGroupedObject): void;
     duplicateObjects(items: DrObject[]): void;
     clearObjects(): void;
+    setPreviewStyle(style: DrStyle): void;
     private getObjectIndex(item);
     private getNextId();
     private areElementArraysTheSameOrder(arr1, arr2);

@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -77,6 +77,11 @@ export const editingReducer: Reducer<IEditingState> = (state: IEditingState = IN
             return Object.assign({}, state, {
                 previewElements: action.elements ? action.elements.slice(0) : []
             });
+        case CHANGE_PREVIEW_STYLES:
+            return Object.assign({}, state, {
+                previewElements: findAndSetNestedChanges(state.previewElements, action.changes)
+            });
+            
             
     }
     
@@ -191,6 +196,26 @@ function findAndReplaceNestedItems(items: DrObject[], changes: any[]): DrObject[
     }
     return newArray;
 }   
+
+function findAndSetNestedChanges(items: DrObject[], changes: any): DrObject[] {
+    let newArray: DrObject[] = [];
+    let newItem: DrObject;
+    let itemChanges: any;
+    let selectedItem: DrObject;
+    let selectedIndex: number;
+    for(let i of items) {
+        if (DrType.GROUPED_OBJECT === i.drType) {
+            newItem = Object.assign({}, cloneDeep(i));
+            Object.assign(newItem, { objects: findAndSetNestedChanges((newItem as DrGroupedObject).objects, changes) });
+        }
+        else {
+            newItem = Object.assign(cloneDeep(i), changes);
+        }
+
+        newArray.push(newItem);
+    }
+    return newArray;
+}  
 
 const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
