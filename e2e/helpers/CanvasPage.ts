@@ -20,7 +20,7 @@ export class CanvasPage {
 
   drawSquareSize(size) {
     browser.actions().
-      mouseDown(element(by.css("app-selector-tool app-drawer svg"))).
+      mouseDown(element(by.css("app-editable-drawer app-drawer svg"))).
       mouseMove({ x: size, y: size }).
       mouseUp().
       perform();
