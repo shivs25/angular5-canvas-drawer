@@ -20,18 +20,9 @@ export class CanvasPage {
 
   drawSquareSize(size) {
     browser.actions().
-      mouseDown(element(by.css("svg"))).
+      mouseDown(element(by.css("app-selector-tool app-drawer svg"))).
       mouseMove({ x: size, y: size }).
       mouseUp().
       perform();
   };
-
-  //selectObjects(objects) {
-  //  var script = "browser.actions().sendKeys(protractor.Key.SHIFT).";
-  //  objects.forEach(function (object) {
-  //    script += "mouseDown(by.css(" + object + ")).";
-  //  });
-  //  script += "perform();";
-  //  browser.executeAsyncScript(script);
-  //}
 }
