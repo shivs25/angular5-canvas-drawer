@@ -1,9 +1,20 @@
-<div class="absolute-position fill-parent">
+<div class="absolute-position fill-parent" contenteditable="true" (input)="onInput($event)" (click)="onClick()">
     
-  <svg
+  <svg *ngIf="cssBounds" [ngStyle]="cssBounds"
         [ngClass]="'text'"
-        class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
-      <ng-container *ngIf="currentObject" dynamic-svg [componentData]="currentObject" [canInteract]="false" elementId="1000000">
-      </ng-container>
+        class="absolute-position" xmlns="http://www.w3.org/2000/svg" >
+      
+      <svg:g [attr.transform]="selectionTransform">
+        <ng-container 
+          dynamic-svg 
+          [elementId]="100000"
+          [componentData]="currentObject"
+          [overrideProperties]="selectionStyle"
+          [hoverClass]="'text'" 
+
+        ></ng-container>
+      </svg:g>
+      
+
   </svg>
 </div>

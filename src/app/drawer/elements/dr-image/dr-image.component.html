@@ -1,6 +1,7 @@
 <ng-template #elementTemplate>
   <ng-container *ngIf="data && visualData">
-    <svg:g>
+    <svg:g 
+        [attr.transform]="data.rotation > 0 ? 'rotate(' + data.rotation + ',' + (data.x + data.width / 2 )+ ',' + (data.y + data.height / 2) + ')' : ''">
         <svg:rect
         [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
         (click)="onClick($event, data)"

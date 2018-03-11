@@ -1,14 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrPolygonComponent } from './dr-polygon.component';
+import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 
 describe('DrPolygonComponent', () => {
   let component: DrPolygonComponent;
   let fixture: ComponentFixture<DrPolygonComponent>;
-
+  let objectService: any = {};
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DrPolygonComponent ]
+      declarations: [ DrPolygonComponent ],
+      providers: [
+        { provide: DrawerObjectHelperService, useValue: objectService }
+      ]
     })
     .compileComponents();
   }));

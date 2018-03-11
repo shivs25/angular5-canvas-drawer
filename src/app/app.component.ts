@@ -6,7 +6,7 @@ import { DrRect, DEFAULT_RECT, createDrRect } from './drawer/models/dr-rect';
 import { DrPolygon, createDrPolygon } from './drawer/models/dr-polygon';
 import { DrPoint } from './drawer/models/dr-point';
 import { DrText, createDrText } from './drawer/models/dr-text';
-import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService, EditorToolType } from './drawer/drawer-library.module';
+import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService, EditorToolType, createDrImage } from './drawer/drawer-library.module';
 import { DataStoreService } from './drawer/services/data-store.service';
 import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
@@ -42,7 +42,10 @@ export class AppComponent implements OnInit {
   }
 
   textEdit(): void {
-    this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL;
+    if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
+      this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL;
+    }
+    
   }
 
   ellipse(): void {
@@ -291,9 +294,10 @@ export class AppComponent implements OnInit {
       vAlignment: DrTextAlignment.CENTER,
       hAlignment:  DrTextAlignment.CENTER, 
       text: "Boom SHAKA-laka",
-      id: 6
+      id: 6,
+      rotation: 90
     });
-    //elements.push(text);
+    elements.push(text);
     
     let e: DrEllipse = createDrEllipse({
       id: 4,
@@ -304,8 +308,24 @@ export class AppComponent implements OnInit {
       showFill: true,
       fill: 'rgba(0,0,255,0.5)',
       stroke: 'black',
-      strokeWidth: 3
+      strokeWidth: 3,
+      rotation: 315
     });
+
+    let i: DrImage = createDrImage({
+      id: 4,
+      x: 400,
+      y: 400,
+      width: 200,
+      height: 200,
+      showFill: true,
+      fill: 'rgba(0,0,255,0.5)',
+      stroke: 'black',
+      strokeWidth: 3,
+      url: '/assets/image-placeholder-dark.png',
+      rotation: 180
+    });
+    elements.push(i);
     //elements.push(e);
     let t2: DrRect = createDrRect({
       id: 3,
@@ -316,9 +336,25 @@ export class AppComponent implements OnInit {
       strokeWidth: 5,
       showFill: true,
       fill: 'blue',
-      clickable: true
+      clickable: true,
+      rotation: 0
     });
     elements.push(t2);
+
+    let t3: DrRect = createDrRect({
+      id: 3,
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200,
+      strokeWidth: 1,
+      showFill: false,
+      fill: 'blue',
+      clickable: true,
+      rotation: 0
+    });
+    elements.push(t3);
+
     //elements.push(t);
     let r: DrPolygon = createDrPolygon({
       id: 1,
@@ -330,12 +366,28 @@ export class AppComponent implements OnInit {
         { x: 110, y: 310 },
         { x: 210, y: 310 },
         { x: 160, y: 410 }
-      ]
+      ],
+      rotation: 10
     });
-    elements.push(r);
+    let r2: DrPolygon = createDrPolygon({
+      id: 10,
+      stroke: 'green',
+      fill: 'white',
+      showFill: false,
+      strokeWidth: 3,
+      points: [
+        { x: 110, y: 310 },
+        { x: 210, y: 310 },
+        { x: 160, y: 410 }
+      ],
+      rotation: 0
+    });
 
-    let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements });
-    this.elements = [g];
+    elements.push(r);
+    elements.push(r2);
+    elements.push(e);
+    //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 45 });
+    this.elements = elements;
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

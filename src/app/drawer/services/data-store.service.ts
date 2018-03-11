@@ -17,7 +17,8 @@ import {
   REPLACE_OBJECTS,
   INIT_ELEMENTS,
   SET_PREVIEW_ELEMENTS,
-  CHANGE_PREVIEW_STYLES
+  CHANGE_PREVIEW_STYLES,
+  SET_HIDE_SELECTION
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -74,6 +75,14 @@ export class DataStoreService {
   }
 
   public set selectedTool(tool: EditorToolType) {
+    switch(tool) {
+      case EditorToolType.TEXT_EDIT_TOOL: 
+        this.setHideSelection(true);
+        break;
+      default: 
+        this.setHideSelection(false);
+        break;
+    }
     this._ngRedux.dispatch({ type: SET_TOOL, tool: tool });
   }
 
@@ -81,7 +90,19 @@ export class DataStoreService {
     return this._ngRedux.getState().editingState.isEditing;
   }
 
+  public get hideSelection(): boolean {
+    return this._ngRedux.getState().elementState.present.hideSelection;
+  }
+
+
   //=========Actions=========
+  public setHideSelection(hide: boolean):void {
+    this._ngRedux.dispatch({
+      type: SET_HIDE_SELECTION,
+      hideSelection: hide
+    });
+  }
+
   public alignObjectsLeft(items: DrObject[]):void {
     if (items.length > 1) {
       this.alignObjects(items, 0);

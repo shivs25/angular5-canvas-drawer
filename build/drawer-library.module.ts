@@ -13,7 +13,7 @@ import { PreviewComponent } from './preview/preview.component';
 
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
-export { DrPolygon, createDrPolygon } from './models/dr-polygon';
+export { DrPolygon, createDrPolygon, createDrPolygonArrow, createDrPolygonCallout, createDrPolygonStar, createDrPolygonTriangle } from './models/dr-polygon';
 export { DrEllipse, createDrEllipse } from './models/dr-ellipse';
 export { DrRect, createDrRect } from './models/dr-rect';
 export { DrType } from './models/dr-type.enum';

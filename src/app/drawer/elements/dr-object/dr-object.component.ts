@@ -2,6 +2,8 @@ import { Component, OnInit, Input, TemplateRef, ViewChild, Output, EventEmitter 
 import { DrObject } from '../../models/dr-object';
 import { select } from '@angular-redux/store';
 import { MouseEventData } from '../../models/mouse-event-data';
+import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
+import { BoundingBox } from '../../models/bounding-box';
 
 @Component({
   selector: 'app-dr-object',
@@ -43,6 +45,16 @@ export class DrObjectComponent implements OnInit {
   @Output()
   public mouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
+
+  getRotationCenterX(): number {
+    let b: BoundingBox = this._objectHelperService.getBoundingBox([this.data]);
+    return  b.x + b.width / 2;
+  }
+
+  getRotationCenterY(): number {
+    let b: BoundingBox = this._objectHelperService.getBoundingBox([this.data]);
+    return  b.y + b.height / 2;
+  }
 
   onClick(evt: any, data:DrObject): void {
     evt.stopPropagation();
@@ -89,7 +101,7 @@ export class DrObjectComponent implements OnInit {
     });
   }
 
-  constructor() { }
+  constructor(private _objectHelperService: DrawerObjectHelperService) { }
 
   ngOnInit() {
   }

@@ -1,14 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrImageComponent } from './dr-image.component';
+import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 
 describe('DrImageComponent', () => {
   let component: DrImageComponent;
   let fixture: ComponentFixture<DrImageComponent>;
-
+  let objectService: any = {};
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DrImageComponent ]
+      declarations: [ DrImageComponent ],
+      providers: [
+        { provide: DrawerObjectHelperService, useValue: objectService }
+      ]
     })
     .compileComponents();
   }));

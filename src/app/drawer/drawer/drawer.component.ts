@@ -57,7 +57,9 @@ export class DrawerComponent implements OnInit {
   ngOnInit() {
   }
 
- 
+  isHiddenSelection(id: number) {
+    return this._dataService.hideSelection && (this._dataService.selectedObjects.find((t: any) => t.id === id));
+  }
 
   onBackgroundClick(evt): void {
     this.handleMouseEvents && this.clickedObject.emit(null);

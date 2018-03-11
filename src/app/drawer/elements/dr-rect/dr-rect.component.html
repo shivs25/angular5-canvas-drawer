@@ -8,6 +8,7 @@
       [id]="elementId" 
       [attr.x]="data.x" 
       [attr.y]="data.y" 
+      [attr.transform]="data.rotation > 0 ? 'rotate(' + data.rotation + ',' + (data.x + data.width / 2 )+ ',' + (data.y + data.height / 2) + ')' : ''"
       [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
       [attr.width]="data.width" 
       [attr.height]="data.height"
