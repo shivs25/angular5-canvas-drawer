@@ -153,9 +153,6 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_AddEllipse_ExpectEllipseObjectOnCanvas', () => {
       utilities.normalPause();
 
-      canvas.selectButton("Clear");
-      utilities.shortPause();
-
       canvas.selectButton("Ellipse");
       utilities.shortPause();
 
@@ -170,9 +167,6 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_AddRectangle_ExpectRectangleObjectOnCanvas', () => {
       utilities.normalPause();
 
-      canvas.selectButton("Clear");
-      utilities.shortPause();
-
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
@@ -184,11 +178,8 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "rect")).isDisplayed()).toBeTruthy();
     });
-    it('CanvasDrawer_AddRectangle_ExpectRectangleObjectOnCanvas', () => {
+    it('CanvasDrawer_AddImage_ExpectImageObjectOnCanvas', () => {
       utilities.normalPause();
-
-      canvas.selectButton("Clear");
-      utilities.shortPause();
 
       canvas.selectButton("Image");
       utilities.shortPause();
@@ -204,9 +195,6 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_AddText_ExpectTextFieldObjectOnCanvas', () => {
       utilities.normalPause();
 
-      canvas.selectButton("Clear");
-      utilities.shortPause();
-
       canvas.selectButton("Text");
       utilities.shortPause();
 
@@ -219,6 +207,112 @@ fdescribe('Maps', function () {
       //both are pointing to the same object, but it's good to test both selectors
       expect(element(by.css(containerCss + "rect")).isDisplayed()).toBeTruthy();
       //expect(element(by.xpath('.//*[.="TEXT"]')).isDisplayed()).toBeTruthy();
+    });
+    it('CanvasDrawer_AddRoundedRectangle_ExpectRoundedRectangleObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rounded Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      expect(element(by.css(containerCss + "rect")).isDisplayed()).toBeTruthy();
+    });
+    it('CanvasDrawer_AddCallout_ExpectCalloutObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Callout");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var el = element(by.css(containerCss + "polygon"));
+ 
+      expect(el.isDisplayed()).toBeTruthy();
+      el.getAttribute('points').then(function (item) { expect(item.split(' ').length).toEqual(14); });
+    });
+    it('CanvasDrawer_AddTriangle_ExpectCalloutObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Triangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var el = element(by.css(containerCss + "polygon"));
+
+      expect(el.isDisplayed()).toBeTruthy();
+      el.getAttribute('points').then(function (item) { expect(item.split(' ').length).toEqual(6); });
+    });
+    it('CanvasDrawer_AddStar_ExpectStarObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Star");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var el = element(by.css(containerCss + "polygon"));
+
+      expect(el.isDisplayed()).toBeTruthy();
+      el.getAttribute('points').then(function (item) { expect(item.split(' ').length).toEqual(20); });
+    });
+    it('CanvasDrawer_AddArrow_ExpectArrowObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Arrow");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var el = element(by.css(containerCss + "polygon"));
+
+      expect(el.isDisplayed()).toBeTruthy();
+      el.getAttribute('points').then(function (item) { expect(item.split(' ').length).toEqual(14); });
+    });
+    xit('CanvasDrawer_AddPenPolygon_ExpectPolygonShapeOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+      
+      canvas.selectButton("Pen");
+      utilities.shortPause();
+      
+      browser.actions().
+        mouseMove(element(by.css(containerCss + "ellipse"))).
+        click().
+        mouseMove({ x: 200, y: 200 }).
+        doubleClick().
+        perform();
+
+      utilities.debugPause();
+    });
+    xit('CanvasDrawer_AddPenLine_ExpectPolygonLineOnCanvas', () => {
+      //this test is to expose a bug - only two points for a polygon should not be possible
     });
 
     //Group / Ungroup
@@ -298,8 +392,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_DuplicateObject_ExpectObjectToAppearTwice', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.selectButton("Duplicate");
       utilities.shortPause();
@@ -311,8 +411,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_RemoveObject_ExpectObjectToBeRemovedFromCanvas', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.selectButton("Remove");
       utilities.shortPause();
@@ -676,4 +782,6 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("460px");
     });
+
+
 });
