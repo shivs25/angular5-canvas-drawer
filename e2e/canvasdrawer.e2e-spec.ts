@@ -21,6 +21,10 @@ fdescribe('Maps', function () {
       browser.get('/');
       browser.waitForAngularEnabled();
       utilities.newSmartPause(by.xpath('.//*[.="Undo"]'), false);
+
+      //clear the canvas before each test
+      canvas.selectButton("Clear");
+      utilities.shortPause();
     });
     afterEach(() => {
         
@@ -36,8 +40,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_TopResize_ExpectObjectToBeResizedVerticallyUpwards', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(7)), 0, -80);
       utilities.normalPause();
@@ -45,8 +55,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_BottomResize_ExpectObjectToBeResizedVerticallyDownwards', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(3)), 0, 80);
       utilities.normalPause();
@@ -54,8 +70,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_LeftResize_ExpectObjectToBeResizedHorizontallyLeft', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(1)), -80, 0);
       utilities.normalPause();
@@ -63,8 +85,14 @@ fdescribe('Maps', function () {
     it('CanvasDrawer_RightResize_ExpectObjectToBeResizedHorizontallyRight', () => {
       utilities.normalPause();
 
-      element(by.css(containerCss + 'rect.clickable')).click();
-      utilities.normalPause();
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(5)), 80, 0);
       utilities.normalPause();
@@ -73,6 +101,15 @@ fdescribe('Maps', function () {
     //Undo / Redo
     it('CanvasDrawer_MoveThenUndo_ExpectObjectToReturnToOriginalPosition', () => {
       utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       var rectElement = element(by.css(containerCss + 'rect.clickable'));
       var ogLocation = rectElement.getLocation();
@@ -87,6 +124,15 @@ fdescribe('Maps', function () {
     });
     it('CanvasDrawer_MoveThenUndoThenRedo_ExpectObjectToReturnToMovedPosition', () => {
       utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
 
       var rectElement = element(by.css(containerCss + 'rect.clickable'));
       var ogLocation = rectElement.getLocation();
@@ -176,17 +222,6 @@ fdescribe('Maps', function () {
     });
 
     //Group / Ungroup
-    it('CanvasDrawer_UngroupObjects_ExpectGroupedObjectsToSeparate', () => {
-      utilities.normalPause();
-
-      element(by.css('rect.clickable')).click();
-      utilities.normalPause();
-
-      canvas.selectButton("Ungroup");
-      utilities.normalPause();
-
-      expect(element(by.css(containerCss + "svg.fill-parent g")).isPresent()).toBeFalsy();
-    });
     it('CanvasDrawer_GroupObjects_ExpectObjectsToBeGrouped', () => {
       utilities.normalPause();
 
@@ -221,6 +256,42 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       expect(element(by.css(containerCss + "svg.fill-parent g")).isPresent()).toBeTruthy();
+    });
+    it('CanvasDrawer_UngroupObjects_ExpectGroupedObjectsToSeparate', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css(containerCss + "ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css(containerCss + "rect"))).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+      utilities.normalPause();
+
+      canvas.selectButton("Group");
+      utilities.shortPause();
+      
+      canvas.selectButton("Ungroup");
+      utilities.normalPause();
+
+      expect(element(by.css(containerCss + "svg.fill-parent g")).isPresent()).toBeFalsy();
     });
 
     //Clearing and copying
