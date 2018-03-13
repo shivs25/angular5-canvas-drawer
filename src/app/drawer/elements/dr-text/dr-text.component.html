@@ -1,7 +1,7 @@
 <ng-template #elementTemplate>
   <ng-container *ngIf="data && visualData">
     <svg:g
-      [attr.transform]="data.rotation > 0 ? 'rotate(' + data.rotation + ',' + (data.x + data.width / 2 )+ ',' + (data.y + data.height / 2) + ')' : ''">
+      [attr.transform]="visualData.rotation > 0 ? 'rotate(' + visualData.rotation + ',' + (visualData.x + visualData.width / 2 )+ ',' + (visualData.y + visualData.height / 2) + ')' : ''">
         >
         <svg:clipPath [id]="elementId">
             <svg:rect

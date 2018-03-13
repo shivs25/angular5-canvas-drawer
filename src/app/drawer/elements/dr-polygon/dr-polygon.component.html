@@ -6,7 +6,7 @@
       (mousemove)="onMouseMove($event, data)"
       (mouseup)="onMouseUp($event, data)"
       [id]="elementId" 
-      [attr.transform]="data.rotation > 0 ? 'rotate(' + data.rotation + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
+      [attr.transform]="visualData.rotation > 0 ? 'rotate(' + visualData.rotation + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
       [attr.points]="getPoints()"
       [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
       [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"

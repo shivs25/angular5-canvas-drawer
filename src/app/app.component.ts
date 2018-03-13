@@ -297,7 +297,7 @@ export class AppComponent implements OnInit {
       id: 6,
       rotation: 90
     });
-    elements.push(text);
+    //elements.push(text);
     
     let e: DrEllipse = createDrEllipse({
       id: 4,
@@ -325,7 +325,7 @@ export class AppComponent implements OnInit {
       url: '/assets/image-placeholder-dark.png',
       rotation: 180
     });
-    elements.push(i);
+    //elements.push(i);
     //elements.push(e);
     let t2: DrRect = createDrRect({
       id: 3,
@@ -339,7 +339,7 @@ export class AppComponent implements OnInit {
       clickable: true,
       rotation: 0
     });
-    elements.push(t2);
+    //elements.push(t2);
 
     let t3: DrRect = createDrRect({
       id: 3,
@@ -351,7 +351,7 @@ export class AppComponent implements OnInit {
       showFill: false,
       fill: 'blue',
       clickable: true,
-      rotation: 0
+      rotation:0
     });
     elements.push(t3);
 
@@ -383,11 +383,11 @@ export class AppComponent implements OnInit {
       rotation: 0
     });
 
-    elements.push(r);
+    //elements.push(r);
     elements.push(r2);
-    elements.push(e);
-    //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 45 });
-    this.elements = elements;
+    //elements.push(e);
+    let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
+    this.elements = [g];
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

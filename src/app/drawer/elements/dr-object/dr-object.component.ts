@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, Output, EventEmitter, ViewContainerRef } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
 import { select } from '@angular-redux/store';
 import { MouseEventData } from '../../models/mouse-event-data';
@@ -79,7 +79,7 @@ export class DrObjectComponent implements OnInit {
     evt.stopPropagation();
     this.mouseMove.emit({ 
       location: { 
-        x: evt.clientX, y: evt.clientY 
+        x: evt.clientX, y: evt.clientY
       }, 
       data: data,
       shiftKey: evt.shiftKey,
@@ -101,7 +101,8 @@ export class DrObjectComponent implements OnInit {
     });
   }
 
-  constructor(private _objectHelperService: DrawerObjectHelperService) { }
+  constructor(
+    private _objectHelperService: DrawerObjectHelperService) { }
 
   ngOnInit() {
   }

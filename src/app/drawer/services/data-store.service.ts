@@ -191,6 +191,15 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
+  public setRotation(item: DrObject, rotation: number) {
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: [{ id: item.id, changes: { rotation: rotation } }]
+    });
+    this.resetSelection();
+    this._duplicateOffset = 1;
+  }
+
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,

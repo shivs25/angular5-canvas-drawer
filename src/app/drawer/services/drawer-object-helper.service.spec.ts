@@ -3,7 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { DrawerObjectHelperService } from './drawer-object-helper.service';
 import { DrEllipse, DEFAULT_ELLIPSE } from '../models/dr-ellipse';
 import { DrImage, DEFAULT_IMAGE } from '../models/dr-image';
-import { DrGroupedObject, DEFAULT_GROUPED_OBJECT } from '../models/dr-grouped-object'
+import { DrGroupedObject, DEFAULT_GROUPED_OBJECT, createDrGroupedObject } from '../models/dr-grouped-object'
 import { DrObject } from '../models/dr-object';
 import { DrPoint } from '../models/dr-point';
 import { DrPolygon, DEFAULT_POLYGON } from '../models/dr-polygon';
@@ -310,5 +310,148 @@ describe('DrawerObjectHelperService', () => {
     expect(returnValues.length).toEqual(2);
     expect(returnValues[0].id).toEqual(2);
     expect(returnValues[1].id).toEqual(7);
+  }));
+
+  it('should return true for 1 non grouped object', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE
+    });
+    
+    
+    let result: boolean = service.canResize(r, false);
+    expect(result).toBeTruthy();
+  }));
+
+  it('should return true for 1 object with rotation', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      x: 15,
+      y: 10,
+      width: 40,
+      height: 75,
+      stroke: 'red',
+      fill: 'yellow',
+      strokeWidth: 3,
+      showStroke: true,
+      showFill: true,
+      clickable: true,
+      drType: DrType.RECTANGLE,
+      rotation: 45
+    });
+    
+    
+    let result: boolean = service.canResize(r, false);
+    expect(result).toBeTruthy();
+  }));
+
+  it('should return true for 1 grouped object without rotation', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      rotation: 0
+    });
+
+    let r2: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 2,
+      rotation: 0
+    });
+    
+    let g: DrGroupedObject = createDrGroupedObject({
+      id: 3,
+      objects: [r, r2]
+    });
+    
+    let result: boolean = service.canResize(g, false);
+    expect(result).toBeTruthy();
+  }));
+
+  it('should return false for 1 grouped object with rotation', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      rotation: 0
+    });
+
+    let r2: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 2,
+      rotation: 45
+    });
+    
+    let g: DrGroupedObject = createDrGroupedObject({
+      id: 3,
+      objects: [r, r2]
+    });
+    
+    let result: boolean = service.canResize(g, false);
+    expect(result).toBeFalsy();
+  }));
+
+  it('should return false for 1 grouped object with rotation 2 levels deep', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      rotation: 0
+    });
+
+    let r2: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 2,
+      rotation: 45
+    });
+    
+    let g: DrGroupedObject = createDrGroupedObject({
+      id: 3,
+      objects: [r, r2]
+    });
+    
+    let r3: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 4,
+      rotation: 0
+    });
+
+    let g2: DrGroupedObject = createDrGroupedObject({
+      id: 5,
+      objects: [g, r3]
+    });
+    
+    let result: boolean = service.canResize(g2, false);
+    expect(result).toBeFalsy();
+  }));
+
+  it('should return true for 1 grouped object with no rotation 2 levels deep', inject([DrawerObjectHelperService], (service: DrawerObjectHelperService) => {
+    let r: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 1,
+      rotation: 0
+    });
+
+    let r2: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 2,
+      rotation: 0
+    });
+    
+    let g: DrGroupedObject = createDrGroupedObject({
+      id: 3,
+      objects: [r, r2]
+    });
+    
+    let r3: DrRect = Object.assign({}, DEFAULT_RECT, {
+      id: 4,
+      rotation: 0
+    });
+
+    let g2: DrGroupedObject = createDrGroupedObject({
+      id: 5,
+      objects: [g, r3]
+    });
+    
+    let result: boolean = service.canResize(g2, false);
+    expect(result).toBeTruthy();
   }));
 });

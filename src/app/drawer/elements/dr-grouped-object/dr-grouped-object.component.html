@@ -1,7 +1,7 @@
 <ng-template #elementTemplate>
     <ng-container *ngIf="data && visualData">
       <svg:g
-      [attr.transform]="data.rotation > 0 ? 'rotate(' + data.rotation + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
+      [attr.transform]="data.visualData > 0 ? 'rotate(' + data.visualData + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
       >
         <ng-container *ngFor="let s of data.objects; let i = index">
             <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"

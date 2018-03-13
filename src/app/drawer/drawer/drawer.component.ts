@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, Input, Output, EventEmitter } from '@angular/core';
+import { NgModule, ModuleWithProviders, Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, Input, Output, EventEmitter, ViewContainerRef } from '@angular/core';
 
 import { DrEllipse } from '../models/dr-ellipse';
 import { DrObject } from '../models/dr-object';
@@ -47,14 +47,21 @@ export class DrawerComponent implements OnInit {
   @Output()
   mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   
+  private _location: DrPoint = null;
 
   constructor(
-    private _dataService: DataStoreService
-    
+    private _dataService: DataStoreService,
+    private _elementRef: ElementRef
   )
      { }
 
   ngOnInit() {
+    let b: any = this._elementRef.nativeElement.getBoundingClientRect();
+
+    this._location = {
+      x: b.left,
+      y: b.top
+    };
   }
 
   isHiddenSelection(id: number) {
@@ -68,7 +75,7 @@ export class DrawerComponent implements OnInit {
   onBackgroundMouseDown(evt): void {
     this.handleMouseEvents && this.mouseDownObject.emit({ 
       location: { 
-        x: evt.clientX, y: evt.clientY 
+        x: evt.offsetX, y: evt.offsetY 
       }, 
       data: null,
       shiftKey: evt.shiftKey,
@@ -80,7 +87,7 @@ export class DrawerComponent implements OnInit {
   onBackgroundMouseMove(evt): void {
     this.handleMouseEvents && this.mouseMoveObject.emit({ 
       location: { 
-        x: evt.clientX, y: evt.clientY 
+        x: evt.offsetX, y: evt.offsetY 
       }, 
       data: null,
       shiftKey: evt.shiftKey,
@@ -92,7 +99,7 @@ export class DrawerComponent implements OnInit {
   onBackgroundMouseUp(evt): void {
     this.handleMouseEvents && this.mouseUpObject.emit({ 
       location: { 
-        x: evt.clientX, y: evt.clientY 
+        x: evt.offsetX, y: evt.offsetY 
       }, 
       data: null,
       shiftKey: evt.shiftKey,
@@ -102,29 +109,32 @@ export class DrawerComponent implements OnInit {
   }
 
   onClick(data: DrObject): void {
+    
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
-      //this.clickedObject.emit(data);
       this.clickedObject.emit(data);
     }
   }
 
   onMouseDown(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
-      //this.clickedObject.emit(data);
+      data.location.x = data.location.x - this._location.x;
+      data.location.y = data.location.y - this._location.y;
       this.mouseDownObject.emit(data);
     }
   }
 
   onMouseMove(data:MouseEventData): void {
     if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
-      //this.clickedObject.emit(data);
+      data.location.x = data.location.x - this._location.x;
+      data.location.y = data.location.y - this._location.y;
       this.mouseMoveObject.emit(data);
     }
   }
 
   onMouseUp(data:MouseEventData): void {
     if(data !== null && typeof data !== 'undefined'){
-      //this.clickedObject.emit(data);
+      data.location.x = data.location.x - this._location.x;
+      data.location.y = data.location.y - this._location.y;
       this.mouseUpObject.emit(data);
     }
   }
