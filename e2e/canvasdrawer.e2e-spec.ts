@@ -8,7 +8,7 @@ fdescribe('Maps', function () {
 
   let utilities: Utilities = new Utilities();
   let canvas: CanvasPage = new CanvasPage();
-  let containerCss = "app-editable-drawer app-drawer ";
+  let containerCss = "app-editable-drawer app-editor-tool ";
 
     beforeAll(() => {
         //browser.ignoreSynchronization = true;
@@ -49,8 +49,13 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(7)), 0, -80);
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(7)), 0, -100);
       utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 200,
+        height: 300
+      }));
     });
     it('CanvasDrawer_BottomResize_ExpectObjectToBeResizedVerticallyDownwards', () => {
       utilities.normalPause();
@@ -64,8 +69,13 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(3)), 0, 80);
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(3)), 0, 100);
       utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 200,
+        height: 300
+      }));
     });
     it('CanvasDrawer_LeftResize_ExpectObjectToBeResizedHorizontallyLeft', () => {
       utilities.normalPause();
@@ -79,8 +89,13 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(1)), -80, 0);
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(1)), -100, 0);
       utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 300,
+        height: 200
+      }));
     });
     it('CanvasDrawer_RightResize_ExpectObjectToBeResizedHorizontallyRight', () => {
       utilities.normalPause();
@@ -94,8 +109,93 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(5)), 80, 0);
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(5)), -100, 0);
       utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 100,
+        height: 200
+      }));
+    });
+    it('CanvasDrawer_TopLeftResize_ExpectObjectToBeResizedDiagonally', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(0)), -100, -100);
+      utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 300,
+        height: 300
+      }));
+    });
+    it('CanvasDrawer_BottomLeftResize_ExpectObjectToBeResizedDiagonally', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(2)), -100, 100);
+      utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 300,
+        height: 300
+      }));
+    });
+    it('CanvasDrawer_BottomRightResize_ExpectObjectToBeResizedDiagonally', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(4)), -100, -100);
+      utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 100,
+        height: 100
+      }));
+    });
+    it('CanvasDrawer_TopRightResize_ExpectObjectToBeResizedDiagonally', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(6)), -100, 100);
+      utilities.normalPause();
+
+      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
+        width: 100,
+        height: 100.5
+      }));
     });
 
     //Undo / Redo
@@ -404,8 +504,8 @@ fdescribe('Maps', function () {
       canvas.selectButton("Duplicate");
       utilities.shortPause();
 
-      element.all(by.css(containerCss + "svg.fill-parent g")).then(function (elements) {
-        expect(elements.length / 2).toEqual(2);
+      element.all(by.css(containerCss + "app-selector-tool app-drawer svg.fill-parent rect")).then(function (elements) {
+        expect(elements.length).toEqual(2);
       });
     });
     it('CanvasDrawer_RemoveObject_ExpectObjectToBeRemovedFromCanvas', () => {
@@ -783,5 +883,71 @@ fdescribe('Maps', function () {
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("460px");
     });
 
+    //Rotation
+    it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
+      utilities.normalPause();
 
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.rotateSelectedObject("#rotate-right", 50, 50);
+
+      //utilities.debugPause();
+
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
+        expect(value).toEqual('rotate(15)');
+      });
+    });
+    it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.rotateSelectedObject("#rotate-bottom", 50, 50);
+
+      //utilities.debugPause();
+
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
+        expect(value).toEqual('rotate(345)');
+      });
+    });
+    it('CanvasDrawer_SelectMultipleItems_ExpectRotationHandlesToNotAppear', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.drawSquareSize(-200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+      
+      browser.actions().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css(containerCss + "rect"))).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+      utilities.normalPause();
+
+      expect(element(by.css("#rotate-right")).isPresent()).toBeFalsy();
+      expect(element(by.css("#rotate-bottom")).isPresent()).toBeFalsy();
+    });
 });
