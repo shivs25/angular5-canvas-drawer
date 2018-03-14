@@ -534,24 +534,58 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   private resizeObjects(location: DrPoint): void {
     let b: BoundingBox = this._dataStoreService.selectedBounds;
 
+    let hChanges = null;
+    let vChanges = null;
+
     switch(this.mouseDownSizer){
       case 0:
+        hChanges = this.resizeH(b, location, false);
+        vChanges = this.resizeV(b, location, false);
         break;
       case 1: 
-        this.resizeH(b, location, false);
+        hChanges = this.resizeH(b, location, false);
+        break;
+      case 2:
+        hChanges = this.resizeH(b, location, false);
+        vChanges = this.resizeV(b, location, true);
         break;
       case 3:
-        this.resizeV(b, location, true);
+        vChanges = this.resizeV(b, location, true);
+        break;
+      case 4:
+        hChanges = this.resizeH(b, location, true);
+        vChanges = this.resizeV(b, location, true);
         break;
       case 5: 
-        this.resizeH(b, location, true);
+        hChanges = this.resizeH(b, location, true);
+        break;
+      case 6:
+        hChanges = this.resizeH(b, location, true);
+        vChanges = this.resizeV(b, location, false);
         break;
       case 7:
-        this.resizeV(b, location, false);
+        vChanges = this.resizeV(b, location, false);
     }
+
+
+    Object.assign(this.cssBounds,
+      null !== hChanges && null !== hChanges.cssBounds ? hChanges.cssBounds : {},
+      null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {}
+    );
+    
+
+    Object.assign(this.boundingBoxObject,
+      null !== hChanges && null !== hChanges.boundingBoxObject ? hChanges.boundingBoxObject : {},
+      null !== vChanges && null !== vChanges.boundingBoxObject ? vChanges.boundingBoxObject : {}
+    );
+    this.applyResizeChanges();
+
+
   }
 
-  private resizeH(b: BoundingBox, location: DrPoint, opposite: boolean): void {
+  private resizeH(b: BoundingBox, location: DrPoint, opposite: boolean): any {
+
+    let returnValue: any = null;
 
     let left: number = 0;
     let width: number = 0;
@@ -570,19 +604,22 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
     
     if (width > 0 && elementWidth > 0) {
-      Object.assign(this.cssBounds, {
-        left: left,
-        width: width
-      });
-      Object.assign(this.boundingBoxObject, {
-        width: elementWidth
-      });
-      this.applyResizeChanges();
+      returnValue = {
+        cssBounds: {
+          left: left,
+          width: width
+        },
+        boundingBoxObject: {
+          width: elementWidth
+        }
+      }
     }
+
+    return returnValue;
   }
 
-  private resizeV(b: BoundingBox, location: DrPoint, opposite: boolean): void {
-
+  private resizeV(b: BoundingBox, location: DrPoint, opposite: boolean): any {
+    let returnValue: any = null;
     let top: number = 0;
     let height: number = 0;
     let elementHeight: number = 0;
@@ -600,15 +637,19 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
     
     if (height > 0 && elementHeight > 0) {
-      Object.assign(this.cssBounds, {
-        top: top,
-        height: height
-      });
-      Object.assign(this.boundingBoxObject, {
-        height: elementHeight
-      });
-      this.applyResizeChanges();
+
+      returnValue = {
+        cssBounds: {
+          top: top,
+          height: height
+        },
+        boundingBoxObject: {
+          height: elementHeight
+        }
+      }
     }
+
+    return returnValue;
   }
 
   private applyResizeChanges(): void {
