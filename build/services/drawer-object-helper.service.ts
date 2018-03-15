@@ -16,6 +16,28 @@ export class DrawerObjectHelperService {
 
   constructor() { }
 
+  public canResize(element: DrObject, checkRotation: boolean): boolean {
+    let returnValue: boolean = true;
+
+    if (DrType.GROUPED_OBJECT === element.drType) {
+      for(let o of (element as DrGroupedObject).objects) {
+        if (!this.canResize(o, true)) {
+          returnValue = false;
+          break;
+        }
+      }
+    }
+    else {
+      if (checkRotation) {
+        returnValue = 0 === element.rotation;
+      }
+    }
+
+    return returnValue;
+  }
+
+  
+
   public getObjects(ids: number[],availableElements: DrObject[]): DrObject[]{
     let objs: DrObject[] = [];
     
@@ -187,6 +209,8 @@ export class DrawerObjectHelperService {
   }
 
   
+  
+
   
 
 }

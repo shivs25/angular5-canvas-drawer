@@ -6,12 +6,8 @@ export interface DrObject {
     drType: DrType;
     name: string;
     visible: boolean;
-    transformX: number;
-    transformY: number;
-    scaleX: number;
-    scaleY: number;
     clickable: boolean;
-
+    rotation: number;
     
 }
 
@@ -20,10 +16,6 @@ export const DEFAULT_OBJECT: DrObject = {
     drType: DrType.INVALID,
     name: "Object",
     visible: true,
-    transformX: 0,
-    transformY: 0,
-    scaleX: 1,
-    scaleY: 1,
     clickable: true,
-
+    rotation: 0
 }

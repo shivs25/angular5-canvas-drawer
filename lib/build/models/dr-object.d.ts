@@ -4,10 +4,7 @@ export interface DrObject {
     drType: DrType;
     name: string;
     visible: boolean;
-    transformX: number;
-    transformY: number;
-    scaleX: number;
-    scaleY: number;
     clickable: boolean;
+    rotation: number;
 }
 export declare const DEFAULT_OBJECT: DrObject;

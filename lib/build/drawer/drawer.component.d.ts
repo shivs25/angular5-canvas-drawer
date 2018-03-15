@@ -1,9 +1,10 @@
-import { OnInit, EventEmitter } from '@angular/core';
+import { OnInit, ElementRef, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
 import { MouseEventData } from '../models/mouse-event-data';
 export declare class DrawerComponent implements OnInit {
     private _dataService;
+    private _elementRef;
     elementState: any;
     overrideProperties: any;
     hoverClass: any;
@@ -12,8 +13,10 @@ export declare class DrawerComponent implements OnInit {
     mouseDownObject: EventEmitter<MouseEventData>;
     mouseMoveObject: EventEmitter<MouseEventData>;
     mouseUpObject: EventEmitter<MouseEventData>;
-    constructor(_dataService: DataStoreService);
+    private _location;
+    constructor(_dataService: DataStoreService, _elementRef: ElementRef);
     ngOnInit(): void;
+    isHiddenSelection(id: number): DrObject;
     onBackgroundClick(evt: any): void;
     onBackgroundMouseDown(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
