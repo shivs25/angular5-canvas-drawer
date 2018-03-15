@@ -69,7 +69,7 @@
                 [attr.text-anchor]="getHAlignment()">
                 
                 <ng-container *ngIf="lineData">
-                  <tspan [attr.x]="getTextX()" [attr.y]="i === 0 ? getMultiLineTextY() : ''" [attr.dy]="i !== 0 ? visualData.size + 2 : ''" *ngFor="let l of lineData.lines; let i = index;">{{ l }}</tspan>
+                  <tspan [attr.x]="getTextX()" [attr.y]="i === 0 ? getMultiLineTextY() : ''" [attr.dy]="i !== 0 ? visualData.size + TEXT_PADDING : ''" *ngFor="let l of lineData.lines; let i = index;">{{ l }}</tspan>
                 </ng-container>
               
               

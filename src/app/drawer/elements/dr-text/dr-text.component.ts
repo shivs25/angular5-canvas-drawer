@@ -7,6 +7,7 @@ import { DrawerObjectHelperService } from '../../services/drawer-object-helper.s
 import * as d3Plus from 'd3plus-text';
 import { DrObject } from '../../models/dr-object';
 
+const TEXT_PADDING: number = 4;
 
 @Component({
   selector: 'dr-text',
@@ -15,6 +16,8 @@ import { DrObject } from '../../models/dr-object';
 })
 
 export class DrTextComponent extends DrObjectComponent {
+
+  TEXT_PADDING: number = TEXT_PADDING;
 
   lineData: any = null;
 
@@ -31,7 +34,7 @@ export class DrTextComponent extends DrObjectComponent {
       .fontFamily(d.fontFamily)
       .fontSize(d.size)
       .fontWeight(d.bold ? 'bold' : 'normal')
-      .width(d.width)
+      .width(d.width - 2 * TEXT_PADDING)
       ((value as DrText).text);
 
       this._data = value;
@@ -43,11 +46,11 @@ export class DrTextComponent extends DrObjectComponent {
 
     switch(o.hAlignment){
       case DrTextAlignment.NEAR:
-        return o.x;
+        return o.x + TEXT_PADDING;
       case DrTextAlignment.CENTER:
         return o.x + o.width / 2;
       case DrTextAlignment.FAR:
-        return o.x + o.width;
+        return o.x + o.width - TEXT_PADDING;
 
     }
   }
@@ -57,11 +60,11 @@ export class DrTextComponent extends DrObjectComponent {
 
     switch(o.vAlignment){
       case DrTextAlignment.NEAR:
-        return o.y;
+        return o.y + TEXT_PADDING;
       case DrTextAlignment.CENTER:
         return o.y + o.height / 2;
       case DrTextAlignment.FAR:
-        return o.y + o.height;
+        return o.y + o.height - TEXT_PADDING;
 
     }
   }
@@ -71,15 +74,15 @@ export class DrTextComponent extends DrObjectComponent {
 
     switch(o.vAlignment){
       case DrTextAlignment.NEAR:
-        return o.y + o.size + 2;
+        return o.y + o.size + TEXT_PADDING;
       case DrTextAlignment.CENTER:
         return (o.y + o.height / 2) -     //center y of box
                 (
-                  (this.lineData.lines.length - 1) * (o.size + 2) / 2 - //total lines
-                  ((o.size + 2) / 2)      //Half a line because v alignment doesnt apply
+                  (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
+                  ((o.size) / 2)      //Half a line because v alignment doesnt apply
                 );
       case DrTextAlignment.FAR:
-        return o.y + o.height - (this.lineData.lines.length - 1) * (o.size + 2) - 2;
+        return o.y + o.height - (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
 
     }
   }
