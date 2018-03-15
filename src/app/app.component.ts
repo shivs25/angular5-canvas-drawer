@@ -287,17 +287,17 @@ export class AppComponent implements OnInit {
     });
 
     let text: DrText = createDrText({
-      x: 0, 
-      y: 0,
+      x: 100, 
+      y: 100,
       width: 200,
       height: 100,
-      vAlignment: DrTextAlignment.CENTER,
-      hAlignment:  DrTextAlignment.CENTER, 
-      text: "Boom SHAKA-laka",
+      vAlignment: DrTextAlignment.FAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "Billy Shivers is awesome. i love what he does with this text editor",
       id: 6,
-      rotation: 90
+      rotation: 0
     });
-    //elements.push(text);
+    elements.push(text);
     
     let e: DrEllipse = createDrEllipse({
       id: 4,
@@ -353,7 +353,7 @@ export class AppComponent implements OnInit {
       clickable: true,
       rotation:0
     });
-    elements.push(t3);
+    //elements.push(t3);
 
     //elements.push(t);
     let r: DrPolygon = createDrPolygon({
@@ -384,10 +384,10 @@ export class AppComponent implements OnInit {
     });
 
     //elements.push(r);
-    elements.push(r2);
+    //elements.push(r2);
     //elements.push(e);
-    let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
-    this.elements = [g];
+    //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
+    this.elements = elements;
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

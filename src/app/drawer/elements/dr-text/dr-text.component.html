@@ -3,7 +3,7 @@
     <svg:g
       [attr.transform]="visualData.rotation > 0 ? 'rotate(' + visualData.rotation + ',' + (visualData.x + visualData.width / 2 )+ ',' + (visualData.y + visualData.height / 2) + ')' : ''">
         >
-        <svg:clipPath [id]="elementId">
+        <svg:clipPath [id]="'clip_' + elementId">
             <svg:rect
               [attr.x]="data.x"
               [attr.y]="data.y"
@@ -19,7 +19,7 @@
             (mousemove)="onMouseMove($event, data)"
             (mouseup)="onMouseUp($event, data)"
             
-            [id]="elementId" 
+            [id]="'bounds_' + elementId" 
             
             [attr.x]="data.x"
             [attr.y]="data.y"
@@ -31,25 +31,51 @@
             [attr.stroke-width]="visualData.strokeWidth"
             [attr.opacity]="visualData.opacity">
           </svg:rect>
-          <svg:g [id]="elementId" [attr.clip-path]="'url(#' + elementId + ')'">
-            <svg:text 
-              [id]="elementId" 
-              (click)="onClick($event, data)"
-              (mousedown)="onMouseDown($event, data)"
-              (mousemove)="onMouseMove($event, data)"
-              (mouseup)="onMouseUp($event, data)"
-              [attr.x]="getTextX()" 
-              [attr.y]="getTextY()"
-              [attr.fill]="visualData.fontColor"
-              [attr.font-size]="visualData.size + 'px'"
-              [attr.font-family]="visualData.fontFamily"
-              [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
-              [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
-              [attr.alignment-baseline]="getVAlignment()"
-              [attr.text-anchor]="getHAlignment()">
-              {{ visualData.text }}
+          <svg:g [id]="'g_' + elementId" [attr.clip-path]="'url(#clip_' + elementId + ')'">
+            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length === 1">
+              <svg:text
+                [id]="'text_' + elementId" 
+                (click)="onClick($event, data)"
+                (mousedown)="onMouseDown($event, data)"
+                (mousemove)="onMouseMove($event, data)"
+                (mouseup)="onMouseUp($event, data)"
+                [attr.x]="getTextX()" 
+                [attr.y]="getTextY()"
+                [attr.fill]="visualData.fontColor"
+                [attr.font-size]="visualData.size + 'px'"
+                [attr.font-family]="visualData.fontFamily"
+                [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
+                [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
+                [attr.alignment-baseline]="getVAlignment()"
+                [attr.text-anchor]="getHAlignment()">
+                
+                {{ visualData.text }}
               
-            </svg:text>
+              
+              </svg:text>
+            </ng-container>
+            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length > 1">
+              <svg:text
+                [id]="'text_' + elementId" 
+                (click)="onClick($event, data)"
+                (mousedown)="onMouseDown($event, data)"
+                (mousemove)="onMouseMove($event, data)"
+                (mouseup)="onMouseUp($event, data)"
+                [attr.fill]="visualData.showText ? visualData.fontColor : 'transparent'"
+                [attr.font-size]="visualData.size + 'px'"
+                [attr.font-family]="visualData.fontFamily"
+                [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
+                [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
+                [attr.text-anchor]="getHAlignment()">
+                
+                <ng-container *ngIf="lineData">
+                  <tspan [attr.x]="getTextX()" [attr.y]="i === 0 ? getMultiLineTextY() : ''" [attr.dy]="i !== 0 ? visualData.size + 2 : ''" *ngFor="let l of lineData.lines; let i = index;">{{ l }}</tspan>
+                </ng-container>
+              
+              
+              </svg:text>
+            </ng-container>
+            
           </svg:g>
     </svg:g>
       
