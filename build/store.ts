@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -24,13 +24,14 @@ export interface IHistory<T> {
 export interface IElementState {
     elements: DrObject[];
     selectedObjects: DrObject[];
+    hideSelection: boolean;
     selectedBounds: BoundingBox;
     selectedTool: EditorToolType;
 }
 
 export interface IEditingState {
     isEditing: boolean;
-    previewElements: DrObject[] 
+    previewElements: DrObject[];
 }
 
 export interface IDrawerAppState {
@@ -41,6 +42,7 @@ export interface IDrawerAppState {
 export const INITIAL_ELEMENT_STATE: IElementState = {
     elements: [],
     selectedObjects: [],
+    hideSelection: false,
     selectedBounds: null,
     selectedTool: EditorToolType.SELECTOR_TOOL
 }
@@ -148,6 +150,11 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 selectedTool: action.tool
             });
         }
+        case SET_HIDE_SELECTION: {
+            return Object.assign({}, state, {
+                hideSelection: action.hideSelection
+            });
+        }
         default:
             return state;
     }
@@ -217,7 +224,7 @@ function findAndSetNestedChanges(items: DrObject[], changes: any): DrObject[] {
     return newArray;
 }  
 
-const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL];
+const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
     filter: excludeAction(ACTIONS_TO_IGNORE),
     limit: 10,

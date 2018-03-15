@@ -25,4 +25,12 @@ export class CanvasPage {
       mouseUp().
       perform();
   };
+
+  rotateSelectedObject(rotateHandleCss, offsetX, offsetY) {
+    browser.actions().
+      mouseDown(element(by.css(rotateHandleCss))).
+      mouseMove({ x: offsetX, y: offsetY }).
+      mouseUp().
+      perform();
+  }
 }
