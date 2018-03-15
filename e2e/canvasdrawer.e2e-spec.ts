@@ -43,7 +43,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(100);
       utilities.longPause();
 
       canvas.selectButton("Selector");
@@ -53,8 +53,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 300
+        width: 100,
+        height: 200
       }));
     });
     it('CanvasDrawer_BottomResize_ExpectObjectToBeResizedVerticallyDownwards', () => {
@@ -63,7 +63,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(100);
       utilities.longPause();
 
       canvas.selectButton("Selector");
@@ -73,8 +73,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 300
+        width: 100,
+        height: 200
       }));
     });
     it('CanvasDrawer_LeftResize_ExpectObjectToBeResizedHorizontallyLeft', () => {
@@ -83,7 +83,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(100);
       utilities.longPause();
 
       canvas.selectButton("Selector");
@@ -93,8 +93,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 300,
-        height: 200
+        width: 200,
+        height: 100
       }));
     });
     it('CanvasDrawer_RightResize_ExpectObjectToBeResizedHorizontallyRight', () => {
@@ -123,7 +123,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(100);
       utilities.longPause();
 
       canvas.selectButton("Selector");
@@ -133,8 +133,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 300,
-        height: 300
+        width: 200,
+        height: 200
       }));
     });
     it('CanvasDrawer_BottomLeftResize_ExpectObjectToBeResizedDiagonally', () => {
@@ -143,7 +143,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(100);
       utilities.longPause();
 
       canvas.selectButton("Selector");
@@ -153,8 +153,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 300,
-        height: 300
+        width: 200,
+        height: 200
       }));
     });
     it('CanvasDrawer_BottomRightResize_ExpectObjectToBeResizedDiagonally', () => {
@@ -194,7 +194,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
         width: 100,
-        height: 100.5
+        height: 100
       }));
     });
 
