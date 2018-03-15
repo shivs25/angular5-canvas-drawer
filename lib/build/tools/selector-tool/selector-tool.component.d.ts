@@ -66,7 +66,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     private setupBounds();
     private rotateObject(location, shiftKey);
     private getRotationAngle(location, shiftKey);
-    private resizeObjects(location);
+    private resizeObjects(location, shiftKey);
     private resizeH(b, location, opposite);
     private resizeV(b, location, opposite);
     private applyResizeChanges();
