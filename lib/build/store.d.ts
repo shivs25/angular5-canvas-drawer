@@ -10,6 +10,7 @@ export interface IHistory<T> {
 export interface IElementState {
     elements: DrObject[];
     selectedObjects: DrObject[];
+    hideSelection: boolean;
     selectedBounds: BoundingBox;
     selectedTool: EditorToolType;
 }

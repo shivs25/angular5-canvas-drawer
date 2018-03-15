@@ -25,6 +25,8 @@ export declare class DataStoreService {
     readonly selectedBounds: BoundingBox;
     selectedTool: EditorToolType;
     readonly isEditing: boolean;
+    readonly hideSelection: boolean;
+    setHideSelection(hide: boolean): void;
     alignObjectsLeft(items: DrObject[]): void;
     alignObjectsRight(items: DrObject[]): void;
     alignObjectsCenter(items: DrObject[]): void;
@@ -34,6 +36,7 @@ export declare class DataStoreService {
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
     setVisibility(items: DrObject[], visibility: boolean): void;
     setUrls(items: DrObject[], url: string): void;
+    setRotation(item: DrObject, rotation: number): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
