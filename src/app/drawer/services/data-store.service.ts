@@ -200,6 +200,27 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
+  public setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox) {
+    let changes: any[] = [];
+    for(let i of items) {
+      changes.push(
+        { id: i.id, 
+          changes: Object.assign(this._changeService.getBoundsChanges(i, bounds, this.selectedBounds), {
+            text: text
+          })
+        });
+      }
+
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: changes
+    });
+    this.resetSelection();
+    this._duplicateOffset = 1;
+  }
+
+
+
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,

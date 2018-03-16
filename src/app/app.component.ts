@@ -283,7 +283,8 @@ export class AppComponent implements OnInit {
       width: 100,
       height: 100,
       strokeWidth: 5,
-      showFill: false
+      showFill: false,
+      showStroke: true
     });
 
     let text: DrText = createDrText({
@@ -292,10 +293,15 @@ export class AppComponent implements OnInit {
       width: 200,
       height: 100,
       vAlignment: DrTextAlignment.FAR,
-      hAlignment:  DrTextAlignment.NEAR, 
-      text: "Billy Shivers is awesome. i love what he does with this text editor",
+      hAlignment:  DrTextAlignment.CENTER, 
+      text: "Billy Shivers\nis   awesome. i love what he does with this text editor",
       id: 6,
-      rotation: 0
+      size: 12,
+      fontFamily: 'Comic Sans',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
     });
     elements.push(text);
     

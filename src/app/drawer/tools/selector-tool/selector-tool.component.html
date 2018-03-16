@@ -35,6 +35,7 @@
       (mouseDown)="onSelectionMouseDown($event)"
       (mouseMove)="onSelectionMouseMove($event)"
       (mouseUp)="onSelectionMouseUp($event)"
+      [hoverClass]="cursor"
     ></ng-container>
 
     <ng-container *ngFor="let s of sizers; let i = index;">
