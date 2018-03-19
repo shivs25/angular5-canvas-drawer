@@ -491,28 +491,43 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         left: b.x - HALF_SIZER,
         top: b.y - HALF_SIZER,
         width: b.width + SIZER_SIZE,
-        height: b.height + SIZER_SIZE
+        height: b.height + SIZER_SIZE,
+        transform: 'rotate(' + this.rotation  + 'deg)'
       };
 
+      let left: number =  b.x + b.width + ROTATE_SPACING - HALF_SIZER;
+      let top: number = b.y + b.height / 2 - HALF_SIZER;
+
+      this.rotation = this.selectedObjects.length === 1 ? this.selectedObjects[0].rotation : 0;
+
       this.rotateRightBounds = {
-        left: b.x + b.width + ROTATE_SPACING - HALF_SIZER,
-        top: b.y + b.height / 2 - HALF_SIZER,
+        left: left,
+        top: top,
         width: SIZER_SIZE,
-        height: SIZER_SIZE
+        height: SIZER_SIZE,
+        transform: 'rotate(' + this.rotation + 'deg)',
+        "transform-origin": ((this.cssBounds.left + this.cssBounds.width / 2) - 
+                             (left + SIZER_SIZE / 2))  + "px " + 
+                             (SIZER_SIZE / 2) + "px"
       };
+
+      top = b.y + b.height + ROTATE_SPACING - HALF_SIZER;
 
       this.rotateBottomBounds = {
         left: b.x + b.width / 2 - HALF_SIZER,
-        top: b.y + b.height + ROTATE_SPACING - HALF_SIZER,
+        top: top,
         width: SIZER_SIZE,
-        height: SIZER_SIZE
+        height: SIZER_SIZE,
+        transform: 'rotate(' + this.rotation + 'deg)',
+        "transform-origin": (SIZER_SIZE / 2) + "px " + ((this.cssBounds.top + this.cssBounds.height / 2) - 
+                                                        (top + SIZER_SIZE / 2)) + "px"
       };
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], true) :
                        this.canAllResize(this.selectedObjects);
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType;
 
-      this.rotation = this.selectedObjects.length === 1 ? this.selectedObjects[0].rotation : 0;
+      
     }
     else {
       this.selectedObjects = [];
@@ -527,6 +542,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private rotateObject(location: DrPoint, shiftKey: boolean): void {
     this.rotation = (360 + this.getRotationAngle(location, shiftKey) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+    Object.assign(this.rotateRightBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
+    Object.assign(this.rotateBottomBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
+    Object.assign(this.cssBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
   }
 
   private getRotationAngle(location: DrPoint, shiftKey: boolean): number {

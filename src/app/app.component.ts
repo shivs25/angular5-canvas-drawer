@@ -393,7 +393,7 @@ export class AppComponent implements OnInit {
     //elements.push(r2);
     //elements.push(e);
     //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
-    this.elements = elements;
+    this.elements = [r];
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 
