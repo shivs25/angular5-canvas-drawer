@@ -286,15 +286,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let elements = [];
-
-<<<<<<< HEAD
-=======
     
     this.dataStoreService.objectsAdded.subscribe(() => {
       console.log(this.dataStoreService.elements);
     });
 
->>>>>>> 1e79322e31759877a04929623f669970a4e11735
     let t: DrRect = createDrRect({
       id: 2,
       x: 100,
