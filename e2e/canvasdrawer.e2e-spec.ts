@@ -177,7 +177,7 @@ fdescribe('Maps', function () {
         height: 100
       }));
     });
-    fit('CanvasDrawer_TopRightResize_ExpectObjectToBeResizedDiagonally', () => {
+    it('CanvasDrawer_TopRightResize_ExpectObjectToBeResizedDiagonally', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
