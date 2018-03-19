@@ -13,6 +13,7 @@ import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
 import { createDrStyle } from '../../build/models/dr-style';
+import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent implements OnInit {
   viewLeft: string = "0";
   viewHeight: string = "560";
   viewWidth: string = "1000";
-
+  viewBoxItem: BoundingBox = null;
  
 
   @select() elementState;
@@ -178,6 +179,18 @@ export class AppComponent implements OnInit {
     }));
   }
 
+  setBoundingBox(): void {
+    if(this.viewBoxItem === null) {
+      this.viewBoxItem = createBoundingBox();
+      this.viewBoxItem.x = 0;
+      this.viewBoxItem.y = 0;
+      this.viewBoxItem.height = 200;
+      this.viewBoxItem.width = 100;
+    } else {
+      this.viewBoxItem = null;
+    }
+  }
+
   up(): void {
     if (this.dataStoreService.selectedObjects.length > 0) {
       this.dataStoreService.moveObjectsUp(this.dataStoreService.selectedObjects);
@@ -273,8 +286,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let elements = [];
-
-    
 
     let t: DrRect = createDrRect({
       id: 2,

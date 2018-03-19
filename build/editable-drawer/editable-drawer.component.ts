@@ -1,13 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
+import { BoundingBox } from '../models/bounding-box';
 
 @Component({
   selector: 'app-editable-drawer',
-  template: "\n    <app-drawer [handleMouseEvents]=\"false\">\n\n    </app-drawer>\n    <app-editor-tool>\n\n    </app-editor-tool>\n  ",
+  template: "\n    <app-drawer [handleMouseEvents]=\"false\" [viewBox]=\"itemViewBox\">\n\n    </app-drawer>\n    <app-editor-tool>\n\n    </app-editor-tool>\n  ",
   styles: ["\n\n  "]
 })
 export class EditableDrawerComponent implements OnInit {
+
+  @Input()
+  itemViewBox: BoundingBox = null;
 
   @Output() 
   public selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();

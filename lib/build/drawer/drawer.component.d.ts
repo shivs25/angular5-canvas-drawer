@@ -1,6 +1,7 @@
 import { OnInit, ElementRef, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
+import { BoundingBox } from '../models/bounding-box';
 import { MouseEventData } from '../models/mouse-event-data';
 export declare class DrawerComponent implements OnInit {
     private _dataService;
@@ -9,6 +10,7 @@ export declare class DrawerComponent implements OnInit {
     overrideProperties: any;
     hoverClass: any;
     handleMouseEvents: boolean;
+    viewBox: BoundingBox;
     clickedObject: EventEmitter<DrObject>;
     mouseDownObject: EventEmitter<MouseEventData>;
     mouseMoveObject: EventEmitter<MouseEventData>;
@@ -25,4 +27,5 @@ export declare class DrawerComponent implements OnInit {
     onMouseDown(data: MouseEventData): void;
     onMouseMove(data: MouseEventData): void;
     onMouseUp(data: MouseEventData): void;
+    getViewBox(): string;
 }

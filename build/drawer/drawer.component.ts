@@ -17,7 +17,7 @@ import { MouseEventData } from '../models/mouse-event-data';
 
 @Component({
   selector: 'app-drawer',
-  template: "\n\n    <div class=\"absolute-position fill-parent\">\n    \n        <svg \n              (mousedown)=\"onBackgroundMouseDown($event)\"\n              (mousemove)=\"onBackgroundMouseMove($event)\" \n              (mouseup)=\"onBackgroundMouseUp($event)\"\n              class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\">\n          <ng-container *ngFor=\"let s of (elementState | async)?.present.elements; let i = index\">\n            <ng-container *ngIf=\"s.visible && !isHiddenSelection(s.id)\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"overrideProperties\" [elementId]=\"i + 1\"\n              [hoverClass]=\"hoverClass\"\n              (mouseDown)=\"onMouseDown($event)\"\n              (mouseMove)=\"onMouseMove($event)\"\n              (mouseUp)=\"onMouseUp($event)\"\n              >\n            </ng-container>\n          </ng-container>\n        </svg>\n    </div>\n  ",
+  template: "\n\n    <div class=\"absolute-position fill-parent\">\n    \n        <svg \n              (mousedown)=\"onBackgroundMouseDown($event)\"\n              (mousemove)=\"onBackgroundMouseMove($event)\" \n              (mouseup)=\"onBackgroundMouseUp($event)\"\n              class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" \n              [attr.viewBox]=\"getViewBox()\">\n          <ng-container *ngFor=\"let s of (elementState | async)?.present.elements; let i = index\">\n            <ng-container *ngIf=\"s.visible && !isHiddenSelection(s.id)\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"overrideProperties\" [elementId]=\"i + 1\"\n              [hoverClass]=\"hoverClass\"\n              (mouseDown)=\"onMouseDown($event)\"\n              (mouseMove)=\"onMouseMove($event)\"\n              (mouseUp)=\"onMouseUp($event)\"\n              >\n            </ng-container>\n          </ng-container>\n        </svg>\n    </div>\n  ",
   styles: ["\n\n  "],
   entryComponents: []
 })
@@ -34,6 +34,9 @@ export class DrawerComponent implements OnInit {
 
   @Input()
   handleMouseEvents: boolean = true;
+
+  @Input()
+  viewBox: BoundingBox = null;
 
   @Output()
   clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
@@ -137,6 +140,15 @@ export class DrawerComponent implements OnInit {
       data.location.y = data.location.y - this._location.y;
       this.mouseUpObject.emit(data);
     }
+  }
+
+  getViewBox(): string {
+    if(null === this.viewBox || 'undefined' === typeof this.viewBox){
+      return null;
+    } else {
+      return this.viewBox.x + " " + this.viewBox.y + " " + this.viewBox.width + " " + this.viewBox.height;
+    }
+
   }
 }
 

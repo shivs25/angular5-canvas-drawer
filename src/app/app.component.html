@@ -40,10 +40,11 @@
     <button (click)="imageUrl()">Image</button>
     <button (click)="showPreview()">Preview</button>
     <button (click)="setPreviewStyle()">Preview Style</button>
+    <button (click)="setBoundingBox()">Bounding Box</button>
 </div>
 <div style="position:relative; width: 600px; height: 600px; border: 1px solid red">
 
-    <app-editable-drawer>
+    <app-editable-drawer [itemViewBox]="viewBoxItem">
     </app-editable-drawer>
 
 </div>

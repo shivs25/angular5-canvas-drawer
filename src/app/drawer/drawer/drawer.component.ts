@@ -35,6 +35,9 @@ export class DrawerComponent implements OnInit {
   @Input()
   handleMouseEvents: boolean = true;
 
+  @Input()
+  viewBox: BoundingBox = null;
+
   @Output()
   clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
   
@@ -137,6 +140,15 @@ export class DrawerComponent implements OnInit {
       data.location.y = data.location.y - this._location.y;
       this.mouseUpObject.emit(data);
     }
+  }
+
+  getViewBox(): string {
+    if(null === this.viewBox || 'undefined' === typeof this.viewBox){
+      return null;
+    } else {
+      return this.viewBox.x + " " + this.viewBox.y + " " + this.viewBox.width + " " + this.viewBox.height;
+    }
+
   }
 }
 
