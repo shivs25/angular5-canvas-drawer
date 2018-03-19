@@ -94,6 +94,34 @@ export class DataStoreService {
     return this._ngRedux.getState().elementState.present.hideSelection;
   }
 
+  public getUniqueName(prefix: string): string {
+    return this.getName(prefix, true);
+  }
+
+  private getName(prefix: string, showNumOne: boolean): string {
+    let returnValue: string = null;
+
+    let exists: boolean = true;
+
+    let i: number = 1;
+    while(exists) {
+      returnValue = prefix + ((showNumOne || 1 !== i) ? " " + i.toString() : "");
+      exists = this.elements.filter((m: DrObject) => m.name === returnValue).length > 0;
+      i++;
+    }
+    
+    return returnValue;
+  }
+
+  private deCopyify(name: string): string {
+    let returnValue: string = name;
+
+    if (returnValue.endsWith(" Copy")) {
+      returnValue = returnValue.substring(0, returnValue.length - 5);
+    }
+
+    return returnValue;
+  }
 
   //=========Actions=========
   public setHideSelection(hide: boolean):void {
@@ -379,13 +407,14 @@ export class DataStoreService {
         y: b.y + (this._duplicateOffset * DUPLICATE_OFFSET_AMOUNT)
       });
 
-      newItem = Object.assign({}, cloneDeep(i), this._changeService.getBoundsChanges(i, newB, b), { id: nextId++ });
+      newItem = Object.assign({}, cloneDeep(i), this._changeService.getBoundsChanges(i, newB, b), { id: nextId++, name: this.getName(this.deCopyify(i.name) + " Copy", false) });
       nextId = updateChildItemIds(newItem, nextId);
 
       newItems.push(newItem);
     }
 
     this._ngRedux.dispatch({ type: ADD_OBJECTS, newItems: newItems });
+    this.objectsAdded.emit(newItems);
     this._duplicateOffset++;
   }
 
@@ -397,6 +426,8 @@ export class DataStoreService {
   public setPreviewStyle(style: DrStyle) {
     this._ngRedux.dispatch({ type: CHANGE_PREVIEW_STYLES, changes: style });
   }
+
+ 
 
   private getObjectIndex(item: DrObject): number {
     let i: DrObject = this.elements.find((t:any) => t.id === item.id);

@@ -104,6 +104,7 @@ export class PenToolComponent implements OnInit {
     else {
       this.currentObject = createDrPolygon({
         id: 1000000,
+        name: this._dataService.getUniqueName("Polygon"),
         points: [{ x: x, y:y }]
       });
     }
@@ -113,7 +114,7 @@ export class PenToolComponent implements OnInit {
     if(this.currentObject &&
       null !== this.currentObject &&
       this.currentObject.points.length > 2) {;
-       let newObject: DrPolygon = createDrPolygon({ points: this.currentObject.points });
+       let newObject: DrPolygon = createDrPolygon({ points: this.currentObject.points, name: this.currentObject.name });
        this._dataService.addObjects([
           newObject
         ]);

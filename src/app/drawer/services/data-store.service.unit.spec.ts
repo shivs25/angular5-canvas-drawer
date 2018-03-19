@@ -380,4 +380,83 @@ describe('DataStoreService', () => {
     
   });
 
+  it('should return a name with a 1 when no elements', () => {
+    let items = [
+    ];
+
+    
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    
+    let result: string = service.getUniqueName("star");
+
+    expect(result).toEqual("star 1");
+    
+  });
+
+  it('should return a name with a 2 when a star already exists', () => {
+    let items = [
+      createDrRect({ id: 1, name: "star 1"})
+    ];
+
+    
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    
+    let result: string = service.getUniqueName("star");
+
+    expect(result).toEqual("star 2");
+    
+  });
+
+  it('should return a name with a 1 when a star already exists with name 2', () => {
+    let items = [
+      createDrRect({ id: 1, name: "star 2"})
+    ];
+
+    
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    
+    let result: string = service.getUniqueName("star");
+
+    expect(result).toEqual("star 1");
+    
+  });
+
+  it('should return a name with a 1 when a 1 already exists but with a different name', () => {
+    let items = [
+      createDrRect({ id: 1, name: "circle 1"})
+    ];
+
+    
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    
+    let result: string = service.getUniqueName("star");
+
+    expect(result).toEqual("star 1");
+    
+  });
+
 });
