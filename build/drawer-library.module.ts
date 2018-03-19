@@ -22,6 +22,7 @@ export { DrImage, createDrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export { DrawerObjectHelperService } from './services/drawer-object-helper.service';
 export { DataStoreService } from './services/data-store.service';
+export { ChangeHelperService } from './services/change-helper.service';
 export { EditorToolType } from './models/enums';
 export { DrStyle, createDrStyle } from './models/dr-style';
 export { DrTextStyle, createDrTextStyle } from './models/dr-text-style';

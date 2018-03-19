@@ -27,26 +27,29 @@ To use this library in your newly generated component, add the `app-drawer` to y
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
-Date: '2018-03-15` VERSION: `1.0.33-beta.30`
+Date: `2018-03-15` VERSION: `1.0.33-beta.31`
+- Exported ChangeHelperService
+
+Date: `2018-03-15` VERSION: `1.0.33-beta.30`
 - Added rotation
 - Added functionality for the corner sizers
 
-Date: '2018-03-08` VERSION: `1.0.33-beta.29`
+Date: `2018-03-08` VERSION: `1.0.33-beta.29`
 - Exported methods for arrow, star, triangle, callout
 
-Date: '2018-03-08` VERSION: `1.0.33-beta.28`
+Date: `2018-03-08` VERSION: `1.0.33-beta.28`
 - Added create methods for arrow, star, triangle, callout
 
-Date: '2018-03-08` VERSION: `1.0.33-beta.27`
+Date: `2018-03-08` VERSION: `1.0.33-beta.27`
 - Added star
 - Added triangle
 - Added arrow
 - Added callout
 
-Date: '2018-03-08` VERSION: `1.0.33-beta.26`
+Date: `2018-03-08` VERSION: `1.0.33-beta.26`
 - Added setPreviewStyles
 
-Date: '2018-03-08` VERSION: `1.0.33-beta.25`
+Date: `2018-03-08` VERSION: `1.0.33-beta.25`
 - Added preview component
 - Removed output and inputs on editable drawer
 - Removed elements input on drawer

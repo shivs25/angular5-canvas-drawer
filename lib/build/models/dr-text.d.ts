@@ -9,6 +9,7 @@ export interface DrText extends DrRect {
     fontColor: string;
     hAlignment: DrTextAlignment;
     vAlignment: DrTextAlignment;
+    showText: boolean;
 }
 export declare const DEFAULT_TEXT: DrText;
 export declare function createDrText(properties: any): DrText;

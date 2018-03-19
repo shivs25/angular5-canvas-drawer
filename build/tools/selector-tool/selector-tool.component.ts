@@ -49,7 +49,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   invisibleStyle: any = {
     showFill: false,
-    showStroke: false
+    showStroke: false,
+    showText: false
   };
 
   selectionStyle: any = {
@@ -59,7 +60,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     showStroke: true,
     stroke: 'red',
     strokeWidth: 1,
-    rotation: 0
+    rotation: 0,
+    showText: false
   };
 
   private _location: DrPoint;
@@ -241,7 +243,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
-          this.resizeObjects(data.location);
+          this.resizeObjects(data.location, data.shiftKey);
         }
         else {
           this.rotateObject(data.location, data.shiftKey);
@@ -270,7 +272,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
-          this.resizeObjects(data.location);
+          this.resizeObjects(data.location, data.shiftKey);
 
           this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
             x: this.cssBounds.left + HALF_SIZER,
@@ -324,7 +326,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.resizeObjects({ 
         x: evt.offsetX + this.cssBounds.left,
         y: evt.offsetY + this.cssBounds.top
-      });
+      }, evt.shiftKey);
     }
   }
 
@@ -334,7 +336,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this.resizeObjects({ 
       x: evt.offsetX + this.cssBounds.left,
       y: evt.offsetY + this.cssBounds.top
-    });
+    }, evt.shiftKey);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
@@ -531,7 +533,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     return Math.round(Math.atan2(location.y - this._mouseDownCentroid.y, location.x - this._mouseDownCentroid.x) * 180 / Math.PI);
   }
 
-  private resizeObjects(location: DrPoint): void {
+  private resizeObjects(location: DrPoint, shiftKey: boolean): void {
     let b: BoundingBox = this._dataStoreService.selectedBounds;
 
     let hChanges = null;
@@ -565,7 +567,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         break;
       case 7:
         vChanges = this.resizeV(b, location, false);
+        break;
     }
+
+    
 
 
     Object.assign(this.cssBounds,

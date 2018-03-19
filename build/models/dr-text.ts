@@ -12,7 +12,7 @@ export interface DrText extends DrRect {
     fontColor: string;
     hAlignment: DrTextAlignment;
     vAlignment: DrTextAlignment; 
-
+    showText: boolean;
 }
 
 
@@ -27,7 +27,8 @@ export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     fontColor: '#000000',
     hAlignment: DrTextAlignment.NEAR,
     vAlignment: DrTextAlignment.NEAR,
-    drType: DrType.TEXT
+    drType: DrType.TEXT,
+    showText: true
 });
 
 export function createDrText(properties: any): DrText {
