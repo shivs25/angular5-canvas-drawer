@@ -7,7 +7,18 @@ import { DrawerObjectHelperService } from '../../services/drawer-object-helper.s
 import * as d3Plus from 'd3plus-text';
 import { DrObject } from '../../models/dr-object';
 
-const TEXT_PADDING: number = 4;
+export const TEXT_PADDING: number = 4;
+
+export const SPACE_PLACEHOLDER: string = "~";
+
+export function replaceSpaces(s: string): string {
+  let normalSplit: string[] = s.split(" ");
+  let newSentence: string = "";
+  for(let n of normalSplit) {
+    newSentence += n.length > 0 ? (n + " ") : SPACE_PLACEHOLDER + " ";
+  }
+  return newSentence.trim();
+}
 
 @Component({
   selector: 'dr-text',
@@ -35,10 +46,14 @@ export class DrTextComponent extends DrObjectComponent {
       .fontSize(d.size)
       .fontWeight(d.bold ? 'bold' : 'normal')
       .width(d.width - 2 * TEXT_PADDING)
-      ((value as DrText).text);
-
+      (replaceSpaces((value as DrText).text));
       this._data = value;
     }
+  }
+
+  redoSpaces(l: string): string {
+    let exp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
+    return l.replace(exp, " ");
   }
 
   getTextX(): number {

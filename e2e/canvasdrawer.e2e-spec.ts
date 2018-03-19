@@ -553,7 +553,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Styles");
       utilities.shortPause();
 
-      expect(element(by.css(containerCss + "rect")).getCssValue("stroke")).toEqual("rgb(255, 255, 0)");
+      expect(element(by.css("app-editable-drawer app-drawer rect")).getCssValue("fill")).toEqual("rgb(255, 0, 0)");
     });
 
     //Directionals

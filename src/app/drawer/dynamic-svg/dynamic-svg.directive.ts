@@ -28,6 +28,10 @@ export class DynamicSvgDirective implements OnInit {
   ngOnInit() {
   }
 
+  public get currentComponent(): any {
+    return this._currentComponent ? this._currentComponent.instance : null;
+  }
+
   @Input() 
   hoverClass: string = 'pointer';
 
@@ -112,6 +116,7 @@ export class DynamicSvgDirective implements OnInit {
     this._currentId = data.id;
     this._currentComponent = component;
   }
+
 
   private buildComponent(data: DrObject): any {
     let returnValue: any = null;

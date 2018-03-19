@@ -1,5 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+  }
+
+.border-red {
+    border: 1px solid red;
+}
+.border-invisible {
+    border: 1px solid transparent;
+}
+
+.preserve-white-space {
+    white-space: pre;
+}
+
 .clickable {
     cursor: pointer;
 }

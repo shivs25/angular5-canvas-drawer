@@ -287,6 +287,14 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     let elements = [];
 
+<<<<<<< HEAD
+=======
+    
+    this.dataStoreService.objectsAdded.subscribe(() => {
+      console.log(this.dataStoreService.elements);
+    });
+
+>>>>>>> 1e79322e31759877a04929623f669970a4e11735
     let t: DrRect = createDrRect({
       id: 2,
       x: 100,
@@ -294,7 +302,8 @@ export class AppComponent implements OnInit {
       width: 100,
       height: 100,
       strokeWidth: 5,
-      showFill: false
+      showFill: false,
+      showStroke: true
     });
 
     let text: DrText = createDrText({
@@ -303,10 +312,15 @@ export class AppComponent implements OnInit {
       width: 200,
       height: 100,
       vAlignment: DrTextAlignment.FAR,
-      hAlignment:  DrTextAlignment.NEAR, 
-      text: "Billy Shivers is awesome. i love what he does with this text editor",
+      hAlignment:  DrTextAlignment.CENTER, 
+      text: "Billy Shivers\nis   awesome. i love what he does with this text editor",
       id: 6,
-      rotation: 0
+      size: 12,
+      fontFamily: 'Comic Sans',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
     });
     elements.push(text);
     
@@ -398,7 +412,7 @@ export class AppComponent implements OnInit {
     //elements.push(r2);
     //elements.push(e);
     //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
-    this.elements = elements;
+    this.elements = [r];
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

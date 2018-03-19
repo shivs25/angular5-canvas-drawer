@@ -25,6 +25,7 @@ export class ObjectCreationToolComponent implements OnInit {
   private _mouseDownLocation: DrPoint = null;
   private _mouseDownClone = null;
   private _mouseDownBounds = null;
+  
 
   constructor(
     private _dataService: DataStoreService, 
@@ -55,12 +56,16 @@ export class ObjectCreationToolComponent implements OnInit {
         if (null === this.currentObject) {
           switch(this._dataService.selectedTool) {
             case EditorToolType.IMAGE_TOOL:
+              this.createRect(evt, false, "Image");
+              break;
             case EditorToolType.TEXT_TOOL:
+              this.createRect(evt, false, "Text");
+              break;
             case EditorToolType.RECTANGLE_TOOL:
-              this.createRect(evt, false);
+              this.createRect(evt, false, "Rectangle");
               break;
             case EditorToolType.ROUNDED_RECTANGLE_TOOL:
-              this.createRect(evt, true);
+              this.createRect(evt, true, "Rounded Rectangle");
               break;
             case EditorToolType.ELLIPSE_TOOL:
               this.createEllipse(evt);
@@ -246,6 +251,7 @@ export class ObjectCreationToolComponent implements OnInit {
               
         }
         
+        objectToAdd.name = this.currentObject.name;
         this._dataService.addObjects([objectToAdd]);
         this._dataService.selectObjects([objectToAdd]);
       }
@@ -276,6 +282,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Star"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -310,6 +317,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Arrow"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -338,6 +346,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Callout"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -366,6 +375,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Triangle"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -378,9 +388,10 @@ export class ObjectCreationToolComponent implements OnInit {
     });
   }
 
-  private createRect(evt, rounded: boolean): void {
+  private createRect(evt, rounded: boolean, name: string): void {
     this.currentObject = createDrRect({
       id: 1000000,
+      name: this._dataService.getUniqueName(name),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -399,6 +410,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrEllipse({
       id: 1000000,
+      name: this._dataService.getUniqueName("Ellipse"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
