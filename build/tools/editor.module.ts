@@ -7,12 +7,13 @@ import { EditableDrawerComponent } from '../editable-drawer/editable-drawer.comp
 import { ObjectCreationToolComponent } from './object-creation-tool/object-creation-tool.component';
 import { PenToolComponent } from './pen-tool/pen-tool.component';
 import { TextEditToolComponent } from './text-edit-tool/text-edit-tool.component';
+import { EditableTextAreaComponent } from './editable-text-area/editable-text-area.component';
 
 
 @NgModule({
   imports: [CommonModule, DrawerModule.forRoot()],
 
-  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent, TextEditToolComponent], 
+  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent, TextEditToolComponent, EditableTextAreaComponent], 
   exports: [DrawerComponent, EditorToolComponent], 
   providers: [],
   entryComponents: [

@@ -23,6 +23,6 @@ export declare class ObjectCreationToolComponent implements OnInit {
     private createArrow(evt);
     private createCallout(evt);
     private createTriangle(evt);
-    private createRect(evt, rounded);
+    private createRect(evt, rounded, name);
     private createEllipse(evt);
 }

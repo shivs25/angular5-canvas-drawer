@@ -227,8 +227,7 @@ function findAndSetNestedChanges(items: DrObject[], changes: any): DrObject[] {
 const ACTIONS_TO_IGNORE = [INIT_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION];
 export const undoableElementsReducer: any = undoable(elementsReducer, {
     filter: excludeAction(ACTIONS_TO_IGNORE),
-    limit: 10,
-    
+    limit: 10
 });
 
 
