@@ -176,6 +176,20 @@ export class TextEditToolComponent implements OnInit {
       top: this.getTop(),
       bottom: this.getBottom()
     };
+
+    
+    setTimeout(() => {
+      let ta = this._elementRef.nativeElement.querySelector(".text-area");
+      ta.focus();
+      
+      var selection = window.getSelection();        
+      var range = document.createRange();
+      range.selectNodeContents(ta);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+    }, 1);
+    
   }
 
   private getTop(): string {

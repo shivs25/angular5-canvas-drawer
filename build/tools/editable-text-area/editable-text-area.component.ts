@@ -3,7 +3,7 @@ import { BoundingBox } from '../../models/bounding-box';
 
 @Component({
   selector: 'app-editable-text-area',
-  template: "\n    <div #textArea (input)=\"onInput($event)\" \n                  [ngClass]=\"{ \n                    'absolute-position': true, \n                    'border-red': border, \n                    'border-invisible': !border \n                  }\" contenteditable [ngStyle]=\"textAreaStyle\" [innerHTML]=\"text\"></div>\n  \n  ",
+  template: "\n    <div #textArea (input)=\"onInput($event)\" \n                  [ngClass]=\"{ \n                    'absolute-position': true, \n                    'border-red': border, \n                    'border-invisible': !border,\n                    'text-area': true\n                  }\" contenteditable [ngStyle]=\"textAreaStyle\" [innerHTML]=\"text\"></div>\n  \n  ",
   styles: ["\n\n  "]
 })
 export class EditableTextAreaComponent implements OnInit {

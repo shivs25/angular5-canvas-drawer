@@ -41,7 +41,7 @@
                 (mousemove)="onMouseMove($event, data)"
                 (mouseup)="onMouseUp($event, data)"
                 [attr.y]="getMultiLineTextY()"
-                [attr.fill]="visualData.fontColor"
+                [attr.fill]="visualData.showText ? visualData.fontColor : 'transparent'"
                 [attr.font-size]="visualData.size + 'px'"
                 [attr.font-family]="visualData.fontFamily"
                 [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"

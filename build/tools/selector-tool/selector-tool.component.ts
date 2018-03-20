@@ -471,7 +471,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private setupBounds(): void {
-    if (null !== this._dataStoreService.selectedBounds) {
+    if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
+      let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
+      this.rotation = objs.length === 1 ? objs[0].rotation : 0;
+
       this.selectedObjects = this._dataStoreService.selectedObjects.map(x => Object.assign({}, x));
       let b: BoundingBox = this._dataStoreService.selectedBounds;
       this.boundingBoxObject = createDrRect({
@@ -498,7 +501,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       let left: number =  b.x + b.width + ROTATE_SPACING - HALF_SIZER;
       let top: number = b.y + b.height / 2 - HALF_SIZER;
 
-      this.rotation = this.selectedObjects.length === 1 ? this.selectedObjects[0].rotation : 0;
+      
 
       this.rotateRightBounds = {
         left: left,
