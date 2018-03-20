@@ -307,12 +307,12 @@ export class AppComponent implements OnInit {
       y: 100,
       width: 200,
       height: 100,
-      vAlignment: DrTextAlignment.FAR,
-      hAlignment:  DrTextAlignment.CENTER, 
-      text: "Billy Shivers\nis   awesome. i love what he does with this text editor",
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "Text",
       id: 6,
-      size: 12,
-      fontFamily: 'Comic Sans',
+      size: 16,
+      fontFamily: 'Courier New',
       rotation: 0,
       italic: false,
       showStroke: true,
@@ -408,7 +408,7 @@ export class AppComponent implements OnInit {
     //elements.push(r2);
     //elements.push(e);
     //let g: DrGroupedObject = createDrGroupedObject({ id: 5, objects: elements, rotation: 0 });
-    this.elements = [r];
+    this.elements = elements;
 
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
 

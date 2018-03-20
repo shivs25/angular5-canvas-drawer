@@ -49,7 +49,7 @@
                 [attr.text-anchor]="getHAlignment()"
                 [ngClass]="'noselect ' + (visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')">
                 
-                <tspan class="preserve-white-space" [attr.x]="getTextX()">{{ redoSpaces(lineData[0].text) }}</tspan>
+                <tspan class="preserve-white-space" [attr.x]="getTextX()">{{ lineData[0].text }}</tspan>
                 
               
               
@@ -73,7 +73,7 @@
                 
                 <tspan class="preserve-white-space" [attr.x]="getTextX()" 
                       [attr.y]="i === 0 ? getMultiLineTextY() : ''" 
-                      [attr.dy]="i !== 0 ? ((visualData.size + TEXT_PADDING) * l.multiplier) : ''" 
+                      [attr.dy]="i !== 0 ? ((visualData.size + TEXT_PADDING) * l.lineHeightMultiplier) : ''" 
                       *ngFor="let l of lineData; let i = index;">{{ l.text}}</tspan>
              
               
