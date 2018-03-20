@@ -32,7 +32,7 @@
             [attr.opacity]="visualData.opacity">
           </svg:rect>
           <svg:g [id]="'g_' + elementId" [attr.clip-path]="'url(#clip_' + elementId + ')'">
-            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length === 1">
+            <ng-container *ngIf="lineData && lineData.length === 1">
               <svg:text
 
                 [id]="'text_' + elementId" 
@@ -40,24 +40,22 @@
                 (mousedown)="onMouseDown($event, data)"
                 (mousemove)="onMouseMove($event, data)"
                 (mouseup)="onMouseUp($event, data)"
-                [attr.x]="getTextX()" 
-                [attr.y]="getTextY()"
+                [attr.y]="getMultiLineTextY()"
                 [attr.fill]="visualData.fontColor"
                 [attr.font-size]="visualData.size + 'px'"
                 [attr.font-family]="visualData.fontFamily"
                 [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
                 [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
-                [attr.alignment-baseline]="getVAlignment()"
                 [attr.text-anchor]="getHAlignment()"
                 [ngClass]="'noselect ' + (visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')">
                 
-                <tspan class="preserve-white-space" [attr.x]="getTextX()">{{ redoSpaces(lineData.lines[0]) }}</tspan>
+                <tspan class="preserve-white-space" [attr.x]="getTextX()">{{ redoSpaces(lineData[0].text) }}</tspan>
                 
               
               
               </svg:text>
             </ng-container>
-            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length > 1">
+            <ng-container *ngIf="lineData && lineData.length > 1">
               <svg:text
                 [id]="'text_' + elementId" 
                 (click)="onClick($event, data)"
@@ -73,7 +71,10 @@
                 [ngClass]="'noselect ' + (visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')">
                 
                 
-                <tspan class="preserve-white-space" [attr.x]="getTextX()" [attr.y]="i === 0 ? getMultiLineTextY() : ''" [attr.dy]="i !== 0 ? visualData.size + TEXT_PADDING : ''" *ngFor="let l of lineData.lines; let i = index;">{{ redoSpaces(l) }}</tspan>
+                <tspan class="preserve-white-space" [attr.x]="getTextX()" 
+                      [attr.y]="i === 0 ? getMultiLineTextY() : ''" 
+                      [attr.dy]="i !== 0 ? ((visualData.size + TEXT_PADDING) * l.multiplier) : ''" 
+                      *ngFor="let l of lineData; let i = index;">{{ l.text}}</tspan>
              
               
               

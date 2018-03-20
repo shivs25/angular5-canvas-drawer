@@ -41,12 +41,38 @@ export class DrTextComponent extends DrObjectComponent {
   set visualData(value: DrObject) {
     if (this._data !== value) {
       let d: DrText = value as DrText;
-      this.lineData = d3Plus.textWrap()
+
+      let c: any = d3Plus.textWrap()
       .fontFamily(d.fontFamily)
       .fontSize(d.size)
       .fontWeight(d.bold ? 'bold' : 'normal')
-      .width(d.width - 2 * TEXT_PADDING)
-      (replaceSpaces((value as DrText).text));
+      .width(d.width - 2 * TEXT_PADDING);
+
+      let userLineBreaks: string[] = d.text.split("\n");
+
+      let ld: any[] = [];
+      let multiplier: number = 0;
+      for(let u of userLineBreaks) {
+        if (0 !== u.length) {
+          for(let l of c(this.redoSpaces(u)).lines) {
+            ld.push({
+              text: l,
+              multiplier: multiplier
+            })
+          }
+          multiplier = 1;
+        }
+        else {
+          ld.push({
+            text: "",
+            multiplier: 0
+          });
+
+          multiplier++;
+        }
+      }
+      this.lineData = ld;
+      
       this._data = value;
     }
   }

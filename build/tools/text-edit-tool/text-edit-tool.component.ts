@@ -75,8 +75,9 @@ export class TextEditToolComponent implements OnInit {
   onClick(): void {
 
     let newText: string = this._textArea.newText
+    .replace(/<div><br><\/div>/g, "\n")
+    .replace(/<br>/g, "\n")
     .replace(/<div>/g, "\n")
-    .replace(/<br>/g, "\r\n")
     .replace(/<\/div>/g, "")
     .replace(/&nbsp;/g, " ");
 
@@ -102,6 +103,7 @@ export class TextEditToolComponent implements OnInit {
       bounds.height = textAreaSize;
     }
 
+    console.log(newText);
     this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
 
 
