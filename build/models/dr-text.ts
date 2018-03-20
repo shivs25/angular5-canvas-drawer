@@ -5,6 +5,7 @@ import { DrType } from "./dr-type.enum";
 export interface DrText extends DrRect {
 
     text: string;
+    fitText: boolean;
     bold: boolean;
     italic: boolean;
     size: number;
@@ -18,6 +19,7 @@ export interface DrText extends DrRect {
 
 export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     text: "TEXT",
+    fitText: false,
     bold: false,
     italic: false,
     showFill: false,

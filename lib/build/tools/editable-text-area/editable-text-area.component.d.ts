@@ -5,10 +5,11 @@ export declare class EditableTextAreaComponent implements OnInit {
     border: boolean;
     textAreaStyle: any;
     text: string;
-    load: EventEmitter<number>;
+    load: EventEmitter<any>;
     dataInput: EventEmitter<any>;
     readonly newText: string;
     readonly newHeight: number;
+    readonly newWidth: number;
     constructor();
     ngOnInit(): void;
     onInput(evt: any): void;

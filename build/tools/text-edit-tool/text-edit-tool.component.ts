@@ -4,16 +4,16 @@ import { select } from '@angular-redux/store';
 import { DataStoreService } from '../../services/data-store.service';
 import { EditorToolType, DrTextAlignment } from '../../models/enums';
 import { DynamicSvgDirective } from '../../dynamic-svg/dynamic-svg.directive';
-import { TEXT_PADDING, replaceSpaces, SPACE_PLACEHOLDER } from '../../elements/dr-text/dr-text.component';
 import { EditableTextAreaComponent } from '../editable-text-area/editable-text-area.component';
 
 import * as d3Plus from 'd3plus-text';
 import { BoundingBox } from '../../models/bounding-box';
 import { DrPoint } from '../../models/dr-point';
+import { TEXT_PADDING, SPACE_PLACEHOLDER, TextRenderingService } from '../../services/text-rendering.service';
 
 @Component({
   selector: 'app-text-edit-tool',
-  template: "\n    <div class=\"absolute-position fill-parent\" (click)=\"onClick()\">\n      <div (click)=\"$event.stopPropagation()\" *ngIf=\"currentObject && cssBounds\" #container [ngStyle]=\"cssBounds\"\n      [ngClass]='{\n        \"absolute-position\": true,\n        \"border-red\": !inputBorder,\n        \"border-invisible\": inputBorder }'>\n          <app-editable-text-area #textArea [border]=\"inputBorder\" (dataInput)=\"onTextAreaInput($event)\" (load)=\"onTextAreaLoaded($event)\" \n                                  [textAreaStyle]=\"textAreaStyle\" [text]=\"divify()\"></app-editable-text-area>\n    \n      </div>\n    </div>\n  ",
+  template: "\n    <div class=\"absolute-position fill-parent\" (click)=\"onClick()\">\n      <div (click)=\"$event.stopPropagation()\" *ngIf=\"currentObject && cssBounds\" #container [ngStyle]=\"cssBounds\"\n      [ngClass]='{\n        \"absolute-position\": true,\n        \"border-red\": !inputBorder && currentObject.fitText,\n        \"border-invisible\": inputBorder || !currentObject.fitText }'>\n          <app-editable-text-area #textArea [border]=\"inputBorder && currentObject.fitText\" (dataInput)=\"onTextAreaInput($event)\" (load)=\"onTextAreaLoaded($event)\" \n                                  [textAreaStyle]=\"textAreaStyle\" [text]=\"divify()\"></app-editable-text-area>\n    \n      </div>\n    </div>\n  ",
   styles: ["\n\n  "]
 })
 export class TextEditToolComponent implements OnInit {
@@ -43,29 +43,45 @@ export class TextEditToolComponent implements OnInit {
   
   constructor(
     private _dataService: DataStoreService, 
+    private _textRenderingService: TextRenderingService,
     private _elementRef: ElementRef) { }
 
   onTextAreaInput(evt): void {
+    let changes: any = {};
+
     if (DrTextAlignment.CENTER === this.currentObject.vAlignment) {
-      Object.assign(this.textAreaStyle, {
+      Object.assign(changes, this.textAreaStyle, {
         "margin-top": this.getMarginTop(evt.height)
        });
     }
-    
-    let newVal: boolean = evt.height >= this._container.nativeElement.offsetHeight;
-
-    if (newVal !== this.inputBorder) {
-      this.inputBorder = newVal;
+    if (DrTextAlignment.CENTER === this.currentObject.hAlignment && !this.currentObject.fitText) {
+      Object.assign(changes, this.textAreaStyle, {
+        "margin-left": this.getMarginLeft(evt.width)
+       });
     }
-   
+
+    if (Object.keys(changes).length > 0) {
+      Object.assign(this.textAreaStyle, changes);
+    }
   }
 
   onTextAreaLoaded(evt): void {
+    let changes: any = {};
+
     if (DrTextAlignment.CENTER === this.currentObject.vAlignment) {
-      Object.assign(this.textAreaStyle, {
-        "margin-top": this.getMarginTop(evt),
+      Object.assign(changes, this.textAreaStyle, {
+        "margin-top": this.getMarginTop(evt.height),
         });
     } 
+    if (DrTextAlignment.CENTER === this.currentObject.hAlignment && !this.currentObject.fitText) {
+      Object.assign(changes, this.textAreaStyle, {
+        "margin-left": this.getMarginLeft(evt.width),
+        });
+    } 
+
+    if (Object.keys(changes).length > 0) {
+      Object.assign(this.textAreaStyle, changes);
+    }
 
     Object.assign(this.textAreaStyle, {
       "opacity": 1
@@ -74,39 +90,53 @@ export class TextEditToolComponent implements OnInit {
 
   onClick(): void {
 
-    let newText: string = this._textArea.newText
-    .replace(/<div><br><\/div>/g, "\n")
-    .replace(/<br>/g, "\n")
-    .replace(/<div>/g, "\n")
-    .replace(/<\/div>/g, "")
-    .replace(/&nbsp;/g, " ");
+    let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
 
-    let bounds: BoundingBox = {
-      x: this.currentObject.x,
-      y: this.currentObject.y,
-      width: this.currentObject.width,
-      height: this.currentObject.height
+    if (this.currentObject.fitText) {
+      this._dataService.setText(this._dataService.selectedObjects, newText);
     }
+    else {
 
-    let textAreaSize: number = this._textArea.newHeight;
-
-    if (textAreaSize > this.currentObject.height) {
-      switch(this.currentObject.vAlignment) {
-        case DrTextAlignment.CENTER:
-          bounds.y -= textAreaSize / 2;
-          break;
-        case DrTextAlignment.FAR:
-          bounds.y -= textAreaSize;
-          break;
+      let bounds: BoundingBox = {
+        x: this.currentObject.x,
+        y: this.currentObject.y,
+        width: this.currentObject.width,
+        height: this.currentObject.height
       }
+  
+      let textAreaHeight: number = this._textArea.newHeight;
+      let textAreaWidth: number = this._textArea.newWidth;
 
-      bounds.height = textAreaSize;
+      if (textAreaHeight > this.currentObject.height) {
+        switch(this.currentObject.vAlignment) {
+          case DrTextAlignment.CENTER:
+            bounds.y -= textAreaHeight / 2;
+            break;
+          case DrTextAlignment.FAR:
+            bounds.y -= textAreaHeight;
+            break;
+        }
+
+        bounds.height = textAreaHeight;
+
+        if (textAreaWidth > this.currentObject.width) {
+          switch(this.currentObject.hAlignment) {
+            case DrTextAlignment.CENTER:
+              bounds.x -= textAreaWidth / 2;
+              break;
+            case DrTextAlignment.FAR:
+              bounds.x -= textAreaWidth;
+              break;
+          }
+
+          bounds.width = textAreaWidth;
+        }
+      }
+    
+
+      this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
+
     }
-
-    console.log(newText);
-    this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
-
-
     this._dataService.selectedTool = EditorToolType.SELECTOR_TOOL;
   }
 
@@ -119,8 +149,10 @@ export class TextEditToolComponent implements OnInit {
     this.cssBounds = {
       left: (this.currentObject.x - 1) + "px",
       top: (this.currentObject.y - 1) + "px",
-      width: (this.currentObject.width + 2) + "px",
+      width: this.currentObject.fitText ? (this.currentObject.width + 2) + "px" : "",
+      "min-width": !this.currentObject.fitText ? (this.currentObject.width + 2) + "px" : "",
       "min-height": (this.currentObject.height + 2) + "px",
+      "overflow": "visible",
       transform: "rotate(" + this.rotation + "deg)"
     };
 
@@ -137,9 +169,10 @@ export class TextEditToolComponent implements OnInit {
       "line-height": (this.currentObject.size + TEXT_PADDING) + "px",
       "font-family": this.currentObject.fontFamily,
       "text-align": this.getHAlign(),
+      "white-space": this.currentObject.fitText ? "normal" : "nowrap",
       padding: TEXT_PADDING + "px",
-      left: "-1px",
-      right: "-1px",
+      left: this.getLeft(),
+      right: this.getRight(),
       top: this.getTop(),
       bottom: this.getBottom()
     };
@@ -167,12 +200,46 @@ export class TextEditToolComponent implements OnInit {
     }
   }
 
+  private getLeft(): string {
+    switch(this.currentObject.hAlignment) {
+      case DrTextAlignment.NEAR:
+        return "-1px";
+      case DrTextAlignment.CENTER:
+        return this.currentObject.fitText ? "-1px" : "50%";
+      case DrTextAlignment.FAR:
+        return this.currentObject.fitText ? "-1px" : "";
+    }
+  }
+
+  private getRight(): string {
+    switch(this.currentObject.hAlignment) {
+      case DrTextAlignment.NEAR:
+        return this.currentObject.fitText ? "-1px" : "";
+      case DrTextAlignment.CENTER:
+        return this.currentObject.fitText ? "-1px" : "";
+      case DrTextAlignment.FAR:
+        return "-1px";
+    }
+  }
+
   private getMarginTop(offsetHeight): string {
     switch(this.currentObject.vAlignment) {
       case DrTextAlignment.NEAR:
         return "0";
       case DrTextAlignment.CENTER:
-        return "-" + (offsetHeight / 2) + "px";
+        return "-" + Math.round((offsetHeight / 2)) + "px";
+      case DrTextAlignment.FAR:
+        return "0";
+    }
+  }
+
+  private getMarginLeft(offsetWidth): string {
+    console.log(offsetWidth);
+    switch(this.currentObject.hAlignment) {
+      case DrTextAlignment.NEAR:
+        return "0";
+      case DrTextAlignment.CENTER:
+        return "-" + Math.round((offsetWidth / 2)) + "px";
       case DrTextAlignment.FAR:
         return "0";
     }
@@ -190,20 +257,6 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private divify():string {
-    let d: DrText = this.currentObject;
-
-    let lineData: any = d3Plus.textWrap()
-      .fontFamily(d.fontFamily)
-      .fontSize(d.size)
-      .fontWeight(d.bold ? 'bold' : 'normal')
-      .width(d.width - 2 * TEXT_PADDING)
-      (replaceSpaces(d.text));
-
-    let returnValue: string = lineData.lines[0];
-    let exp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
-    for(let i: number = 1; i < lineData.lines.length; i++) {
-      returnValue += "<div>" + lineData.lines[i].replace(exp, "&nbsp;") + "</div>";
-    }
-    return returnValue;
+    return this._textRenderingService.getDivText(this.currentObject);
   }
 }
