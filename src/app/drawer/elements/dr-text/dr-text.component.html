@@ -32,29 +32,30 @@
             [attr.opacity]="visualData.opacity">
           </svg:rect>
           <svg:g [id]="'g_' + elementId" [attr.clip-path]="'url(#clip_' + elementId + ')'">
-            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length === 1">
+            <ng-container *ngIf="lineData && lineData.length === 1">
               <svg:text
+
                 [id]="'text_' + elementId" 
                 (click)="onClick($event, data)"
                 (mousedown)="onMouseDown($event, data)"
                 (mousemove)="onMouseMove($event, data)"
                 (mouseup)="onMouseUp($event, data)"
-                [attr.x]="getTextX()" 
-                [attr.y]="getTextY()"
-                [attr.fill]="visualData.fontColor"
+                [attr.y]="getMultiLineTextY()"
+                [attr.fill]="visualData.showText ? visualData.fontColor : 'transparent'"
                 [attr.font-size]="visualData.size + 'px'"
                 [attr.font-family]="visualData.fontFamily"
                 [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
                 [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
-                [attr.alignment-baseline]="getVAlignment()"
-                [attr.text-anchor]="getHAlignment()">
+                [attr.text-anchor]="getHAlignment()"
+                [ngClass]="'noselect ' + (visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')">
                 
-                {{ visualData.text }}
+                <tspan class="preserve-white-space" [attr.x]="getTextX()">{{ lineData[0].text }}</tspan>
+                
               
               
               </svg:text>
             </ng-container>
-            <ng-container *ngIf="lineData && lineData.lines && lineData.lines.length > 1">
+            <ng-container *ngIf="lineData && lineData.length > 1">
               <svg:text
                 [id]="'text_' + elementId" 
                 (click)="onClick($event, data)"
@@ -66,11 +67,15 @@
                 [attr.font-family]="visualData.fontFamily"
                 [attr.font-weight]="visualData.bold ? 'bold' : 'normal'"
                 [attr.font-style]="visualData.italic ? 'italic' : 'normal'"
-                [attr.text-anchor]="getHAlignment()">
+                [attr.text-anchor]="getHAlignment()"
+                [ngClass]="'noselect ' + (visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')">
                 
-                <ng-container *ngIf="lineData">
-                  <tspan [attr.x]="getTextX()" [attr.y]="i === 0 ? getMultiLineTextY() : ''" [attr.dy]="i !== 0 ? visualData.size + TEXT_PADDING : ''" *ngFor="let l of lineData.lines; let i = index;">{{ l }}</tspan>
-                </ng-container>
+                
+                <tspan class="preserve-white-space" [attr.x]="getTextX()" 
+                      [attr.y]="i === 0 ? getMultiLineTextY() : ''" 
+                      [attr.dy]="i !== 0 ? ((visualData.size + TEXT_PADDING) * l.lineHeightMultiplier) : ''" 
+                      *ngFor="let l of lineData; let i = index;">{{ l.text}}</tspan>
+             
               
               
               </svg:text>

@@ -4,10 +4,10 @@ import { DrText } from '../../models/dr-text';
 import { DrTextAlignment } from '../../models/dr-text-alignment.enum';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 
-import * as d3Plus from 'd3plus-text';
-import { DrObject } from '../../models/dr-object';
 
-const TEXT_PADDING: number = 4;
+import { DrObject } from '../../models/dr-object';
+import { TextRenderingService, TEXT_PADDING } from '../../services/text-rendering.service';
+
 
 @Component({
   selector: 'dr-text',
@@ -23,6 +23,13 @@ export class DrTextComponent extends DrObjectComponent {
 
   private _data: DrObject = null;
 
+
+  constructor(private _textService: TextRenderingService,
+              _objectHelperService: DrawerObjectHelperService) {
+
+    super(_objectHelperService);
+  }
+
   get visualData(): DrObject {
     return this._data;
   }
@@ -30,16 +37,13 @@ export class DrTextComponent extends DrObjectComponent {
   set visualData(value: DrObject) {
     if (this._data !== value) {
       let d: DrText = value as DrText;
-      this.lineData = d3Plus.textWrap()
-      .fontFamily(d.fontFamily)
-      .fontSize(d.size)
-      .fontWeight(d.bold ? 'bold' : 'normal')
-      .width(d.width - 2 * TEXT_PADDING)
-      ((value as DrText).text);
-
+      this.lineData = this._textService.getSvgText(d);
       this._data = value;
     }
   }
+
+ 
+
 
   getTextX(): number {
     let o: DrText = this.data as DrText;
@@ -78,11 +82,11 @@ export class DrTextComponent extends DrObjectComponent {
       case DrTextAlignment.CENTER:
         return (o.y + o.height / 2) -     //center y of box
                 (
-                  (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
+                  (this.lineData.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
                   ((o.size) / 2)      //Half a line because v alignment doesnt apply
                 );
       case DrTextAlignment.FAR:
-        return o.y + o.height - (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
+        return o.y + o.height - (this.lineData.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
 
     }
   }

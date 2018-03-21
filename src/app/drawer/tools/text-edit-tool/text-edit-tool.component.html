@@ -1,20 +1,11 @@
-<div class="absolute-position fill-parent" contenteditable="true" (input)="onInput($event)" (click)="onClick()">
+<div class="absolute-position fill-parent" (click)="onClick()">
+  <div (click)="$event.stopPropagation()" *ngIf="currentObject && cssBounds" #container [ngStyle]="cssBounds"
+  [ngClass]='{
+    "absolute-position": true,
+    "border-red": !inputBorder && currentObject.fitText,
+    "border-invisible": inputBorder || !currentObject.fitText }'>
+      <app-editable-text-area #textArea [border]="inputBorder && currentObject.fitText" (dataInput)="onTextAreaInput($event)" (load)="onTextAreaLoaded($event)" 
+                              [textAreaStyle]="textAreaStyle" [text]="divify()"></app-editable-text-area>
     
-  <svg *ngIf="cssBounds" [ngStyle]="cssBounds"
-        [ngClass]="'text'"
-        class="absolute-position" xmlns="http://www.w3.org/2000/svg" >
-      
-      <svg:g [attr.transform]="selectionTransform">
-        <ng-container 
-          dynamic-svg 
-          [elementId]="100000"
-          [componentData]="currentObject"
-          [overrideProperties]="selectionStyle"
-          [hoverClass]="'text'" 
-
-        ></ng-container>
-      </svg:g>
-      
-
-  </svg>
+  </div>
 </div>

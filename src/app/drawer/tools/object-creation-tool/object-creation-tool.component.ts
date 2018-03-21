@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
 import { DrPoint } from '../../models/dr-point';
 import { DataStoreService } from '../../services/data-store.service';
-import { EditorToolType } from '../../models/enums';
+import { EditorToolType, DrType, DrTextAlignment } from '../../models/enums';
 import { createDrRect, DrRect } from '../../models/dr-rect';
 import { DrEllipse, createDrEllipse } from '../../models/dr-ellipse';
 import { createDrText } from '../../models/dr-text';
@@ -25,7 +25,16 @@ export class ObjectCreationToolComponent implements OnInit {
   private _mouseDownLocation: DrPoint = null;
   private _mouseDownClone = null;
   private _mouseDownBounds = null;
+  
+  private _modifierKeys: any = {
+    shift: false,
+    alt: false,
+    control: false
+  };
 
+  private _lastEvent: any = null;
+
+  
   constructor(
     private _dataService: DataStoreService, 
     private _changeService: ChangeHelperService, 
@@ -39,6 +48,67 @@ export class ObjectCreationToolComponent implements OnInit {
     
   }
 
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(evt): void {
+
+    switch(this._dataService.selectedTool) {
+      case EditorToolType.TRIANGLE_TOOL:
+      case EditorToolType.ARROW_TOOL:
+      case EditorToolType.CALLOUT_ROUNDED_TOOL:
+      case EditorToolType.CALLOUT_SQUARE_TOOL:
+      case EditorToolType.ELLIPSE_TOOL:
+      case EditorToolType.IMAGE_TOOL:
+      case EditorToolType.RECTANGLE_TOOL:
+      case EditorToolType.ROUNDED_RECTANGLE_TOOL:
+      case EditorToolType.STAR_TOOL:
+        switch(evt.key) {
+          case "Shift":
+          case "Control":
+          case "Alt":
+            this._modifierKeys[evt.key.toLowerCase()] = true;
+          
+            if (this._mouseDown && null !== this._lastEvent) {
+              this.onBackgroundMouseMove(this._lastEvent);
+            }
+            break;
+        }
+        break;
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(evt): void {
+    switch(this._dataService.selectedTool) {
+      case EditorToolType.TRIANGLE_TOOL:
+      case EditorToolType.ARROW_TOOL:
+      case EditorToolType.CALLOUT_ROUNDED_TOOL:
+      case EditorToolType.CALLOUT_SQUARE_TOOL:
+      case EditorToolType.ELLIPSE_TOOL:
+      case EditorToolType.IMAGE_TOOL:
+      case EditorToolType.RECTANGLE_TOOL:
+      case EditorToolType.ROUNDED_RECTANGLE_TOOL:
+      case EditorToolType.STAR_TOOL:
+        switch(evt.key) {
+          case "Shift":
+          case "Control":
+          case "Alt":
+            this._modifierKeys[evt.key.toLowerCase()] = false;
+            
+            if (this._mouseDown && null !== this._lastEvent) {
+              this.onBackgroundMouseMove(this._lastEvent);
+            }
+            break;
+          case "Escape":
+            this.currentObject = null;
+            this._mouseDown = false;
+            this._mouseDownLocation = null;
+            break;
+        }
+        break;
+
+    }
+  }
+
   onBackgroundMouseDown(evt): void {
     this._mouseDown = true;
     this._mouseDownLocation = {
@@ -48,6 +118,7 @@ export class ObjectCreationToolComponent implements OnInit {
   }
 
   onBackgroundMouseMove(evt): void {
+    this._lastEvent = evt;
     
     if (this._mouseDown) {
       if (Math.abs(evt.offsetX - this._mouseDownLocation.x) > 2 && 
@@ -55,12 +126,16 @@ export class ObjectCreationToolComponent implements OnInit {
         if (null === this.currentObject) {
           switch(this._dataService.selectedTool) {
             case EditorToolType.IMAGE_TOOL:
+              this.createRect(evt, false, "Image");
+              break;
             case EditorToolType.TEXT_TOOL:
+              this.createRect(evt, false, "Text");
+              break;
             case EditorToolType.RECTANGLE_TOOL:
-              this.createRect(evt, false);
+              this.createRect(evt, false, "Rectangle");
               break;
             case EditorToolType.ROUNDED_RECTANGLE_TOOL:
-              this.createRect(evt, true);
+              this.createRect(evt, true, "Rounded Rectangle");
               break;
             case EditorToolType.ELLIPSE_TOOL:
               this.createEllipse(evt);
@@ -89,25 +164,35 @@ export class ObjectCreationToolComponent implements OnInit {
           }
         }
         else {
+          let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
+          let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
+
+          if (this._modifierKeys.shift) {
+            if (w > h) {
+              h = w;
+            }
+            else {
+              w = h;
+            }
+          }
           switch(this._dataService.selectedTool) {
             case EditorToolType.IMAGE_TOOL:
             case EditorToolType.TEXT_TOOL:
             case EditorToolType.RECTANGLE_TOOL:
             case EditorToolType.ROUNDED_RECTANGLE_TOOL:
+
               Object.assign(this.currentObject, {
-                x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
-                y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
-                width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
-                height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
+                x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w,
+                y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h,
+                width: w,
+                height: h
               });
               break;
             case EditorToolType.ELLIPSE_TOOL: {
-                let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
-                let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
-
+                
                 Object.assign(this.currentObject, {
-                  x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX) + w / 2),
-                  y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY) + h / 2),
+                  x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w) + w / 2),
+                  y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h) + h / 2),
                   rx: Math.round(w / 2),
                   ry: Math.round(h / 2)
                 });
@@ -117,16 +202,14 @@ export class ObjectCreationToolComponent implements OnInit {
             case EditorToolType.STAR_TOOL:
             case EditorToolType.ARROW_TOOL:
             case EditorToolType.CALLOUT_SQUARE_TOOL: {
-              let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
-              let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
               Object.assign(this.currentObject, 
                 this._changeService.getBoundsChanges(
                   this._mouseDownClone, 
                   {
-                    x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
-                    y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
-                    width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
-                    height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
+                    x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w,
+                    y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h,
+                    width: w,
+                    height: h
                   },
                   this._mouseDownBounds
                 )
@@ -149,16 +232,28 @@ export class ObjectCreationToolComponent implements OnInit {
       if (null !== this.currentObject) {
         let objectToAdd: DrObject = null;
 
+        let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
+        let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
+
+        if (this._modifierKeys.shift) {
+          if (w > h) {
+            h = w;
+          }
+          else {
+            w = h;
+          }
+        }
+
         switch(this._dataService.selectedTool) {
           case EditorToolType.IMAGE_TOOL:
           case EditorToolType.TEXT_TOOL:
           case EditorToolType.RECTANGLE_TOOL: 
           case EditorToolType.ROUNDED_RECTANGLE_TOOL: {
             Object.assign(this.currentObject, {
-              x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
-              y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
-              width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
-              height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
+              x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w,
+              y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h,
+              width: w,
+              height: h
             });
 
             let r: DrRect = this.currentObject as DrRect;
@@ -180,7 +275,8 @@ export class ObjectCreationToolComponent implements OnInit {
                     x: r.x,
                     y: r.y,
                     width: r.width,
-                    height: r.height
+                    height: r.height,
+                    hAlignment: DrTextAlignment.CENTER
                    });
                    
                 }
@@ -201,12 +297,10 @@ export class ObjectCreationToolComponent implements OnInit {
             break;
           }
           case EditorToolType.ELLIPSE_TOOL: {
-              let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
-              let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
 
               Object.assign(this.currentObject, {
-                x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX) + w / 2),
-                y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY) + h / 2),
+                x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w) + w / 2),
+                y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h) + h / 2),
                 rx: Math.round(w / 2),
                 ry: Math.round(h / 2)
               });
@@ -229,10 +323,10 @@ export class ObjectCreationToolComponent implements OnInit {
                 this._changeService.getBoundsChanges(
                   this._mouseDownClone, 
                   {
-                    x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
-                    y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
-                    width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
-                    height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
+                    x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w,
+                    y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h,
+                    width: w,
+                    height: h
                   },
                   this._mouseDownBounds
                 )
@@ -246,10 +340,26 @@ export class ObjectCreationToolComponent implements OnInit {
               
         }
         
+        objectToAdd.name = this.currentObject.name;
         this._dataService.addObjects([objectToAdd]);
         this._dataService.selectObjects([objectToAdd]);
       }
-      
+      else {
+        if (EditorToolType.TEXT_TOOL === this._dataService.selectedTool) {
+          let objectToAdd = createDrText({
+            id: this.getNextId(),
+            name: this._dataService.getUniqueName('Text'),
+            x: this._mouseDownLocation.x,
+            y: this._mouseDownLocation.y,
+            width: 200,
+            height: 100,
+            hAlignment: DrTextAlignment.NEAR
+          });
+
+          this._dataService.addObjects([objectToAdd]);
+          this._dataService.selectObjects([objectToAdd]);
+        }
+      }
       this.currentObject = null;
       this._mouseDown = false;
       this._mouseDownLocation = null;
@@ -276,6 +386,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Star"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -310,6 +421,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Arrow"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -338,6 +450,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Callout"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -366,6 +479,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrPolygon({
       id: 1000000,
+      name: this._dataService.getUniqueName("Triangle"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -378,9 +492,10 @@ export class ObjectCreationToolComponent implements OnInit {
     });
   }
 
-  private createRect(evt, rounded: boolean): void {
+  private createRect(evt, rounded: boolean, name: string): void {
     this.currentObject = createDrRect({
       id: 1000000,
+      name: this._dataService.getUniqueName(name),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
@@ -399,6 +514,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
     this.currentObject = createDrEllipse({
       id: 1000000,
+      name: this._dataService.getUniqueName("Ellipse"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',

@@ -14,6 +14,7 @@ import { DrawerObjectHelperService } from '../services/drawer-object-helper.serv
 import { ChangeHelperService } from '../services/change-helper.service';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 import { PreviewComponent } from '../preview/preview.component';
+import { TextRenderingService } from '../services/text-rendering.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -31,7 +32,7 @@ import { PreviewComponent } from '../preview/preview.component';
     PreviewComponent
   ], 
   exports: [DrawerComponent, PreviewComponent, DynamicSvgDirective], 
-  providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective],
+  providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
@@ -43,5 +44,5 @@ import { PreviewComponent } from '../preview/preview.component';
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService]}; }
 }

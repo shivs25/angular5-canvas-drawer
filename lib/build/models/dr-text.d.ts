@@ -2,6 +2,7 @@ import { DrRect } from "./dr-rect";
 import { DrTextAlignment } from "./dr-text-alignment.enum";
 export interface DrText extends DrRect {
     text: string;
+    fitText: boolean;
     bold: boolean;
     italic: boolean;
     size: number;

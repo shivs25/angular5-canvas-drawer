@@ -13,6 +13,7 @@ import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
 import { createDrStyle } from '../../build/models/dr-style';
+import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent implements OnInit {
   viewLeft: string = "0";
   viewHeight: string = "560";
   viewWidth: string = "1000";
-
+  viewBoxItem: BoundingBox = null;
  
 
   @select() elementState;
@@ -178,6 +179,18 @@ export class AppComponent implements OnInit {
     }));
   }
 
+  setBoundingBox(): void {
+    if(this.viewBoxItem === null) {
+      this.viewBoxItem = createBoundingBox();
+      this.viewBoxItem.x = 0;
+      this.viewBoxItem.y = 0;
+      this.viewBoxItem.height = 200;
+      this.viewBoxItem.width = 100;
+    } else {
+      this.viewBoxItem = null;
+    }
+  }
+
   up(): void {
     if (this.dataStoreService.selectedObjects.length > 0) {
       this.dataStoreService.moveObjectsUp(this.dataStoreService.selectedObjects);
@@ -273,8 +286,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let elements = [];
-
     
+    this.dataStoreService.objectsAdded.subscribe(() => {
+      console.log(this.dataStoreService.elements);
+    });
 
     let t: DrRect = createDrRect({
       id: 2,
@@ -283,7 +298,8 @@ export class AppComponent implements OnInit {
       width: 100,
       height: 100,
       strokeWidth: 5,
-      showFill: false
+      showFill: false,
+      showStroke: true
     });
 
     let text: DrText = createDrText({
@@ -291,11 +307,16 @@ export class AppComponent implements OnInit {
       y: 100,
       width: 200,
       height: 100,
-      vAlignment: DrTextAlignment.FAR,
+      vAlignment: DrTextAlignment.NEAR,
       hAlignment:  DrTextAlignment.NEAR, 
-      text: "Billy Shivers is awesome. i love what he does with this text editor",
+      text: "Text",
       id: 6,
-      rotation: 0
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
     });
     elements.push(text);
     

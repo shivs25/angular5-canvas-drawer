@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 
 import { DataStoreService } from '../../services/data-store.service';
 import { DrObject } from '../../models/dr-object';
@@ -10,7 +10,7 @@ import { BoundingBox } from '../../models/bounding-box';
 import { MouseEventData } from '../../models/mouse-event-data';
 import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
-import { DrType } from '../../models/enums';
+import { DrType, EditorToolType } from '../../models/enums';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
@@ -18,7 +18,7 @@ const ROTATE_SPACING: number = 40;
 
 @Component({
   selector: 'app-selector-tool',
-  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\"\n      [attr.transform]=\"rotation ? 'rotate(' + rotation + ')' : ''\"\n      \n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <svg:g>\n          <ng-container \n            *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n            [elementId]=\"1000001\"\n            [componentData]=\"boundingBoxObject\"\n            [hoverClass]=\"cursor\" \n  \n            (mouseDown)=\"onBoundsMouseDown($event)\"\n            (mouseMove)=\"onBoundsMouseMove($event)\"\n            (mouseUp)=\"onBoundsMouseUp($event)\">\n          </ng-container>\n        </svg:g>\n   \n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onSelectionMouseDown($event)\"\n          (mouseMove)=\"onSelectionMouseMove($event)\"\n          (mouseUp)=\"onSelectionMouseUp($event)\"\n        ></ng-container>\n\n        <ng-container *ngFor=\"let s of sizers; let i = index;\">\n            <rect [id]=\"'resizer-' + i\"  *ngIf=\"(elementState | async)?.present.selectedBounds && \n                                                boundingBoxObject && \n                                                canResize && \n                                                mouseDownRotator < 0 &&\n                                                (!mouseDown || mouseDownSizer >= 0)\"\n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" fill=\"green\" \n            [attr.x]=\"getResizerX(i)\" \n            [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateRightBounds\" fill=\"green\"\n      [attr.transform]=\"rotation > 0 ? 'rotate(' + rotation + ',' + ((cssBounds.left + cssBounds.width / 2) - (rotateRightBounds.left + rotateRightBounds.width / 2)) + ',' + (rotateRightBounds.height / 2) + ')' : ''\">\n\n      <rect id='rotate-right'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 0)\" \n            (mousemove)=\"onRotateMouseMove($event, 0)\"\n            (mouseup)=\"onRotateMouseUp($event, 0)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\" \n            fill=\"red\">\n        </rect>\n    </svg>\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateBottomBounds\" fill=\"green\"\n      [attr.transform]=\"rotation > 0 ? 'rotate(' + rotation + ',' + (rotateBottomBounds.height / 2) + ',' + ((cssBounds.top + cssBounds.height / 2) - (rotateBottomBounds.top + rotateBottomBounds.height / 2)) + ')' : ''\">\n      <rect id='rotate-bottom'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 1)\" \n            (mousemove)=\"onRotateMouseMove($event, 1)\"\n            (mouseup)=\"onRotateMouseUp($event, 1)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\"\n            fill=\"red\">\n        </rect>\n    </svg>\n  ",
+  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\"\n      \n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <svg:g>\n          <ng-container \n            *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n            [elementId]=\"1000001\"\n            [componentData]=\"boundingBoxObject\"\n            [hoverClass]=\"cursor\" \n  \n            (mouseDown)=\"onBoundsMouseDown($event)\"\n            (mouseMove)=\"onBoundsMouseMove($event)\"\n            (mouseUp)=\"onBoundsMouseUp($event)\">\n          </ng-container>\n        </svg:g>\n   \n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onSelectionMouseDown($event)\"\n          (mouseMove)=\"onSelectionMouseMove($event)\"\n          (mouseUp)=\"onSelectionMouseUp($event)\"\n          [hoverClass]=\"cursor\"\n        ></ng-container>\n\n        <ng-container *ngFor=\"let s of sizers; let i = index;\">\n            <rect [id]=\"'resizer-' + i\"  *ngIf=\"(elementState | async)?.present.selectedBounds && \n                                                boundingBoxObject && \n                                                canResize && \n                                                mouseDownRotator < 0 &&\n                                                (!mouseDown || mouseDownSizer >= 0)\"\n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" fill=\"green\" \n            [attr.x]=\"getResizerX(i)\" \n            [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateRightBounds\" fill=\"green\">\n       <rect id='rotate-right'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 0)\" \n            (mousemove)=\"onRotateMouseMove($event, 0)\"\n            (mouseup)=\"onRotateMouseUp($event, 0)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\" \n            fill=\"red\">\n        </rect>\n    </svg>\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateBottomBounds\" fill=\"green\">\n      <rect id='rotate-bottom'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 1)\" \n            (mousemove)=\"onRotateMouseMove($event, 1)\"\n            (mouseup)=\"onRotateMouseUp($event, 1)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\"\n            fill=\"red\">\n        </rect>\n    </svg>\n  ",
   styles: ["\n\n  "]
 })
 export class SelectorToolComponent implements OnInit, OnDestroy {
@@ -74,6 +74,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
   private _mouseDownCentroid: DrPoint = null;
+  private _modifierKeys: any = {
+    shift: false,
+    alt: false,
+    control: false
+  };
+  private _lastEvent: any = null;
 
   constructor(
     private _dataStoreService: DataStoreService,
@@ -105,6 +111,38 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     })
     this.setupBounds();
   }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(evt): void {
+    if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLower()] = true;
+        
+
+          break;
+      }
+    }
+    
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(evt): void {
+    if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLower()] = false;
+          
+          
+          break;
+      }
+    }
+  }
+
 
   onBackgroundMouseDown(evt): void {
     this.onMouseDown({ 
@@ -471,7 +509,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private setupBounds(): void {
-    if (null !== this._dataStoreService.selectedBounds) {
+    if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
+      let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
+      this.rotation = objs.length === 1 ? objs[0].rotation : 0;
+
       this.selectedObjects = this._dataStoreService.selectedObjects.map(x => Object.assign({}, x));
       let b: BoundingBox = this._dataStoreService.selectedBounds;
       this.boundingBoxObject = createDrRect({
@@ -491,28 +532,43 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         left: b.x - HALF_SIZER,
         top: b.y - HALF_SIZER,
         width: b.width + SIZER_SIZE,
-        height: b.height + SIZER_SIZE
+        height: b.height + SIZER_SIZE,
+        transform: 'rotate(' + this.rotation  + 'deg)'
       };
 
+      let left: number =  b.x + b.width + ROTATE_SPACING - HALF_SIZER;
+      let top: number = b.y + b.height / 2 - HALF_SIZER;
+
+      
+
       this.rotateRightBounds = {
-        left: b.x + b.width + ROTATE_SPACING - HALF_SIZER,
-        top: b.y + b.height / 2 - HALF_SIZER,
+        left: left,
+        top: top,
         width: SIZER_SIZE,
-        height: SIZER_SIZE
+        height: SIZER_SIZE,
+        transform: 'rotate(' + this.rotation + 'deg)',
+        "transform-origin": ((this.cssBounds.left + this.cssBounds.width / 2) - 
+                             (left + SIZER_SIZE / 2))  + "px " + 
+                             (SIZER_SIZE / 2) + "px"
       };
+
+      top = b.y + b.height + ROTATE_SPACING - HALF_SIZER;
 
       this.rotateBottomBounds = {
         left: b.x + b.width / 2 - HALF_SIZER,
-        top: b.y + b.height + ROTATE_SPACING - HALF_SIZER,
+        top: top,
         width: SIZER_SIZE,
-        height: SIZER_SIZE
+        height: SIZER_SIZE,
+        transform: 'rotate(' + this.rotation + 'deg)',
+        "transform-origin": (SIZER_SIZE / 2) + "px " + ((this.cssBounds.top + this.cssBounds.height / 2) - 
+                                                        (top + SIZER_SIZE / 2)) + "px"
       };
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], true) :
                        this.canAllResize(this.selectedObjects);
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType;
 
-      this.rotation = this.selectedObjects.length === 1 ? this.selectedObjects[0].rotation : 0;
+      
     }
     else {
       this.selectedObjects = [];
@@ -527,6 +583,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private rotateObject(location: DrPoint, shiftKey: boolean): void {
     this.rotation = (360 + this.getRotationAngle(location, shiftKey) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+    Object.assign(this.rotateRightBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
+    Object.assign(this.rotateBottomBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
+    Object.assign(this.cssBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
   }
 
   private getRotationAngle(location: DrPoint, shiftKey: boolean): number {
@@ -684,5 +743,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this._subSelectedBoundsChanged) {
       this._subSelectedBoundsChanged.unsubscribe();
     }
+
   }
 }

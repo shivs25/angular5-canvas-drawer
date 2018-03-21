@@ -7,6 +7,7 @@ export declare class DynamicSvgDirective implements OnInit {
     _currentId: number;
     _currentComponent: any;
     ngOnInit(): void;
+    readonly currentComponent: any;
     hoverClass: string;
     overrideProperties: any;
     elementId: any;

@@ -27,6 +27,24 @@ To use this library in your newly generated component, add the `app-drawer` to y
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
+Date: `2018-03-19` VERSION: `1.0.33-beta.39`
+- Finished Text Tool
+- Added shift click and escape to the object creation tool
+
+Date: `2018-03-19` VERSION: `1.0.33-beta.36`
+- Added debug consoles for Pen Tool
+
+Date: `2018-03-19` VERSION: `1.0.33-beta.35`
+- Fixed images not loading in safari
+
+Date: `2018-03-19` VERSION: `1.0.33-beta.34`
+- Named objects
+- Got rotation working in safari
+
+Date: `2018-03-16` VERSION: `1.0.33-beta.32`
+- Added input to handle changes to a view box through a bounding box if needed
+
+
 Date: `2018-03-15` VERSION: `1.0.33-beta.31`
 - Exported ChangeHelperService
 

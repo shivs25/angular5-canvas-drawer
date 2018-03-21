@@ -8,7 +8,6 @@
 </app-drawer>
 
 <svg *ngIf="cssBounds" [ngStyle]="cssBounds"
-  [attr.transform]="rotation ? 'rotate(' + rotation + ')' : ''"
       
   xmlns="http://www.w3.org/2000/svg"
   (mousedown)="onBackgroundMouseDown($event)"
@@ -35,6 +34,7 @@
       (mouseDown)="onSelectionMouseDown($event)"
       (mouseMove)="onSelectionMouseMove($event)"
       (mouseUp)="onSelectionMouseUp($event)"
+      [hoverClass]="cursor"
     ></ng-container>
 
     <ng-container *ngFor="let s of sizers; let i = index;">
@@ -56,10 +56,8 @@
 </svg>
 
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)"
-  [ngStyle]="rotateRightBounds" fill="green"
-  [attr.transform]="rotation > 0 ? 'rotate(' + rotation + ',' + ((cssBounds.left + cssBounds.width / 2) - (rotateRightBounds.left + rotateRightBounds.width / 2)) + ',' + (rotateRightBounds.height / 2) + ')' : ''">
-
-  <rect id='rotate-right'
+  [ngStyle]="rotateRightBounds" fill="green">
+   <rect id='rotate-right'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 0)" 
         (mousemove)="onRotateMouseMove($event, 0)"
@@ -72,8 +70,7 @@
     </rect>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)"
-  [ngStyle]="rotateBottomBounds" fill="green"
-  [attr.transform]="rotation > 0 ? 'rotate(' + rotation + ',' + (rotateBottomBounds.height / 2) + ',' + ((cssBounds.top + cssBounds.height / 2) - (rotateBottomBounds.top + rotateBottomBounds.height / 2)) + ')' : ''">
+  [ngStyle]="rotateBottomBounds" fill="green">
   <rect id='rotate-bottom'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 1)" 
