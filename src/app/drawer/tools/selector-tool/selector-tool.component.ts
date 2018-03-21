@@ -16,6 +16,8 @@ const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 const ROTATE_SPACING: number = 40;
 
+const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
+
 @Component({
   selector: 'app-selector-tool',
   templateUrl: './selector-tool.component.html',
@@ -119,8 +121,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Shift":
         case "Control":
         case "Alt":
-          this._modifierKeys[evt.key.toLower()] = true;
-        
+          this._modifierKeys[evt.key.toLowerCase()] = true;
+          this.onMouseMove(this._lastEvent);
 
           break;
       }
@@ -135,9 +137,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Shift":
         case "Control":
         case "Alt":
-          this._modifierKeys[evt.key.toLower()] = false;
-          
-          
+          this._modifierKeys[evt.key.toLowerCase()] = false;
+          this.onMouseMove(this._lastEvent);
+
           break;
       }
     }
@@ -230,7 +232,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === data.data.id);
         if (selected) {
           let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
-          if (data.shiftKey) {
+          if (this._modifierKeys.shift) {
             //Remove from selection
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects.slice(0, index),
@@ -239,7 +241,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
         else {
-          if (data.shiftKey) {
+          if (this._modifierKeys.shift) {
             //Add to selection.
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects,
@@ -270,6 +272,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onMouseMove(data: MouseEventData): void {
+    this._lastEvent = data; 
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
@@ -281,10 +284,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
-          this.resizeObjects(data.location, data.shiftKey);
+          this.resizeObjects(data.location, this._modifierKeys.shift);
         }
         else {
-          this.rotateObject(data.location, data.shiftKey);
+          this.rotateObject(data.location, this._modifierKeys.shift);
         }
       }
       
@@ -310,7 +313,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
-          this.resizeObjects(data.location, data.shiftKey);
+          this.resizeObjects(data.location, this._modifierKeys.shift);
 
           this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
             x: this.cssBounds.left + HALF_SIZER,
@@ -320,7 +323,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.rotateObject(data.location, data.shiftKey);
+          this.rotateObject(data.location, this._modifierKeys.shift);
           if (this._dataStoreService.selectedObjects.length > 0) {
             this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
           }
@@ -364,7 +367,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.resizeObjects({ 
         x: evt.offsetX + this.cssBounds.left,
         y: evt.offsetY + this.cssBounds.top
-      }, evt.shiftKey);
+      }, this._modifierKeys.shift);
     }
   }
 
@@ -374,7 +377,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this.resizeObjects({ 
       x: evt.offsetX + this.cssBounds.left,
       y: evt.offsetY + this.cssBounds.top
-    }, evt.shiftKey);
+    }, this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
@@ -413,7 +416,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     if (this.mouseDownRotator >= 0 &&
       this.mouseDown) {
-      this.rotateObject(this.getRelativePointFromEvent(evt), evt.shiftKey);
+      this.rotateObject(this.getRelativePointFromEvent(evt), this._modifierKeys.shift);
     }
   }
 
@@ -422,7 +425,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     let pt: DrPoint = this.getRelativePointFromEvent(evt);
 
-    this.rotateObject(pt, evt.shiftKey);
+    this.rotateObject(pt, this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
@@ -582,13 +585,24 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private rotateObject(location: DrPoint, shiftKey: boolean): void {
-    this.rotation = (360 + this.getRotationAngle(location, shiftKey) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+    let rotation = (360 + this.getRotationAngle(location) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+
+    if (shiftKey) {
+      let snapped: number[] = SNAP_ANGLES.slice(0);
+      this.rotation = snapped.sort((a, b) => {
+        return Math.abs(rotation - a) - Math.abs(rotation - b)
+      })[0];
+    }
+    else {
+      this.rotation = rotation;
+    }
+
     Object.assign(this.rotateRightBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
     Object.assign(this.rotateBottomBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
     Object.assign(this.cssBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
   }
 
-  private getRotationAngle(location: DrPoint, shiftKey: boolean): number {
+  private getRotationAngle(location: DrPoint): number {
     return Math.round(Math.atan2(location.y - this._mouseDownCentroid.y, location.x - this._mouseDownCentroid.x) * 180 / Math.PI);
   }
 
