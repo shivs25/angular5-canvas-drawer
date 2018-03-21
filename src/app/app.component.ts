@@ -14,7 +14,7 @@ import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
 import { createDrStyle } from '../../build/models/dr-style';
 import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
-
+import { } from ''
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
 
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }
-
+  
   selector(): void {
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
   }

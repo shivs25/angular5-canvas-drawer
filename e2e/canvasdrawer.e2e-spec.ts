@@ -415,6 +415,50 @@ fdescribe('Maps', function () {
       //this test is to expose a bug - only two points for a polygon should not be possible
     });
 
+    //Adding objects while holding shift key
+    it('CanvasDrawer_AddEllipseThenHoldShiftKey_ExpectObjectSizeToBecomeSquareVertically', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("app-editable-drawer app-drawer svg"))).
+        mouseMove({ x: -200, y: 100 }).
+        sendKeys(protractor.Key.SHIFT).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
+        width: 200,
+        height: 200
+      }));
+    });
+    it('CanvasDrawer_AddEllipseThenHoldShiftKey_ExpectObjectSizeToBecomeSquareHorizontally', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("app-editable-drawer app-drawer svg"))).
+        mouseMove({ x: -100, y: 200 }).
+        sendKeys(protractor.Key.SHIFT).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
+        width: 200,
+        height: 200
+      }));
+    });
+
     //Group / Ungroup
     it('CanvasDrawer_GroupObjects_ExpectObjectsToBeGrouped', () => {
       utilities.normalPause();
@@ -897,14 +941,15 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       canvas.rotateSelectedObject("#rotate-right", 50, 50);
+      utilities.normalPause();
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
-        expect(value).toEqual('rotate(15)');
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+        expect(value.includes("transform: rotate(15deg)")).toBeTruthy();
       });
     });
-    it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
+    it('CanvasDrawer_RotateBottomHandle_ExpectObjectToRotate', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
@@ -917,11 +962,12 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       canvas.rotateSelectedObject("#rotate-bottom", 50, 50);
+      utilities.normalPause();
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
-        expect(value).toEqual('rotate(345)');
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+        expect(value.includes("transform: rotate(345deg)")).toBeTruthy();
       });
     });
     it('CanvasDrawer_SelectMultipleItems_ExpectRotationHandlesToNotAppear', () => {
@@ -949,5 +995,50 @@ fdescribe('Maps', function () {
 
       expect(element(by.css("#rotate-right")).isPresent()).toBeFalsy();
       expect(element(by.css("#rotate-bottom")).isPresent()).toBeFalsy();
+    });
+
+    //Es-ca-pé - it's spelled just like the word escape
+    it('CanvasDrawer_PressEscapeWhileCreatingEllipse_ExpectObjectToClear', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("app-editable-drawer app-drawer svg"))).
+        mouseMove({ x: 100, y: 100 }).
+        sendKeys(protractor.Key.ESCAPE).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      expect(element(by.css("ellipse")).isPresent()).toBeFalsy();
+    });
+    it('CanvasDrawer_PressEscapeWhileResizingObject_ExpectObjectToRemainOriginalSize', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(100);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(browser.findElement(by.css(canvas.getResizerCssByIndex(1)))).
+        mouseMove({ x: 100, y: 0 }).
+        sendKeys(protractor.Key.ESCAPE).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+      
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
+        width: 100,
+        height: 100
+      }));
     });
 });
