@@ -2,9 +2,9 @@
   <div (click)="$event.stopPropagation()" *ngIf="currentObject && cssBounds" #container [ngStyle]="cssBounds"
   [ngClass]='{
     "absolute-position": true,
-    "border-red": !inputBorder,
-    "border-invisible": inputBorder }'>
-      <app-editable-text-area #textArea [border]="inputBorder" (dataInput)="onTextAreaInput($event)" (load)="onTextAreaLoaded($event)" 
+    "border-red": !inputBorder && currentObject.fitText,
+    "border-invisible": inputBorder || !currentObject.fitText }'>
+      <app-editable-text-area #textArea [border]="inputBorder && currentObject.fitText" (dataInput)="onTextAreaInput($event)" (load)="onTextAreaLoaded($event)" 
                               [textAreaStyle]="textAreaStyle" [text]="divify()"></app-editable-text-area>
     
   </div>

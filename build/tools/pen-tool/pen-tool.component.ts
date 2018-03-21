@@ -58,14 +58,17 @@ export class PenToolComponent implements OnInit {
 
   onBackgroundClick(evt): void {
     if (this._delay) {
+      console.log('pen tool click to complete obj');
       this.currentObject.points.push({ x: evt.offsetX, y: evt.offsetY })
       this.completeObject();
       
     }
     else {
+      console.log('pen tool set delay')
       this._clickPt = { x: evt.offsetX, y: evt.offsetY };
       this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
         if (this._delay) {
+          
           this.handleClick(evt.offsetX, evt.offsetY);
         }
         
@@ -89,6 +92,7 @@ export class PenToolComponent implements OnInit {
 
   private handleClick(x: number, y: number): void {
     if (this._delay) {
+      console.log('pen tool click to complete obj');
       this._delay.unsubscribe();
       this._delay = null;
     }

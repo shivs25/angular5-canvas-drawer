@@ -6,7 +6,6 @@ export declare class EditorToolComponent implements OnInit {
     SELECTOR_TOOL: EditorToolType;
     PEN_TOOL: EditorToolType;
     TEXT_EDIT_TOOL: EditorToolType;
-    TEXT_CREATION_TOOL: EditorToolType;
     elementState: any;
     constructor(_dataService: DataStoreService);
     ngOnInit(): void;

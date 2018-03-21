@@ -41,6 +41,7 @@ export declare class DataStoreService {
     setUrls(items: DrObject[], url: string): void;
     setRotation(item: DrObject, rotation: number): void;
     setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox): void;
+    setText(items: DrObject[], text: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;

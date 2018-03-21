@@ -4,21 +4,10 @@ import { DrText } from '../../models/dr-text';
 import { DrTextAlignment } from '../../models/dr-text-alignment.enum';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 
-import * as d3Plus from 'd3plus-text';
+
 import { DrObject } from '../../models/dr-object';
+import { TextRenderingService, TEXT_PADDING } from '../../services/text-rendering.service';
 
-export const TEXT_PADDING: number = 4;
-
-export const SPACE_PLACEHOLDER: string = "~";
-
-export function replaceSpaces(s: string): string {
-  let normalSplit: string[] = s.split(" ");
-  let newSentence: string = "";
-  for(let n of normalSplit) {
-    newSentence += n.length > 0 ? (n + " ") : SPACE_PLACEHOLDER + " ";
-  }
-  return newSentence.trim();
-}
 
 @Component({
   selector: 'dr-text',
@@ -34,6 +23,13 @@ export class DrTextComponent extends DrObjectComponent {
 
   private _data: DrObject = null;
 
+
+  constructor(private _textService: TextRenderingService,
+              _objectHelperService: DrawerObjectHelperService) {
+
+    super(_objectHelperService);
+  }
+
   get visualData(): DrObject {
     return this._data;
   }
@@ -41,46 +37,13 @@ export class DrTextComponent extends DrObjectComponent {
   set visualData(value: DrObject) {
     if (this._data !== value) {
       let d: DrText = value as DrText;
-
-      let c: any = d3Plus.textWrap()
-      .fontFamily(d.fontFamily)
-      .fontSize(d.size)
-      .fontWeight(d.bold ? 'bold' : 'normal')
-      .width(d.width - 2 * TEXT_PADDING);
-
-      let userLineBreaks: string[] = d.text.split("\n");
-
-      let ld: any[] = [];
-      let multiplier: number = 0;
-      for(let u of userLineBreaks) {
-        if (0 !== u.length) {
-          for(let l of c(this.redoSpaces(u)).lines) {
-            ld.push({
-              text: l,
-              multiplier: multiplier
-            })
-          }
-          multiplier = 1;
-        }
-        else {
-          ld.push({
-            text: "",
-            multiplier: 0
-          });
-
-          multiplier++;
-        }
-      }
-      this.lineData = ld;
-      
+      this.lineData = this._textService.getSvgText(d);
       this._data = value;
     }
   }
 
-  redoSpaces(l: string): string {
-    let exp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
-    return l.replace(exp, " ");
-  }
+ 
+
 
   getTextX(): number {
     let o: DrText = this.data as DrText;
@@ -119,11 +82,11 @@ export class DrTextComponent extends DrObjectComponent {
       case DrTextAlignment.CENTER:
         return (o.y + o.height / 2) -     //center y of box
                 (
-                  (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
+                  (this.lineData.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
                   ((o.size) / 2)      //Half a line because v alignment doesnt apply
                 );
       case DrTextAlignment.FAR:
-        return o.y + o.height - (this.lineData.lines.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
+        return o.y + o.height - (this.lineData.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
 
     }
   }

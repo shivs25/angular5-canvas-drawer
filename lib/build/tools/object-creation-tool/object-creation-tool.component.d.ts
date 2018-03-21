@@ -12,9 +12,13 @@ export declare class ObjectCreationToolComponent implements OnInit {
     private _mouseDownLocation;
     private _mouseDownClone;
     private _mouseDownBounds;
+    private _modifierKeys;
+    private _lastEvent;
     constructor(_dataService: DataStoreService, _changeService: ChangeHelperService, _drawerObjectService: DrawerObjectHelperService);
     ngOnInit(): void;
     onBackgroundClick(evt: any): void;
+    onKeyDown(evt: any): void;
+    onKeyUp(evt: any): void;
     onBackgroundMouseDown(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundMouseUp(evt: any): void;

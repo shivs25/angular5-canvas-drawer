@@ -38,8 +38,12 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     private _mouseDownClones;
     private _mouseDownLocation;
     private _mouseDownCentroid;
+    private _modifierKeys;
+    private _lastEvent;
     constructor(_dataStoreService: DataStoreService, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _elementRef: ElementRef);
     ngOnInit(): void;
+    onKeyDown(evt: any): void;
+    onKeyUp(evt: any): void;
     onBackgroundMouseDown(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundMouseUp(evt: any): void;

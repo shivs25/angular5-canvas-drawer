@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 
 import { DataStoreService } from '../../services/data-store.service';
 import { DrObject } from '../../models/dr-object';
@@ -10,7 +10,7 @@ import { BoundingBox } from '../../models/bounding-box';
 import { MouseEventData } from '../../models/mouse-event-data';
 import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
-import { DrType } from '../../models/enums';
+import { DrType, EditorToolType } from '../../models/enums';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
@@ -74,6 +74,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
   private _mouseDownCentroid: DrPoint = null;
+  private _modifierKeys: any = {
+    shift: false,
+    alt: false,
+    control: false
+  };
+  private _lastEvent: any = null;
 
   constructor(
     private _dataStoreService: DataStoreService,
@@ -105,6 +111,38 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     })
     this.setupBounds();
   }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(evt): void {
+    if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLower()] = true;
+        
+
+          break;
+      }
+    }
+    
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(evt): void {
+    if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLower()] = false;
+          
+          
+          break;
+      }
+    }
+  }
+
 
   onBackgroundMouseDown(evt): void {
     this.onMouseDown({ 
@@ -471,7 +509,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private setupBounds(): void {
-    if (null !== this._dataStoreService.selectedBounds) {
+    if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
+      let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
+      this.rotation = objs.length === 1 ? objs[0].rotation : 0;
+
       this.selectedObjects = this._dataStoreService.selectedObjects.map(x => Object.assign({}, x));
       let b: BoundingBox = this._dataStoreService.selectedBounds;
       this.boundingBoxObject = createDrRect({
@@ -498,7 +539,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       let left: number =  b.x + b.width + ROTATE_SPACING - HALF_SIZER;
       let top: number = b.y + b.height / 2 - HALF_SIZER;
 
-      this.rotation = this.selectedObjects.length === 1 ? this.selectedObjects[0].rotation : 0;
+      
 
       this.rotateRightBounds = {
         left: left,
@@ -702,5 +743,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this._subSelectedBoundsChanged) {
       this._subSelectedBoundsChanged.unsubscribe();
     }
+
   }
 }

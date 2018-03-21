@@ -234,7 +234,8 @@ export class DataStoreService {
       changes.push(
         { id: i.id, 
           changes: Object.assign(this._changeService.getBoundsChanges(i, bounds, this.selectedBounds), {
-            text: text
+            text: text,
+            fitText: true
           })
         });
       }
@@ -247,6 +248,25 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
+
+  public setText(items: DrObject[], text: string) {
+    let changes: any[] = [];
+    for(let i of items) {
+      changes.push(
+      { 
+        id: i.id, 
+        changes: {
+          text: text
+        }
+      });
+    }
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: changes
+    });
+    this.resetSelection();
+    this._duplicateOffset = 1;
+  }
 
 
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
