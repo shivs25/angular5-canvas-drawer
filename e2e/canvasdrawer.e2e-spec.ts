@@ -897,14 +897,15 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       canvas.rotateSelectedObject("#rotate-right", 50, 50);
+      utilities.normalPause();
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
-        expect(value).toEqual('rotate(15)');
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+        expect(value.includes("transform: rotate(15deg)")).toBeTruthy();
       });
     });
-    it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
+    it('CanvasDrawer_RotateBottomHandle_ExpectObjectToRotate', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
@@ -917,11 +918,12 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       canvas.rotateSelectedObject("#rotate-bottom", 50, 50);
+      utilities.normalPause();
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("transform").then(function (value) {
-        expect(value).toEqual('rotate(345)');
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+        expect(value.includes("transform: rotate(345deg)")).toBeTruthy();
       });
     });
     it('CanvasDrawer_SelectMultipleItems_ExpectRotationHandlesToNotAppear', () => {
