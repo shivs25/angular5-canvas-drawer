@@ -800,11 +800,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let elementWidth: number = 0
     let threshold: number = opposite ? b.x : b.x + b.width;
   
-    let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
-    let scale = mouseDistance / this._cornerDistance;
+    
 
     if (newLocation.x < threshold) {
-      if (shiftKey) {
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
         newLocation = Object.assign({}, newLocation, {
           x: threshold - this._originalBounds.width * scale * quadrantMultiplier
         });
@@ -824,7 +826,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       
     }
     else {
-      if (shiftKey) {
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
         newLocation = Object.assign({}, newLocation, {
           x: threshold + this._originalBounds.width * scale * quadrantMultiplier
         });
@@ -868,11 +873,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let height: number = 0;
     let elementHeight: number = 0;
     let threshold: number = opposite ? b.y : b.y + b.height;
-    let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
-    let scale = mouseDistance / this._cornerDistance;
+    
     
     if (newLocation.y < threshold) {
-      if (shiftKey) {
+      
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
         newLocation = Object.assign({}, newLocation, {
           y: threshold - this._originalBounds.height * scale * quadrantMultiplier
         });
@@ -892,7 +900,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       
     }
     else {
-      if (shiftKey) {
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
         newLocation = Object.assign({}, newLocation, {
           y: threshold + this._originalBounds.height * scale * quadrantMultiplier
         });
