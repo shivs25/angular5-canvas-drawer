@@ -166,7 +166,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseMove(evt): void {
-    console.log("WHAT");
     this.onMouseMove({ 
       location: { 
         x: this.cssBounds.left + evt.offsetX, 
@@ -217,8 +216,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseMove(data: MouseEventData): void {
-    console.log("Selection");
-    console.log(data);
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseMove(data);
