@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { DrPolygon, createDrPolygon } from '../../models/dr-polygon';
 import { DataStoreService } from '../../services/data-store.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
+import { EditorToolType } from '../../models/enums';
+import { DrPoint } from '../../models/dr-point';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 const DOUBLE_CLICK_TIME: number = 250;
+
+const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 
 @Component({
   selector: 'app-pen-tool',
@@ -32,23 +36,69 @@ export class PenToolComponent implements OnInit {
   private _clickPt = null;
   private _delay: any;
 
+  private _lastEvent: any = null;
+
+  private _modifierKeys: any = {
+    shift: false,
+    alt: false,
+    control: false
+  };
+  
   constructor(private _dataService: DataStoreService) { }
 
   ngOnInit() {
   }
 
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(evt): void {
+    if ((EditorToolType.PEN_TOOL === this._dataService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLowerCase()] = true;
+          this.onBackgroundMouseMove(this._lastEvent);
+
+          break;
+      }
+    }
+    
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(evt): void {
+    if ((EditorToolType.PEN_TOOL === this._dataService.selectedTool)) {
+      switch(evt.key) {
+        case "Shift":
+        case "Control":
+        case "Alt":
+          this._modifierKeys[evt.key.toLowerCase()] = false;
+          this.onBackgroundMouseMove(this._lastEvent);
+          break;
+        case "Escape":
+          this.reset();
+          break;
+      }
+    }
+  }
+
   onBackgroundMouseMove(evt): void {
     if(this.currentObject) {
+      this._lastEvent = evt;
       if (this._delay) {
         this.handleClick(this._clickPt.x, this._clickPt.y);
       }
       else {
         if (this._currentPt) {
-          this._currentPt.x = evt.offsetX;
-          this._currentPt.y = evt.offsetY;
+          let pt: DrPoint = this.getActivePoint(evt.offsetX, evt.offsetY);
+
+          Object.assign(this._currentPt, {
+            x: pt.x,
+            y: pt.y
+          });
         }
         else {
-          this._currentPt = { x: evt.offsetX, y: evt.offsetY };
+          this._currentPt = this.getActivePoint(evt.offsetX, evt.offsetY);
           this.currentObject.points.push(this._currentPt);
         }
       }
@@ -58,18 +108,16 @@ export class PenToolComponent implements OnInit {
 
   onBackgroundClick(evt): void {
     if (this._delay) {
-      console.log('pen tool click to complete obj');
-      this.currentObject.points.push({ x: evt.offsetX, y: evt.offsetY })
+      this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
       this.completeObject();
       
     }
     else {
-      console.log('pen tool set delay')
-      this._clickPt = { x: evt.offsetX, y: evt.offsetY };
+      this._clickPt = this.getActivePoint(evt.offsetX, evt.offsetY);;
       this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
         if (this._delay) {
           
-          this.handleClick(evt.offsetX, evt.offsetY);
+          this.handleClick(this._clickPt.x, this._clickPt.y);
         }
         
       });
@@ -92,7 +140,6 @@ export class PenToolComponent implements OnInit {
 
   private handleClick(x: number, y: number): void {
     if (this._delay) {
-      console.log('pen tool click to complete obj');
       this._delay.unsubscribe();
       this._delay = null;
     }
@@ -114,6 +161,39 @@ export class PenToolComponent implements OnInit {
     }
   }
 
+  private getActivePoint(x: number, y: number): DrPoint {
+    let returnValue: DrPoint = { x: x, y: y };
+
+    if (this._modifierKeys.shift && this.currentObject.points.length > 1) {
+      let lastPoint: DrPoint = this.currentObject.points[this.currentObject.points.length - 2];
+
+      let angle: number = (360 + this.getRotationAngle(lastPoint, returnValue)) % 360;
+      
+      let snapped: number[] = SNAP_ANGLES.slice(0);
+      let snappedAngle: number = snapped.sort((a, b) => {
+        return Math.abs(angle - a) - Math.abs(angle - b);
+      })[0];
+
+      let dist: number = Math.sqrt(Math.pow(Math.abs(returnValue.x - lastPoint.x), 2) + 
+                         Math.pow(Math.abs(returnValue.y - lastPoint.y), 2));
+
+      returnValue = this.pointOnLine(lastPoint.x, lastPoint.y, snappedAngle, dist);
+    }
+
+    return returnValue;
+  }
+
+  private pointOnLine(x: number, y: number, angle: number, distance: number): DrPoint {
+    return {
+      x: Math.round(Math.cos(angle * Math.PI / 180) * distance + x),
+      y: Math.round(Math.sin(angle * Math.PI / 180) * distance + y)
+    };
+  }
+
+  private getRotationAngle(a: DrPoint, b: DrPoint): number {
+    return Math.round(Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI);
+  }
+
   private completeObject(): void {
     if(this.currentObject &&
       null !== this.currentObject &&
@@ -125,13 +205,17 @@ export class PenToolComponent implements OnInit {
        this._dataService.selectObjects([newObject]);
        
    }
-   this.currentObject = null;
-   this._currentPt = null;
-   this._clickPt = null;
-   if (this._delay) {
-    this._delay.unsubscribe();
-    this._delay = null;
-    
-   }
+   this.reset();
+  }
+
+  private reset(): void {
+    this.currentObject = null;
+    this._currentPt = null;
+    this._clickPt = null;
+    if (this._delay) {
+      this._delay.unsubscribe();
+      this._delay = null;
+      
+    }
   }
 }

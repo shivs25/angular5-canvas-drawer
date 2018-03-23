@@ -10,13 +10,21 @@ export declare class PenToolComponent implements OnInit {
     private _currentPt;
     private _clickPt;
     private _delay;
+    private _lastEvent;
+    private _modifierKeys;
     constructor(_dataService: DataStoreService);
     ngOnInit(): void;
+    onKeyDown(evt: any): void;
+    onKeyUp(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundClick(evt: any): void;
     onResizerClick(evt: any): void;
     getResizerX(): number;
     getResizerY(): number;
     private handleClick(x, y);
+    private getActivePoint(x, y);
+    private pointOnLine(x, y, angle, distance);
+    private getRotationAngle(a, b);
     private completeObject();
+    private reset();
 }

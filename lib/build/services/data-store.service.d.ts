@@ -15,6 +15,8 @@ export declare class DataStoreService {
     undid: EventEmitter<void>;
     redid: EventEmitter<void>;
     selectionChanged: EventEmitter<DrObject[]>;
+    objectsDoubleClicked: EventEmitter<DrObject[]>;
+    objectsClicked: EventEmitter<DrObject[]>;
     selectedBoundsChanged: EventEmitter<BoundingBox>;
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
@@ -61,6 +63,8 @@ export declare class DataStoreService {
     beginEdit(): void;
     endEdit(): void;
     setPreviewElements(items: DrObject[]): void;
+    doubleClickObjects(items: DrObject[]): void;
+    clickObjects(items: DrObject[]): void;
     undo(): void;
     redo(): void;
     getObjects(ids: number[]): DrObject[];
