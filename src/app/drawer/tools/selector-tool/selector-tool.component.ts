@@ -17,6 +17,7 @@ const HALF_SIZER: number = 4;
 const ROTATE_SPACING: number = 40;
 
 const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
+const DOUBLE_CLICK_TIME: number = 250;
 
 @Component({
   selector: 'app-selector-tool',
@@ -75,6 +76,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private _cornerDistance: number = 0;
   private _originalBounds: BoundingBox;
+  private _originX: number;
+  private _originY: number;
 
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
@@ -166,6 +169,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseMove(evt): void {
+
     this.onMouseMove({ 
       location: { 
         x: this.cssBounds.left + evt.offsetX, 
@@ -353,21 +357,17 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     this._dataStoreService.beginEdit();
 
+    let pt: DrPoint = this.getRelativeChildPointFromEvent(evt);
+
     this._lastEvent = {
-      location: { 
-        x: this.cssBounds.left + evt.offsetX, 
-        y: this.cssBounds.top + evt.offsetY 
-      }, 
+      location: pt,
       data: null,
       shiftKey: evt.shiftKey,
       ctrlKey: evt.ctrlKey,
       altKey: evt.altKey
     };
 
-    let pt: DrPoint = { 
-      x: evt.offsetX + this.cssBounds.left,
-      y: evt.offsetY + this.cssBounds.top
-    };
+    
     this._mouseDownLocation = pt;
 
     this.mouseDown = true;
@@ -376,6 +376,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this._mouseDownClones = this._dataStoreService.selectedObjects.map((x) => Object.assign({}, x));
 
     this._originalBounds = Object.assign({}, this._dataStoreService.selectedBounds);
+    this._originX = this._originalBounds.width / 2;
+    this._originY = this._originalBounds.height / 2;
     this._cornerDistance = this.getDistanceBetweenTwoPoints(
       { 
         x: this._dataStoreService.selectedBounds.x,
@@ -391,33 +393,25 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   onResizerMouseMove(evt: any, index: number): void {
     evt.stopPropagation();
 
+    let pt: DrPoint = this.getRelativeChildPointFromEvent(evt);
     if (this.mouseDownSizer >= 0 &&
         this.mouseDown) {
       this._lastEvent = {
-        location: { 
-          x: this.cssBounds.left + evt.offsetX, 
-          y: this.cssBounds.top + evt.offsetY 
-        }, 
+        location: pt, 
         data: null,
         shiftKey: evt.shiftKey,
         ctrlKey: evt.ctrlKey,
         altKey: evt.altKey
       };
 
-      this.resizeObjects({ 
-        x: evt.offsetX + this.cssBounds.left,
-        y: evt.offsetY + this.cssBounds.top
-      }, this._modifierKeys.shift);
+      this.resizeObjects(pt, this._modifierKeys.shift);
     }
   }
 
   onResizerMouseUp(evt: any, index: number): void {
     evt.stopPropagation();
 
-    this.resizeObjects({ 
-      x: evt.offsetX + this.cssBounds.left,
-      y: evt.offsetY + this.cssBounds.top
-    }, this._modifierKeys.shift);
+    this.resizeObjects(this.getRelativeChildPointFromEvent(evt), this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
@@ -468,7 +462,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this.rotateObject(pt, this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
-      this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
+      this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation % 360);
       this.setupBounds(); 
     }
 
@@ -535,6 +529,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let b: number = point1.y - point2.y;
 
     return Math.sqrt( a*a + b*b );
+  }
+
+  private getRelativeChildPointFromEvent(evt): DrPoint {
+    return {
+      x: evt.clientX - this._location.x,
+      y: evt.clientY - this._location.y
+    }
   }
 
   private getRelativePointFromEvent(evt): DrPoint {
@@ -638,7 +639,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       let snapped: number[] = SNAP_ANGLES.slice(0);
       this.rotation = snapped.sort((a, b) => {
         return Math.abs(rotation - a) - Math.abs(rotation - b)
-      })[0];
+      })[0] % 360;
     }
     else {
       this.rotation = rotation;
@@ -773,15 +774,26 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         break;
     }
 
-    
+    let xSizer: number = 0;
+    let ySizer: number = 0;
 
+    if (vChanges && vChanges.cssBounds && vChanges.cssBounds.top) {
+      this._originY = this._originalBounds.y + this._originalBounds.height / 2 - vChanges.cssBounds.top;
+      xSizer = HALF_SIZER;
+    }
+
+    if (hChanges && hChanges.cssBounds && hChanges.cssBounds.left) {
+      this._originX = this._originalBounds.x + this._originalBounds.width / 2 - hChanges.cssBounds.left;
+      ySizer = HALF_SIZER;
+    }
 
     Object.assign(this.cssBounds,
       null !== hChanges && null !== hChanges.cssBounds ? hChanges.cssBounds : {},
-      null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {}
+      null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {},
+      { 
+        "transform-origin": (this._originX + xSizer) + "px " + (this._originY + ySizer) + "px"
+      }
     );
-    
-
     Object.assign(this.boundingBoxObject,
       null !== hChanges && null !== hChanges.boundingBoxObject ? hChanges.boundingBoxObject : {},
       null !== vChanges && null !== vChanges.boundingBoxObject ? vChanges.boundingBoxObject : {}
@@ -936,6 +948,15 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
 
     return returnValue;
+  }
+
+  private getRotatedPoint(point: DrPoint, originX: number, originY: number, angle: number): DrPoint {
+    let newX = ((originX - point.x) * Math.cos(angle) - (originY - point.y) * Math.sin(angle)) + point.x;
+    let newY = ((originY - point.y) * Math.cos(angle) + (originX - point.x) * Math.sin(angle)) + point.y;
+    return {
+      x: newX,
+      y: newY
+    };
   }
 
   private applyResizeChanges(): void {
