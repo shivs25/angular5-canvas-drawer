@@ -12,6 +12,11 @@ import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrType, EditorToolType } from '../../models/enums';
 
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/observable/of';
+
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 const ROTATE_SPACING: number = 40;
@@ -88,6 +93,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     control: false
   };
   private _lastEvent: any = null;
+
+  //DOUBLE CLICK STUFF
+  private _clickPt = null;
+  private _delay: any;
 
   constructor(
     private _dataStoreService: DataStoreService,
@@ -308,17 +317,42 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
-        Object.assign(this.cssBounds, {
-          left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
-          top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
-        });
 
-        this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
-          x: this.cssBounds.left + HALF_SIZER,
-          y: this.cssBounds.top + HALF_SIZER,
-          width: this.cssBounds.width - SIZER_SIZE,
-          height: this.cssBounds.height - SIZER_SIZE
-        });
+        if (Math.abs(data.location.x - this._mouseDownLocation.x) < 2 &&
+            Math.abs(data.location.y - this._mouseDownLocation.y) < 2) {
+            
+          //Click
+          if (this._delay) {
+            //Double click
+            this._delay.unsubscribe();
+            this._delay = null;
+            this._dataStoreService.doubleClickObjects(this._dataStoreService.selectedObjects);
+          }
+          else {
+            this._clickPt = data.location;
+            this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
+              if (this._delay) {
+                this._delay.unsubscribe();
+                this._delay = null;
+                this._dataStoreService.clickObjects(this._dataStoreService.selectedObjects);
+              }
+            });
+          }
+        }
+        else {
+          Object.assign(this.cssBounds, {
+            left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
+            top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
+          });
+  
+          this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+            x: this.cssBounds.left + HALF_SIZER,
+            y: this.cssBounds.top + HALF_SIZER,
+            width: this.cssBounds.width - SIZER_SIZE,
+            height: this.cssBounds.height - SIZER_SIZE
+          });
+        }
+        
       }
       else {
         if (this.mouseDownSizer >= 0) {

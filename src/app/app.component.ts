@@ -291,6 +291,16 @@ export class AppComponent implements OnInit {
       console.log(this.dataStoreService.elements);
     });
 
+    this.dataStoreService.objectsClicked.subscribe((items) => {
+      console.log("SINGLE");
+      console.log(items);
+    });
+
+    this.dataStoreService.objectsDoubleClicked.subscribe((items) => {
+      console.log("DOUBLE");
+      console.log(items);
+    });
+
     let t: DrRect = createDrRect({
       id: 2,
       x: 100,
