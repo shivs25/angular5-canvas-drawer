@@ -38,7 +38,8 @@
     ></ng-container>
 
     <ng-container *ngFor="let s of sizers; let i = index;">
-        <rect [id]="'resizer-' + i"  *ngIf="(elementState | async)?.present.selectedBounds && 
+        <rect [id]="'resizer-' + i"  *ngIf="(i % 2 === 0 || !isShiftDown()) &&
+                                            (elementState | async)?.present.selectedBounds && 
                                             boundingBoxObject && 
                                             canResize && 
                                             mouseDownRotator < 0 &&

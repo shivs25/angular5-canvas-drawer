@@ -107,32 +107,25 @@ export class TextEditToolComponent implements OnInit {
       let textAreaHeight: number = this._textArea.newHeight;
       let textAreaWidth: number = this._textArea.newWidth;
 
-      if (textAreaHeight > this.currentObject.height) {
-        switch(this.currentObject.vAlignment) {
-          case DrTextAlignment.CENTER:
-            bounds.y -= textAreaHeight / 2;
-            break;
-          case DrTextAlignment.FAR:
-            bounds.y -= textAreaHeight;
-            break;
-        }
-
-        bounds.height = textAreaHeight;
-
-        if (textAreaWidth > this.currentObject.width) {
-          switch(this.currentObject.hAlignment) {
-            case DrTextAlignment.CENTER:
-              bounds.x -= textAreaWidth / 2;
-              break;
-            case DrTextAlignment.FAR:
-              bounds.x -= textAreaWidth;
-              break;
-          }
-
-          bounds.width = textAreaWidth;
-        }
+      switch(this.currentObject.vAlignment) {
+        case DrTextAlignment.CENTER:
+          bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
+          break;
+        case DrTextAlignment.FAR:
+          bounds.y -= textAreaHeight;
+          break;
       }
-    
+      bounds.height = textAreaHeight;
+
+      switch(this.currentObject.hAlignment) {
+        case DrTextAlignment.CENTER:
+          bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
+          break;
+        case DrTextAlignment.FAR:
+          bounds.x -= textAreaWidth;
+          break;
+      }
+      bounds.width = textAreaWidth;
 
       this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
 

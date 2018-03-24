@@ -40,6 +40,8 @@ export class DataStoreService {
   redid: EventEmitter<void> = new EventEmitter<void>();
 
   selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  objectsDoubleClicked:EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  objectsClicked:EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   selectedBoundsChanged: EventEmitter<BoundingBox> = new EventEmitter<BoundingBox>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
@@ -600,6 +602,14 @@ export class DataStoreService {
       type: SET_PREVIEW_ELEMENTS,
       elements: items
     });
+  }
+
+  public doubleClickObjects(items: DrObject[]): void {
+    this.objectsDoubleClicked.emit(items);
+  }
+
+  public clickObjects(items: DrObject[]): void {
+    this.objectsClicked.emit(items);
   }
 
   //=========History=========

@@ -12,9 +12,17 @@ import { DrPoint } from '../../models/dr-point';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrType, EditorToolType } from '../../models/enums';
 
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/observable/of';
+
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
 const ROTATE_SPACING: number = 40;
+
+const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
+const DOUBLE_CLICK_TIME: number = 250;
 
 @Component({
   selector: 'app-selector-tool',
@@ -71,6 +79,11 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   private _subSelectionChanged: any;
   private _subSelectedBoundsChanged: any;
 
+  private _cornerDistance: number = 0;
+  private _originalBounds: BoundingBox;
+  private _originX: number;
+  private _originY: number;
+
   private _mouseDownClones: DrObject[] = null;
   private _mouseDownLocation: DrPoint = null;
   private _mouseDownCentroid: DrPoint = null;
@@ -80,6 +93,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     control: false
   };
   private _lastEvent: any = null;
+
+  //DOUBLE CLICK STUFF
+  private _clickPt = null;
+  private _delay: any;
 
   constructor(
     private _dataStoreService: DataStoreService,
@@ -120,7 +137,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Control":
         case "Alt":
           this._modifierKeys[evt.key.toLowerCase()] = true;
-        
+          this.onMouseMove(this._lastEvent);
 
           break;
       }
@@ -136,13 +153,15 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Control":
         case "Alt":
           this._modifierKeys[evt.key.toLowerCase()] = false;
-          
-          
+          this.onMouseMove(this._lastEvent);
           break;
       }
     }
   }
 
+  isShiftDown(): boolean {
+    return this._modifierKeys.shift;
+  }
 
   onBackgroundMouseDown(evt): void {
     this.onMouseDown({ 
@@ -158,6 +177,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseMove(evt): void {
+
     this.onMouseMove({ 
       location: { 
         x: this.cssBounds.left + evt.offsetX, 
@@ -230,7 +250,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === data.data.id);
         if (selected) {
           let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
-          if (data.shiftKey) {
+          if (this._modifierKeys.shift) {
             //Remove from selection
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects.slice(0, index),
@@ -239,7 +259,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
         else {
-          if (data.shiftKey) {
+          if (this._modifierKeys.shift) {
             //Add to selection.
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects,
@@ -270,6 +290,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onMouseMove(data: MouseEventData): void {
+    this._lastEvent = data; 
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
@@ -281,10 +302,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
-          this.resizeObjects(data.location, data.shiftKey);
+          this.resizeObjects(data.location, this._modifierKeys.shift);
         }
         else {
-          this.rotateObject(data.location, data.shiftKey);
+          this.rotateObject(data.location, this._modifierKeys.shift);
         }
       }
       
@@ -295,22 +316,47 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
-        Object.assign(this.cssBounds, {
-          left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
-          top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
-        });
 
-        this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
-          x: this.cssBounds.left + HALF_SIZER,
-          y: this.cssBounds.top + HALF_SIZER,
-          width: this.cssBounds.width - SIZER_SIZE,
-          height: this.cssBounds.height - SIZER_SIZE
-        });
+        if (Math.abs(data.location.x - this._mouseDownLocation.x) < 2 &&
+            Math.abs(data.location.y - this._mouseDownLocation.y) < 2) {
+            
+          //Click
+          if (this._delay) {
+            //Double click
+            this._delay.unsubscribe();
+            this._delay = null;
+            this._dataStoreService.doubleClickObjects(this._dataStoreService.selectedObjects);
+          }
+          else {
+            this._clickPt = data.location;
+            this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
+              if (this._delay) {
+                this._delay.unsubscribe();
+                this._delay = null;
+                this._dataStoreService.clickObjects(this._dataStoreService.selectedObjects);
+              }
+            });
+          }
+        }
+        else {
+          Object.assign(this.cssBounds, {
+            left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
+            top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
+          });
+  
+          this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+            x: this.cssBounds.left + HALF_SIZER,
+            y: this.cssBounds.top + HALF_SIZER,
+            width: this.cssBounds.width - SIZER_SIZE,
+            height: this.cssBounds.height - SIZER_SIZE
+          });
+        }
+        
       }
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
-          this.resizeObjects(data.location, data.shiftKey);
+          this.resizeObjects(data.location, this._modifierKeys.shift);
 
           this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
             x: this.cssBounds.left + HALF_SIZER,
@@ -320,7 +366,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.rotateObject(data.location, data.shiftKey);
+          this.rotateObject(data.location, this._modifierKeys.shift);
           if (this._dataStoreService.selectedObjects.length > 0) {
             this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
           }
@@ -344,37 +390,61 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     this._dataStoreService.beginEdit();
 
-    let pt: DrPoint = { 
-      x: evt.offsetX + this.cssBounds.left,
-      y: evt.offsetY + this.cssBounds.top
+    let pt: DrPoint = this.getRelativeChildPointFromEvent(evt);
+
+    this._lastEvent = {
+      location: pt,
+      data: null,
+      shiftKey: evt.shiftKey,
+      ctrlKey: evt.ctrlKey,
+      altKey: evt.altKey
     };
+
+    
     this._mouseDownLocation = pt;
 
     this.mouseDown = true;
     this.mouseDownSizer = index;
     this.cursor = this.getResizerCursor(index);
     this._mouseDownClones = this._dataStoreService.selectedObjects.map((x) => Object.assign({}, x));
+
+    this._originalBounds = Object.assign({}, this._dataStoreService.selectedBounds);
+    this._originX = this._originalBounds.width / 2;
+    this._originY = this._originalBounds.height / 2;
+    this._cornerDistance = this.getDistanceBetweenTwoPoints(
+      { 
+        x: this._dataStoreService.selectedBounds.x,
+        y: this._dataStoreService.selectedBounds.y,
+      },
+      {
+        x: this._dataStoreService.selectedBounds.x + this._dataStoreService.selectedBounds.width,
+        y: this._dataStoreService.selectedBounds.y + this._dataStoreService.selectedBounds.height
+      }
+    );
   }
 
   onResizerMouseMove(evt: any, index: number): void {
     evt.stopPropagation();
+
+    let pt: DrPoint = this.getRelativeChildPointFromEvent(evt);
     if (this.mouseDownSizer >= 0 &&
         this.mouseDown) {
-      
-      this.resizeObjects({ 
-        x: evt.offsetX + this.cssBounds.left,
-        y: evt.offsetY + this.cssBounds.top
-      }, evt.shiftKey);
+      this._lastEvent = {
+        location: pt, 
+        data: null,
+        shiftKey: evt.shiftKey,
+        ctrlKey: evt.ctrlKey,
+        altKey: evt.altKey
+      };
+
+      this.resizeObjects(pt, this._modifierKeys.shift);
     }
   }
 
   onResizerMouseUp(evt: any, index: number): void {
     evt.stopPropagation();
 
-    this.resizeObjects({ 
-      x: evt.offsetX + this.cssBounds.left,
-      y: evt.offsetY + this.cssBounds.top
-    }, evt.shiftKey);
+    this.resizeObjects(this.getRelativeChildPointFromEvent(evt), this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
@@ -413,7 +483,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     if (this.mouseDownRotator >= 0 &&
       this.mouseDown) {
-      this.rotateObject(this.getRelativePointFromEvent(evt), evt.shiftKey);
+      this.rotateObject(this.getRelativePointFromEvent(evt), this._modifierKeys.shift);
     }
   }
 
@@ -422,10 +492,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     let pt: DrPoint = this.getRelativePointFromEvent(evt);
 
-    this.rotateObject(pt, evt.shiftKey);
+    this.rotateObject(pt, this._modifierKeys.shift);
 
     if (this._dataStoreService.selectedObjects.length > 0) {
-      this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
+      this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation % 360);
       this.setupBounds(); 
     }
 
@@ -484,6 +554,20 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 3:
       case 7:
         return 'resizer-top-bottom';
+    }
+  }
+
+  private getDistanceBetweenTwoPoints(point1: DrPoint, point2: DrPoint): number {
+    let a: number = point1.x - point2.x;
+    let b: number = point1.y - point2.y;
+
+    return Math.sqrt( a*a + b*b );
+  }
+
+  private getRelativeChildPointFromEvent(evt): DrPoint {
+    return {
+      x: evt.clientX - this._location.x,
+      y: evt.clientY - this._location.y
     }
   }
 
@@ -582,14 +666,29 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private rotateObject(location: DrPoint, shiftKey: boolean): void {
-    this.rotation = (360 + this.getRotationAngle(location, shiftKey) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+    let rotation = (360 + this.getRotationAngleFromMouseDownPoint(location) - (0 === this.mouseDownRotator ? 0 : 90)) % 360;
+
+    if (shiftKey) {
+      let snapped: number[] = SNAP_ANGLES.slice(0);
+      this.rotation = snapped.sort((a, b) => {
+        return Math.abs(rotation - a) - Math.abs(rotation - b)
+      })[0] % 360;
+    }
+    else {
+      this.rotation = rotation;
+    }
+
     Object.assign(this.rotateRightBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
     Object.assign(this.rotateBottomBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
     Object.assign(this.cssBounds, { transform: 'rotate(' + this.rotation + 'deg)' });
   }
 
-  private getRotationAngle(location: DrPoint, shiftKey: boolean): number {
-    return Math.round(Math.atan2(location.y - this._mouseDownCentroid.y, location.x - this._mouseDownCentroid.x) * 180 / Math.PI);
+  private getRotationAngle(a: DrPoint, b: DrPoint): number {
+    return Math.round(Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI);
+  }
+
+  private getRotationAngleFromMouseDownPoint(location: DrPoint): number {
+    return this.getRotationAngle(location, this._mouseDownCentroid);
   }
 
   private resizeObjects(location: DrPoint, shiftKey: boolean): void {
@@ -598,46 +697,136 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let hChanges = null;
     let vChanges = null;
 
+ 
+
     switch(this.mouseDownSizer){
-      case 0:
-        hChanges = this.resizeH(b, location, false);
-        vChanges = this.resizeV(b, location, false);
+      case 0: {
+      let quadrant: number = 0;
+        if (location.x > b.x + b.width) {
+          if (location.y > b.y) {
+            quadrant = 4;
+          }
+          else {
+            quadrant = 1;
+          }
+        }
+        else {
+          if (location.y > b.y + b.height) {
+            quadrant = 3;
+          }
+          else {  
+            quadrant = 2;
+          }
+        }
+
+        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 1 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
         break;
+      }
       case 1: 
-        hChanges = this.resizeH(b, location, false);
+        hChanges = this.resizeH(b, location, false, shiftKey, null, 1);
         break;
-      case 2:
-        hChanges = this.resizeH(b, location, false);
-        vChanges = this.resizeV(b, location, true);
+      case 2: {
+        let quadrant: number = 0;
+        if (location.x > b.x + b.width) {
+          if (location.y > b.y) {
+            quadrant = 4;
+          }
+          else {
+            quadrant = 1;
+          }
+        }
+        else {
+          if (location.y > b.y) {
+            quadrant = 3;
+          }
+          else {  
+            quadrant = 2;
+          }
+        }
+
+        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 4 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 2 ? -1 : 1);
         break;
+      }
       case 3:
-        vChanges = this.resizeV(b, location, true);
+        vChanges = this.resizeV(b, location, true, shiftKey, null, 1);
         break;
-      case 4:
-        hChanges = this.resizeH(b, location, true);
-        vChanges = this.resizeV(b, location, true);
+      case 4: {
+          
+        let quadrant: number = 0;
+        if (location.x > b.x) {
+          if (location.y > b.y) {
+            quadrant = 4;
+          }
+          else {
+            quadrant = 1;
+          }
+        }
+        else {
+          if (location.y > b.y) {
+            quadrant = 3;
+          }
+          else {  
+            quadrant = 2;
+          }
+        }
+
+        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 3 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
         break;
+      }
       case 5: 
-        hChanges = this.resizeH(b, location, true);
+        hChanges = this.resizeH(b, location, true, shiftKey, null, 1);
         break;
-      case 6:
-        hChanges = this.resizeH(b, location, true);
-        vChanges = this.resizeV(b, location, false);
+      case 6: {
+        let quadrant: number = 0;
+        if (location.x > b.x) {
+          if (location.y > b.y + b.height) {
+            quadrant = 4;
+          }
+          else {
+            quadrant = 1;
+          }
+        }
+        else {
+          if (location.y > b.y + b.height) {
+            quadrant = 3;
+          }
+          else {  
+            quadrant = 2;
+          }
+        }
+
+        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 2 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 4 ? -1 : 1);
         break;
+      }
       case 7:
-        vChanges = this.resizeV(b, location, false);
+        vChanges = this.resizeV(b, location, false, shiftKey, null, 1);
         break;
     }
 
-    
+    let xSizer: number = 0;
+    let ySizer: number = 0;
 
+    if (vChanges && vChanges.cssBounds && vChanges.cssBounds.top) {
+      this._originY = this._originalBounds.y + this._originalBounds.height / 2 - vChanges.cssBounds.top;
+      xSizer = HALF_SIZER;
+    }
+
+    if (hChanges && hChanges.cssBounds && hChanges.cssBounds.left) {
+      this._originX = this._originalBounds.x + this._originalBounds.width / 2 - hChanges.cssBounds.left;
+      ySizer = HALF_SIZER;
+    }
 
     Object.assign(this.cssBounds,
       null !== hChanges && null !== hChanges.cssBounds ? hChanges.cssBounds : {},
-      null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {}
+      null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {},
+      { 
+        "transform-origin": (this._originX + xSizer) + "px " + (this._originY + ySizer) + "px"
+      }
     );
-    
-
     Object.assign(this.boundingBoxObject,
       null !== hChanges && null !== hChanges.boundingBoxObject ? hChanges.boundingBoxObject : {},
       null !== vChanges && null !== vChanges.boundingBoxObject ? vChanges.boundingBoxObject : {}
@@ -647,24 +836,64 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   }
 
-  private resizeH(b: BoundingBox, location: DrPoint, opposite: boolean): any {
+  private resizeH(b: BoundingBox, location: DrPoint, opposite: boolean, shiftKey: boolean, stationaryPt: DrPoint, quadrantMultiplier: number): any {
 
     let returnValue: any = null;
-
+    let newLocation: DrPoint = location;
     let left: number = 0;
     let width: number = 0;
     let elementWidth: number = 0
     let threshold: number = opposite ? b.x : b.x + b.width;
+  
+    
 
-    if (location.x < threshold) {
-      left = location.x - HALF_SIZER;
-      width = threshold + HALF_SIZER - left;
-      elementWidth = threshold - location.x;
+    if (newLocation.x < threshold) {
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
+        newLocation = Object.assign({}, newLocation, {
+          x: threshold - this._originalBounds.width * scale * quadrantMultiplier
+        });
+      }
+ 
+      
+      if (shiftKey && -1 === quadrantMultiplier) {
+        left = threshold - HALF_SIZER;
+        width = newLocation.x + HALF_SIZER - left;
+        elementWidth = newLocation.x - threshold;
+      }
+      else {
+        left = newLocation.x - HALF_SIZER;
+        width = threshold + HALF_SIZER - left;
+        elementWidth = threshold - newLocation.x;
+      }
+      
     }
     else {
-      left = threshold - HALF_SIZER;
-      width = location.x + HALF_SIZER - left;
-      elementWidth = location.x - threshold;
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
+        newLocation = Object.assign({}, newLocation, {
+          x: threshold + this._originalBounds.width * scale * quadrantMultiplier
+        });
+        
+      }
+
+
+      if (shiftKey && -1 === quadrantMultiplier) {
+        left = newLocation.x - HALF_SIZER;
+        width = threshold + HALF_SIZER - left;
+        elementWidth = threshold - newLocation.x;
+      }
+      else {
+        left = threshold - HALF_SIZER;
+        width = newLocation.x + HALF_SIZER - left;
+        elementWidth = newLocation.x - threshold;
+      }
+
+      
     }
     
     if (width > 0 && elementWidth > 0) {
@@ -682,26 +911,64 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     return returnValue;
   }
 
-  private resizeV(b: BoundingBox, location: DrPoint, opposite: boolean): any {
+  private resizeV(b: BoundingBox, location: DrPoint, opposite: boolean, shiftKey: boolean, stationaryPt: DrPoint, quadrantMultiplier: number): any {
     let returnValue: any = null;
     let top: number = 0;
+    let newLocation: DrPoint = location;
     let height: number = 0;
     let elementHeight: number = 0;
     let threshold: number = opposite ? b.y : b.y + b.height;
+    
+    
+    if (newLocation.y < threshold) {
+      
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
 
-    if (location.y < threshold) {
-      top = location.y - HALF_SIZER;
-      height = threshold + HALF_SIZER - top;
-      elementHeight = threshold - location.y;
+        newLocation = Object.assign({}, newLocation, {
+          y: threshold - this._originalBounds.height * scale * quadrantMultiplier
+        });
+      }
+
+      if (shiftKey && quadrantMultiplier === -1) {
+        top = threshold - HALF_SIZER;
+        height = newLocation.y + HALF_SIZER - top;
+        elementHeight = newLocation.y - threshold;
+      }
+      else {
+        top = newLocation.y - HALF_SIZER;
+        height = threshold + HALF_SIZER - top;
+        elementHeight = threshold - newLocation.y;
+      }
+
+      
     }
     else {
-      top = threshold - HALF_SIZER;
-      height = location.y + HALF_SIZER - top;
-      elementHeight = location.y - threshold;
+      if (shiftKey && null !== stationaryPt) {
+        let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
+        let scale = mouseDistance / this._cornerDistance;
+
+        newLocation = Object.assign({}, newLocation, {
+          y: threshold + this._originalBounds.height * scale * quadrantMultiplier
+        });
+        
+      }
+
+      if (shiftKey && quadrantMultiplier === -1) {
+        top = newLocation.y - HALF_SIZER;
+        height = threshold + HALF_SIZER - top;
+        elementHeight = threshold - newLocation.y;
+      }
+      else {
+        top = threshold - HALF_SIZER;
+        height = newLocation.y + HALF_SIZER - top;
+        elementHeight = newLocation.y - threshold;
+      }
+      
     }
     
     if (height > 0 && elementHeight > 0) {
-
       returnValue = {
         cssBounds: {
           top: top,
@@ -714,6 +981,15 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
 
     return returnValue;
+  }
+
+  private getRotatedPoint(point: DrPoint, originX: number, originY: number, angle: number): DrPoint {
+    let newX = ((originX - point.x) * Math.cos(angle) - (originY - point.y) * Math.sin(angle)) + point.x;
+    let newY = ((originY - point.y) * Math.cos(angle) + (originX - point.x) * Math.sin(angle)) + point.y;
+    return {
+      x: newX,
+      y: newY
+    };
   }
 
   private applyResizeChanges(): void {
