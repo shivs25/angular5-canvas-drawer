@@ -119,7 +119,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Shift":
         case "Control":
         case "Alt":
-          this._modifierKeys[evt.key.toLower()] = true;
+          this._modifierKeys[evt.key.toLowerCase()] = true;
         
 
           break;
@@ -135,7 +135,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Shift":
         case "Control":
         case "Alt":
-          this._modifierKeys[evt.key.toLower()] = false;
+          this._modifierKeys[evt.key.toLowerCase()] = false;
           
           
           break;
