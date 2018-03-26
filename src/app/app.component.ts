@@ -315,7 +315,7 @@ export class AppComponent implements OnInit {
     let text: DrText = createDrText({
       x: 100, 
       y: 100,
-      width: 200,
+      width: 100,
       height: 100,
       vAlignment: DrTextAlignment.NEAR,
       hAlignment:  DrTextAlignment.NEAR, 
