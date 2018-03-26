@@ -30,7 +30,7 @@ fdescribe('Maps', function () {
         
     });
   
-    it('CanvasDrawer_ExpectCanvasLoads', () => {
+    xit('CanvasDrawer_ExpectCanvasLoads', () => {
       utilities.normalPause();
 
       expect(browser.isElementPresent(by.xpath('.//*[.="Undo"]'))).toBeTruthy();
@@ -403,9 +403,11 @@ fdescribe('Maps', function () {
       utilities.shortPause();
       
       browser.actions().
-        mouseMove(element(by.css(containerCss + "ellipse"))).
-        click().
+        mouseDown(element(by.css("ellipse"))).
+        mouseUp().
         mouseMove({ x: 200, y: 200 }).
+        click().
+        mouseMove({ x: -100, y: 0 }).
         doubleClick().
         perform();
 
@@ -457,6 +459,28 @@ fdescribe('Maps', function () {
         width: 200,
         height: 200
       }));
+    });
+    xit('CanvasDrawer_UsePenToolWhileHoldingShiftKey_ExpectObjectToSnapToAngle', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Pen");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("app-editable-drawer app-drawer svg"))).
+        mouseUp().
+        mouseMove({ x: -100, y: 200 }).
+        click().
+        mouseMove({ x: -10, y: 10 }).
+        sendKeys(protractor.Key.SHIFT).
+        click().
+        mouseMove({ x: 0, y: -10 }).
+        sendKeys(protractor.Key.NULL).
+        doubleClick().
+        perform();
+
+      utilities.debugPause();
+      utilities.debugPause();
     });
 
     //Group / Ungroup

@@ -154,7 +154,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Alt":
           this._modifierKeys[evt.key.toLowerCase()] = false;
           this.onMouseMove(this._lastEvent);
-
           break;
       }
     }
