@@ -286,9 +286,9 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
-public getSvgText(item: DrText): TextInfo[] {
+public getSvgText(item: DrObject): TextInfo[] {
 
-  return this._textRenderService.getSvgText(item);
+  return item.drType === DrType.TEXT ? this._textRenderService.getSvgText(item as DrText) : null;
 }
 
   public moveObjectsDown(items: DrObject[]): void {

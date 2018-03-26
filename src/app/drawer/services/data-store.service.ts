@@ -30,7 +30,7 @@ import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject, createDrGroupedObject } from '../models/dr-grouped-object';
 import { cloneDeep, updateChildItemIds } from '../utilities';
 import { DrImage } from '../models/dr-image';
-import { DrText } from '../../../../build/models/dr-text';
+import { DrText } from '../models/dr-text';
 import { TextRenderingService } from './text-rendering.service';
 import { TextInfo } from '../models/text-info';
 
