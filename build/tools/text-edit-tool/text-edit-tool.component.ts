@@ -241,7 +241,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getMarginLeft(offsetWidth): string {
-    console.log(offsetWidth);
+    
     switch(this.currentObject.hAlignment) {
       case DrTextAlignment.NEAR:
         return "0";
