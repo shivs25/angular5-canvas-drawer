@@ -196,7 +196,7 @@ fdescribe('Maps', function () {
         width: 100,
         height: 100
       }));
-    });
+  });
 
     //Undo / Redo
     it('CanvasDrawer_MoveThenUndo_ExpectObjectToReturnToOriginalPosition', () => {
@@ -1019,6 +1019,66 @@ fdescribe('Maps', function () {
 
       expect(element(by.css("#rotate-right")).isPresent()).toBeFalsy();
       expect(element(by.css("#rotate-bottom")).isPresent()).toBeFalsy();
+  });
+
+    //Shift rotate (snap to 45 degree angle)
+    it('CanvasDrawer_SnapRotateObject_ExpectObjectToBeRotatedAt45DegreeAngle', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css("#rotate-right"))).
+        mouseMove({ x: -100, y: -50 }). // Odd movement, so it's not an obvious 45 degree change
+        sendKeys(protractor.Key.SHIFT).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      //utilities.debugPause();
+
+      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+        expect(value.includes("transform: rotate(315deg)")).toBeTruthy();
+      });
+    });
+
+    //Shift resize of already rotated object
+    it('CanvasDrawer_AddEllipseThenHoldShiftKey_ExpectObjectSizeToBeResized', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.rotateSelectedObject("#rotate-right", 50, 50);
+      utilities.normalPause();
+      
+      browser.actions().
+        mouseDown(element(by.css("#resizer-4"))).
+        mouseMove({ x: -100, y: -50 }).
+        sendKeys(protractor.Key.SHIFT).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
+        width: 172.07049560546875,
+        height: 172.07049560546875
+      }));
     });
 
     //Es-ca-pé - it's spelled just like the word escape
