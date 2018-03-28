@@ -1,4 +1,5 @@
 import { DrObject } from '../models/dr-object';
+import { DrPoint } from '../models/dr-point';
 import { BoundingBox } from '../models/bounding-box';
 export declare class DrawerObjectHelperService {
     constructor();
@@ -12,5 +13,7 @@ export declare class DrawerObjectHelperService {
         height: number;
     };
     getBoundingBox(drObjs: DrObject[]): BoundingBox;
+    getRotatedPoint(x: number, y: number, originX: number, originY: number, angle: number): DrPoint;
+    getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox;
     private getBoundingBoxForObject(drObj);
 }
