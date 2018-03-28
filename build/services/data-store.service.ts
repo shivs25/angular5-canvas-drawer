@@ -30,6 +30,9 @@ import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject, createDrGroupedObject } from '../models/dr-grouped-object';
 import { cloneDeep, updateChildItemIds } from '../utilities';
 import { DrImage } from '../models/dr-image';
+import { DrText } from '../models/dr-text';
+import { TextRenderingService } from './text-rendering.service';
+import { TextInfo } from '../models/text-info';
 
 const DUPLICATE_OFFSET_AMOUNT = 10;
 
@@ -51,7 +54,8 @@ export class DataStoreService {
   constructor(
     private _ngRedux: NgRedux<IDrawerAppState>, 
     private _objectHelperService: DrawerObjectHelperService,
-    private _changeService: ChangeHelperService
+    private _changeService: ChangeHelperService,
+    private _textRenderService: TextRenderingService
   ) { }
 
   //=========State=========
@@ -281,6 +285,11 @@ export class DataStoreService {
     this.resetSelection();
     this._duplicateOffset = 1;
   }
+
+public getSvgText(item: DrObject): TextInfo[] {
+
+  return item.drType === DrType.TEXT ? this._textRenderService.getSvgText(item as DrText) : null;
+}
 
   public moveObjectsDown(items: DrObject[]): void {
 

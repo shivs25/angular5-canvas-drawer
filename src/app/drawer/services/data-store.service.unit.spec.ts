@@ -6,7 +6,7 @@ import { DrawerObjectHelperService } from './drawer-object-helper.service';
 import { ChangeHelperService  } from './change-helper.service';
 import { rootReducer, INITIAL_STATE, IDrawerAppState } from '../store';
 
-import { MockRedux, MockChangeHelperService, MockDrawerObjectHelperService } from '../helpers/mocks';
+import { MockRedux, MockChangeHelperService, MockDrawerObjectHelperService, MockTextRenderingService } from '../helpers/mocks';
 import { createDrRect, DrRect } from '../models/dr-rect';
 import { DrObject } from '../models/dr-object';
 import { SET_ELEMENTS, SELECT_OBJECTS } from '../actions';
@@ -18,12 +18,14 @@ describe('DataStoreService', () => {
   let changeService: any;
   let redux;
   let service: DataStoreService;
+  let textRenderingService: any;
 
   beforeEach(() => {
    redux = new MockRedux({});
     changeService = new MockChangeHelperService();
     objectHelperService = new MockDrawerObjectHelperService();
-    service = new DataStoreService(redux, objectHelperService, changeService);
+    textRenderingService = new MockTextRenderingService();
+    service = new DataStoreService(redux, objectHelperService, changeService, textRenderingService);
   });
 
   it('should be created', () => {

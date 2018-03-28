@@ -8,10 +8,13 @@ import { DrawerObjectHelperService } from '../services/drawer-object-helper.serv
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
+import { TextRenderingService } from './text-rendering.service';
+import { TextInfo } from '../models/text-info';
 export declare class DataStoreService {
     private _ngRedux;
     private _objectHelperService;
     private _changeService;
+    private _textRenderService;
     undid: EventEmitter<void>;
     redid: EventEmitter<void>;
     selectionChanged: EventEmitter<DrObject[]>;
@@ -21,7 +24,7 @@ export declare class DataStoreService {
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
     private _duplicateOffset;
-    constructor(_ngRedux: NgRedux<IDrawerAppState>, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService);
+    constructor(_ngRedux: NgRedux<IDrawerAppState>, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _textRenderService: TextRenderingService);
     elements: DrObject[];
     readonly selectedObjects: DrObject[];
     readonly selectedBounds: BoundingBox;
@@ -45,6 +48,7 @@ export declare class DataStoreService {
     setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox): void;
     setText(items: DrObject[], text: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
+    getSvgText(item: DrObject): TextInfo[];
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
     addObjects(items: DrObject[]): void;

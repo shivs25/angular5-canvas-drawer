@@ -1,6 +1,7 @@
 import { NgRedux } from "@angular-redux/store";
 import { ChangeHelperService } from "../services/change-helper.service";
 import { DrawerObjectHelperService } from "../services/drawer-object-helper.service";
+import { TextRenderingService } from '../services/text-rendering.service';
 export declare class MockRedux extends NgRedux<any> {
     private state;
     constructor(state: any);
@@ -16,4 +17,6 @@ export declare class MockRedux extends NgRedux<any> {
 export declare class MockChangeHelperService extends ChangeHelperService {
 }
 export declare class MockDrawerObjectHelperService extends DrawerObjectHelperService {
+}
+export declare class MockTextRenderingService extends TextRenderingService {
 }

@@ -31,6 +31,9 @@ Date: `2018-03-23` VERSION: `1.0.33-beta.45`
 - Added public function to find rotated point
 - Added public function to find rotated bounding box
 
+Date: `2018-03-26` VERSION: `1.0.33-beta.44`
+- Added service call to export text object as SVG text
+
 Date: `2018-03-23` VERSION: `1.0.33-beta.43`
 - Resize rotated objects
 
