@@ -9,6 +9,7 @@ fdescribe('Maps', function () {
   let utilities: Utilities = new Utilities();
   let canvas: CanvasPage = new CanvasPage();
   let containerCss = "app-editable-drawer app-editor-tool ";
+  let sizeBuffer = 3;
 
     beforeAll(() => {
         //browser.ignoreSynchronization = true;
@@ -52,10 +53,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(7)), 0, -100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 200
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_BottomResize_ExpectObjectToBeResizedVerticallyDownwards', () => {
       utilities.normalPause();
@@ -72,10 +75,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(3)), 0, 100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 200
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_LeftResize_ExpectObjectToBeResizedHorizontallyLeft', () => {
       utilities.normalPause();
@@ -92,10 +97,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(1)), -100, 0);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 100
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(100 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(200 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_RightResize_ExpectObjectToBeResizedHorizontallyRight', () => {
       utilities.normalPause();
@@ -112,10 +119,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(5)), -100, 0);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 200
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_TopLeftResize_ExpectObjectToBeResizedDiagonally', () => {
       utilities.normalPause();
@@ -132,10 +141,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(0)), -100, -100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 200
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(200 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_BottomLeftResize_ExpectObjectToBeResizedDiagonally', () => {
       utilities.normalPause();
@@ -152,10 +163,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(2)), -100, 100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 200
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(200 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_BottomRightResize_ExpectObjectToBeResizedDiagonally', () => {
       utilities.normalPause();
@@ -172,10 +185,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(4)), -100, -100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 100
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(100 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_TopRightResize_ExpectObjectToBeResizedDiagonally', () => {
       utilities.normalPause();
@@ -192,10 +207,12 @@ fdescribe('Maps', function () {
       canvas.moveObjectByOffset(by.css(canvas.getResizerCssByIndex(6)), -100, 100);
       utilities.normalPause();
 
-      expect(element(by.css(containerCss + "rect")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 100
-      }));
+      element(by.css(containerCss + "rect")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(100 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
   });
 
     //Undo / Redo
@@ -434,10 +451,12 @@ fdescribe('Maps', function () {
 
       utilities.normalPause();
 
-      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 200
-      }));
+      element(by.css("ellipse")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(200 - sizeBuffer);
+      });
     });
     it('CanvasDrawer_AddEllipseThenHoldShiftKey_ExpectObjectSizeToBecomeSquareHorizontally', () => {
       utilities.normalPause();
@@ -455,10 +474,12 @@ fdescribe('Maps', function () {
 
       utilities.normalPause();
 
-      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
-        width: 200,
-        height: 200
-      }));
+      element(by.css("ellipse")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(200 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(200 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(200 - sizeBuffer);
+      });
     });
     xit('CanvasDrawer_UsePenToolWhileHoldingShiftKey_ExpectObjectToSnapToAngle', () => {
       utilities.normalPause();
@@ -1120,9 +1141,11 @@ fdescribe('Maps', function () {
       
       utilities.normalPause();
 
-      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
-        width: 100,
-        height: 100
-      }));
+      element(by.css("ellipse")).getSize().then(function (eleSize) {
+        expect(eleSize.height).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.height).toBeGreaterThan(100 - sizeBuffer);
+        expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
+        expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
+      });
     });
 });
