@@ -160,6 +160,10 @@ export class DrawerObjectHelperService {
     };
   }
 
+  public getRotatedBounds(item: DrObject) {
+    return  this.getRotatedBoundingBox(this.getBoundingBox([item]), item.rotation);
+  }
+
   public getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox {
     let returnValue: BoundingBox = createBoundingBox();
     //top left
@@ -167,7 +171,7 @@ export class DrawerObjectHelperService {
     let y1: number = bb.y;
     //bottom left
     let x2: number = bb.x;
-    let y2: number = bb.y + bb.width;
+    let y2: number = bb.y + bb.height;
     //top right
     let x3: number = bb.x + bb.width;
     let y3: number = bb.y;

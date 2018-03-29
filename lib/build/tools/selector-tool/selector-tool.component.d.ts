@@ -30,8 +30,8 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     mouseDownSizer: number;
     mouseDownRotator: number;
     mouseDown: boolean;
-    invisibleStyle: any;
     selectionStyle: any;
+    invisibleStyle: any;
     private _location;
     private _subRedid;
     private _subUndid;
