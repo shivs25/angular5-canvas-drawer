@@ -153,8 +153,6 @@ describe('TextRenderingService', () => {
 
     let r = service.getSvgText(d);
 
-    console.log(r[0].text);
-    console.log(r[1].text);
     expect(r.length).toEqual(2);
   });
 
