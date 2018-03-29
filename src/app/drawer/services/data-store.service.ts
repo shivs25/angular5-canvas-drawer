@@ -574,14 +574,17 @@ public getSvgText(item: DrObject): TextInfo[] {
   }
 
   private resetSelection(): void {
-    let newArray: DrObject[] = [];
+    let items: DrObject[] = [];
     for(let o of this.selectedObjects) {
-      newArray.push(this.elements.find((t: DrObject) => t.id === o.id));
+      items.push(this.elements.find((t: DrObject) => t.id === o.id));
     }
     this._ngRedux.dispatch({
       type: SELECT_OBJECTS,
-      items: newArray,
-      selectedBounds: this._objectHelperService.getBoundingBox(newArray)
+      items: items,
+      selectedBounds: items.length > 0 ? 
+      (items.length > 1 ? this._objectHelperService.getBoundingBoxForBounds(items.map((d) => this._objectHelperService.getRotatedBounds(d))) 
+       : this._objectHelperService.getBoundingBox(items)) 
+    : null
     });
     this.selectedBoundsChanged.emit(this.selectedBounds);
   }
@@ -591,7 +594,10 @@ public getSvgText(item: DrObject): TextInfo[] {
     this._ngRedux.dispatch({ 
       type: SELECT_OBJECTS, 
       items: items, 
-      selectedBounds: items.length > 0 ? this._objectHelperService.getBoundingBox(items) : null
+      selectedBounds: items.length > 0 ? 
+        (items.length > 1 ? this._objectHelperService.getBoundingBoxForBounds(items.map((d) => this._objectHelperService.getRotatedBounds(d))) 
+         : this._objectHelperService.getBoundingBox(items)) 
+      : null
     });
     this.selectionChanged.emit(this.selectedObjects);
   }
