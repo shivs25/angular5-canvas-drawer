@@ -989,8 +989,8 @@ fdescribe('Maps', function () {
       utilities.normalPause();
 
       //utilities.debugPause();
-
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+      
+      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
         expect(value.includes("transform: rotate(15deg)")).toBeTruthy();
       });
     });
@@ -1011,7 +1011,7 @@ fdescribe('Maps', function () {
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
         expect(value.includes("transform: rotate(345deg)")).toBeTruthy();
       });
     });
@@ -1040,7 +1040,34 @@ fdescribe('Maps', function () {
 
       expect(element(by.css("#rotate-right")).isPresent()).toBeFalsy();
       expect(element(by.css("#rotate-bottom")).isPresent()).toBeFalsy();
-  });
+    });
+    it('CanvasDrawer_RotateObject_ExpectRedOutlineToMatchObjectAfterRotation', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.rotateSelectedObject("#rotate-right", 50, 50);
+      utilities.normalPause();
+
+      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (valueRed) {
+        valueRed = valueRed.split("rotate(")[1].replace("deg);", "");
+        
+        element(by.css("app-selector-tool app-drawer rect")).getAttribute("transform").then(function (valueObj) {
+          valueObj = valueObj.split(",")[0].replace("rotate(", "");
+
+          expect(valueRed).toEqual(valueObj);
+        });
+      });
+
+      utilities.normalPause();
+    });
 
     //Shift rotate (snap to 45 degree angle)
     it('CanvasDrawer_SnapRotateObject_ExpectObjectToBeRotatedAt45DegreeAngle', () => {
@@ -1065,7 +1092,7 @@ fdescribe('Maps', function () {
 
       //utilities.debugPause();
 
-      element(by.css("app-selector-tool svg.grabber")).getAttribute("style").then(function (value) {
+      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
         expect(value.includes("transform: rotate(315deg)")).toBeTruthy();
       });
     });
@@ -1119,7 +1146,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css("ellipse")).isPresent()).toBeFalsy();
     });
-    it('CanvasDrawer_PressEscapeWhileResizingObject_ExpectObjectToRemainOriginalSize', () => {
+    xit('CanvasDrawer_PressEscapeWhileResizingObject_ExpectObjectToRemainOriginalSize', () => {
       utilities.normalPause();
 
       canvas.selectButton("Ellipse");

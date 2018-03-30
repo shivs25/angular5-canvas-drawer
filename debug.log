@@ -177,3 +177,21 @@
 [0324/143353.564:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [0324/143353.566:ERROR:exception_snapshot_win.cc(88)] thread ID 7172 not found in process
 [0324/143353.566:WARNING:crash_report_exception_handler.cc(62)] ProcessSnapshotWin::Initialize failed
+[0330/142009.116:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.119:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.119:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.120:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.120:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.120:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/142009.120:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0330/142009.120:ERROR:exception_snapshot_win.cc(88)] thread ID 3272 not found in process
+[0330/142009.120:WARNING:crash_report_exception_handler.cc(62)] ProcessSnapshotWin::Initialize failed
+[0330/152110.919:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0330/152110.920:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
+[0330/152110.920:ERROR:exception_snapshot_win.cc(88)] thread ID 8068 not found in process
+[0330/152110.920:WARNING:crash_report_exception_handler.cc(62)] ProcessSnapshotWin::Initialize failed
