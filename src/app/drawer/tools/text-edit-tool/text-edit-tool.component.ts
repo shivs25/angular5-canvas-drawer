@@ -158,7 +158,7 @@ export class TextEditToolComponent implements OnInit {
       "outline": "none",
       "opacity": "0",
       "color": this.currentObject.fontColor,
-      "font-size": this.currentObject.size + "px",
+      "font-size": this.currentObject.size + "pt",
       "line-height": (this.currentObject.size + TEXT_PADDING) + "px",
       "font-family": this.currentObject.fontFamily,
       "text-align": this.getHAlign(),
