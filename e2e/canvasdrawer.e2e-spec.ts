@@ -31,7 +31,7 @@ fdescribe('Maps', function () {
         
     });
   
-    fit('CanvasDrawer_ExpectCanvasLoads', () => {
+    xit('CanvasDrawer_ExpectCanvasLoads', () => {
       utilities.normalPause();
 
       expect(browser.isElementPresent(by.xpath('.//*[.="Undo"]'))).toBeTruthy();
@@ -1247,7 +1247,7 @@ fdescribe('Maps', function () {
 
       utilities.normalPause();
     });
-    fit('CanvasDrawer_PressLeftArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsLeft', () => {
+    it('CanvasDrawer_PressLeftArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsLeft', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
@@ -1282,7 +1282,7 @@ fdescribe('Maps', function () {
 
       utilities.normalPause();
     });
-    fit('CanvasDrawer_PressRightArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsRight', () => {
+    it('CanvasDrawer_PressRightArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsRight', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
