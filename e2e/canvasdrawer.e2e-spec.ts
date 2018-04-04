@@ -31,7 +31,7 @@ fdescribe('Maps', function () {
         
     });
   
-    xit('CanvasDrawer_ExpectCanvasLoads', () => {
+    fit('CanvasDrawer_ExpectCanvasLoads', () => {
       utilities.normalPause();
 
       expect(browser.isElementPresent(by.xpath('.//*[.="Undo"]'))).toBeTruthy();
@@ -1174,5 +1174,147 @@ fdescribe('Maps', function () {
         expect(eleSize.width).toBeLessThan(100 + sizeBuffer);
         expect(eleSize.width).toBeGreaterThan(100 - sizeBuffer);
       });
+    });
+
+    //Micromovements
+    it('CanvasDrawer_PressUpArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsUp', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var loc;
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        loc = location;
+      });
+
+      utilities.normalPause();
+
+      browser.actions().
+        sendKeys(protractor.Key.ARROW_UP).
+        sendKeys(protractor.Key.ARROW_UP).
+        sendKeys(protractor.Key.ARROW_UP).
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        expect(location.y).toEqual(loc.y - 3);
+      });
+
+      utilities.normalPause();
+    });
+    it('CanvasDrawer_PressDownArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsDown', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var loc;
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        loc = location;
+      });
+
+      utilities.normalPause();
+
+      browser.actions().
+        sendKeys(protractor.Key.ARROW_DOWN).
+        sendKeys(protractor.Key.ARROW_DOWN).
+        sendKeys(protractor.Key.ARROW_DOWN).
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        expect(location.y).toEqual(loc.y + 3);
+      });
+
+      utilities.normalPause();
+    });
+    fit('CanvasDrawer_PressLeftArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsLeft', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var loc;
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        loc = location;
+      });
+
+      utilities.normalPause();
+
+      browser.actions().
+        sendKeys(protractor.Key.ARROW_LEFT).
+        sendKeys(protractor.Key.ARROW_LEFT).
+        sendKeys(protractor.Key.ARROW_LEFT).
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        expect(location.x).toEqual(loc.x - 3);
+      });
+
+      utilities.normalPause();
+    });
+    fit('CanvasDrawer_PressRightArrowThriceWithObjectSelected_ExpectObjectToMoveThreePixelsRight', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      var loc;
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        loc = location;
+      });
+
+      utilities.normalPause();
+
+      browser.actions().
+        sendKeys(protractor.Key.ARROW_RIGHT).
+        sendKeys(protractor.Key.ARROW_RIGHT).
+        sendKeys(protractor.Key.ARROW_RIGHT).
+        sendKeys(protractor.Key.NULL).
+        perform();
+
+      utilities.normalPause();
+
+      element(by.css(containerCss + 'rect.clickable')).getLocation().then(function (location) {
+        expect(location.x).toEqual(loc.x + 3);
+      });
+
+      utilities.normalPause();
     });
 });
