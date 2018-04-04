@@ -30,6 +30,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     mouseDownSizer: number;
     mouseDownRotator: number;
     mouseDown: boolean;
+    keyDown: boolean;
     selectionStyle: any;
     invisibleStyle: any;
     private _location;
@@ -74,6 +75,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     getResizerX(index: number): number;
     getResizerY(index: number): number;
     getResizerCursor(index: number): string;
+    private microMoveObjects(diffX, diffY);
     private getDistanceBetweenTwoPoints(point1, point2);
     private getRelativeChildPointFromEvent(evt);
     private getRelativePointFromEvent(evt);
