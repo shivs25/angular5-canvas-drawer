@@ -43,7 +43,7 @@
                                             boundingBoxObject && 
                                             canResize && 
                                             mouseDownRotator < 0 &&
-                                            (!mouseDown || mouseDownSizer >= 0)"
+                                            ((!mouseDown && !keyDown) || mouseDownSizer >= 0)"
         (mousedown)="onResizerMouseDown($event, i)" 
         (mousemove)="onResizerMouseMove($event, i)"
         (mouseup)="onResizerMouseUp($event, i)"
@@ -56,7 +56,7 @@
   </svg:g>
 </svg>
 
-<svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)"
+<svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
   [ngStyle]="rotateRightBounds" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
    <rect id='rotate-right'
         class='crosshair'
@@ -70,7 +70,7 @@
         fill="red">
     </rect>
 </svg>
-<svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && (!mouseDown || mouseDownRotator >= 0)"
+<svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
   [ngStyle]="rotateBottomBounds" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
   <rect id='rotate-bottom'
         class='crosshair'

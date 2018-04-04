@@ -71,6 +71,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   mouseDownRotator: number = -1;
   mouseDown: boolean = false;
 
+  keyDown: boolean = false;
   
   selectionStyle: any;
   invisibleStyle: any = INVISIBLE_STYLE;
@@ -146,6 +147,30 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           this.onMouseMove(this._lastEvent);
 
           break;
+        case "ArrowUp":
+          this.keyDown = true;
+          this.microMoveObjects(0, this.isShiftDown() ? -10 : -1);
+          evt.stopPropagation();
+          evt.preventDefault();
+          break;
+        case "ArrowDown":
+          this.keyDown = true;
+          this.microMoveObjects(0, this.isShiftDown() ? 10 : 1);
+          evt.stopPropagation();
+          evt.preventDefault();
+          break;
+        case "ArrowLeft":
+          this.keyDown = true;
+          this.microMoveObjects(this.isShiftDown() ? -10 : -1, 0);
+          evt.stopPropagation();
+          evt.preventDefault();
+          break;
+        case "ArrowRight":
+          this.keyDown = true;
+          this.microMoveObjects(this.isShiftDown() ? 10 : 1, 0);
+          evt.stopPropagation();
+          evt.preventDefault();
+          break;
       }
     }
     
@@ -160,6 +185,19 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "Alt":
           this._modifierKeys[evt.key.toLowerCase()] = false;
           this.onMouseMove(this._lastEvent);
+          break;
+        case "ArrowUp":
+        case "ArrowDown":
+        case "ArrowLeft":
+        case "ArrowRight":
+          this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+            x: this.cssBounds.left + HALF_SIZER,
+            y: this.cssBounds.top + HALF_SIZER,
+            width: this.cssBounds.width - SIZER_SIZE,
+            height: this.cssBounds.height - SIZER_SIZE
+          });
+          evt.stopPropagation();
+          this.keyDown = false;
           break;
       }
     }
@@ -556,6 +594,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 7:
         return 'resizer-top-bottom';
     }
+  }
+
+  private microMoveObjects(diffX: number, diffY: number) {
+    Object.assign(this.cssBounds, {
+      left: this.cssBounds.left + diffX,
+      top: this.cssBounds.top + diffY
+    });
   }
 
   private getDistanceBetweenTwoPoints(point1: DrPoint, point2: DrPoint): number {
