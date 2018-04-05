@@ -63,6 +63,7 @@ export declare class DataStoreService {
     private areElementArraysTheSameOrder(arr1, arr2);
     private alignObjects(items, alignment);
     private resetSelection();
+    private buildRotatedPoints(items);
     selectObjects(items: DrObject[]): void;
     beginEdit(): void;
     endEdit(): void;

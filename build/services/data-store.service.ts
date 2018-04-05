@@ -33,6 +33,7 @@ import { DrImage } from '../models/dr-image';
 import { DrText } from '../models/dr-text';
 import { TextRenderingService } from './text-rendering.service';
 import { TextInfo } from '../models/text-info';
+import { DrPoint } from '../models/dr-point';
 
 const DUPLICATE_OFFSET_AMOUNT = 10;
 
@@ -583,11 +584,21 @@ public getSvgText(item: DrObject): TextInfo[] {
       type: SELECT_OBJECTS,
       items: items,
       selectedBounds: items.length > 0 ? 
-      (items.length > 1 ? this._objectHelperService.getBoundingBoxForBounds(items.map((d) => this._objectHelperService.getRotatedBounds(d))) 
+      (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items)) 
        : this._objectHelperService.getBoundingBox(items)) 
     : null
     });
     this.selectedBoundsChanged.emit(this.selectedBounds);
+  }
+
+  private buildRotatedPoints(items: DrObject[]): DrPoint[] {
+    let returnValue: DrPoint[] = []
+
+    for(let i: number = 0; i < items.length; i++) {
+      returnValue = returnValue.concat(this._objectHelperService.getRotatedPoints(items[i]));
+    }
+
+    return  returnValue;
   }
 
   //=========Selection========
@@ -596,7 +607,7 @@ public getSvgText(item: DrObject): TextInfo[] {
       type: SELECT_OBJECTS, 
       items: items, 
       selectedBounds: items.length > 0 ? 
-        (items.length > 1 ? this._objectHelperService.getBoundingBoxForBounds(items.map((d) => this._objectHelperService.getRotatedBounds(d))) 
+        (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items)) 
          : this._objectHelperService.getBoundingBox(items)) 
       : null
     });

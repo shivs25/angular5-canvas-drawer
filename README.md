@@ -27,10 +27,14 @@ To use this library in your newly generated component, add the `app-drawer` to y
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
-Date: `2018-04-06` VERSION: `1.0.33-beta.52`
+Date: `2018-04-05` VERSION: `1.0.33-beta.53`
+- Added lines
+- Added micro-movements
+
+Date: `2018-04-04` VERSION: `1.0.33-beta.52`
 - Fixed naming of Grouped Objects
 
-Date: `2018-04-06` VERSION: `1.0.33-beta.51`
+Date: `2018-04-04` VERSION: `1.0.33-beta.51`
 - Edited text tool to no longer use a placehoder text string.
 
 Date: `2018-04-02` VERSION: `1.0.33-beta.50`

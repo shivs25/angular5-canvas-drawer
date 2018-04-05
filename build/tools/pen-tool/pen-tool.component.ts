@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { DrPolygon, createDrPolygon } from '../../models/dr-polygon';
+import { DrPolygon, createDrPolygon, createDrPolyline } from '../../models/dr-polygon';
 import { DataStoreService } from '../../services/data-store.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
@@ -107,9 +107,12 @@ export class PenToolComponent implements OnInit {
   }
 
   onBackgroundClick(evt): void {
+    evt.stopPropagation();
+    evt.preventDefault();
+
     if (this._delay) {
       this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
-      this.completeObject();
+      this.completeObject(false);
       
     }
     else {
@@ -127,7 +130,7 @@ export class PenToolComponent implements OnInit {
 
   onResizerClick(evt): void {
     evt.stopPropagation();
-    this.completeObject();
+    this.completeObject(true);
   }
 
   getResizerX(): number {
@@ -153,9 +156,9 @@ export class PenToolComponent implements OnInit {
       this._currentPt = null;
     }
     else {
-      this.currentObject = createDrPolygon({
+      this.currentObject = createDrPolyline({
         id: 1000000,
-        name: this._dataService.getUniqueName("Polygon"),
+        name: this._dataService.getUniqueName("Polyline"),
         points: [{ x: x, y:y }]
       });
     }
@@ -194,15 +197,28 @@ export class PenToolComponent implements OnInit {
     return Math.round(Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI);
   }
 
-  private completeObject(): void {
+  private getNextId(): number {
+    return 0 === this._dataService.elements.length ? 1 :
+          Math.max(...this._dataService.elements.map(o => o.id)) + 1;
+  }
+
+  private completeObject(isClosed: boolean): void {
     if(this.currentObject &&
       null !== this.currentObject &&
-      this.currentObject.points.length > 2) {;
-       let newObject: DrPolygon = createDrPolygon({ points: this.currentObject.points, name: this.currentObject.name });
-       this._dataService.addObjects([
-          newObject
-        ]);
-       this._dataService.selectObjects([newObject]);
+      this.currentObject.points.length > 1) {;
+      let newObject: DrPolygon
+      if (this.currentObject.points.length > 3 && isClosed) {
+        newObject = createDrPolygon({ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon" });
+      }
+      else {
+        newObject = createDrPolyline({ id: this.getNextId(), points: this.currentObject.points, name: "Polyline" });
+        
+      }
+       
+      this._dataService.addObjects([
+        newObject
+      ]);
+      this._dataService.selectObjects([newObject]);
        
    }
    this.reset();

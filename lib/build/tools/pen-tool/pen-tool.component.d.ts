@@ -25,6 +25,7 @@ export declare class PenToolComponent implements OnInit {
     private getActivePoint(x, y);
     private pointOnLine(x, y, angle, distance);
     private getRotationAngle(a, b);
-    private completeObject();
+    private getNextId();
+    private completeObject(isClosed);
     private reset();
 }

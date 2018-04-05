@@ -6,10 +6,18 @@ import { DrStyledObject, DEFAULT_STYLED_OBJECT } from "./dr-styled-object";
 export interface DrPolygon extends DrStyledObject {
 
     points: DrPoint[];
+    isClosed: boolean
 }
 
 export const DEFAULT_POLYGON: DrPolygon = Object.assign({}, DEFAULT_STYLED_OBJECT, {
     points: [],
+    isClosed: true,
+    drType: DrType.POLYGON
+});
+
+export const DEFAULT_POLYLINE: DrPolygon = Object.assign({}, DEFAULT_STYLED_OBJECT, {
+    points: [],
+    isClosed: false,
     drType: DrType.POLYGON
 });
 
@@ -17,6 +25,9 @@ export function createDrPolygon(properties: any): DrPolygon {
     return  Object.assign({}, DEFAULT_POLYGON, properties);
 }
 
+export function createDrPolyline(properties: any): DrPolygon {
+    return  Object.assign({}, DEFAULT_POLYLINE, properties);
+}
 
 export function createDrPolygonStar(x: number, y: number, width: number, height: number, properties: any): DrPolygon {
     return  Object.assign({}, DEFAULT_POLYGON, properties, {
