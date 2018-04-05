@@ -7,6 +7,7 @@ export enum DrType {
     ELLIPSE = 3,
     TEXT= 4,
     IMAGE = 5,
+    CALLOUT = 6,
     GROUPED_OBJECT = 100
 }
 

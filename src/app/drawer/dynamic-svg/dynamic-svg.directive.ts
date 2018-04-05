@@ -16,6 +16,7 @@ import { DrType } from '../models/dr-type.enum';
 import { MouseEventData } from '../models/mouse-event-data';
 import { StaticInjector } from '@angular/core/src/di/injector';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
+import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -132,6 +133,8 @@ export class DynamicSvgDirective implements OnInit {
         return DrPolygonComponent;
       case DrType.RECTANGLE:
         return  DrRectComponent;
+      case DrType.CALLOUT:
+        return DrCalloutComponent;
       case DrType.GROUPED_OBJECT:
         return DrGroupedObjectComponent;
     }

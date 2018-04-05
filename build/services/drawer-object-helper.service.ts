@@ -10,6 +10,7 @@ import { DrGroupedObject } from '../models/dr-grouped-object';
 import { DrType } from '../models/dr-type.enum';
 import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/bounding-box';
 import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/compiler';
+import { DrCallout } from '../models/dr-callout';
 
 @Injectable()
 export class DrawerObjectHelperService {
@@ -266,6 +267,18 @@ export class DrawerObjectHelperService {
           returnValue.push(this.getRotatedPoint(r.x, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
           returnValue.push(this.getRotatedPoint(r.x + r.width, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
       break;
+      case (DrType.CALLOUT):
+          let c: DrCallout = <DrCallout>drObj;
+          returnValue = [
+            { x: c.x, y: c.y },
+            { x: c.x + c.width, y: c.y },
+            { x: c.x, y: c.y + c.height },
+            { x: c.x + c.width, y: c.y + c.height },
+            c.basePoint1,
+            c.basePoint2,
+            c.pointerLocation
+          ];
+          break;
       case (DrType.GROUPED_OBJECT): {
         let pts: DrPoint[];
         let g: DrGroupedObject = <DrGroupedObject>drObj;
@@ -328,7 +341,22 @@ export class DrawerObjectHelperService {
           boundingBox.x = drObj.x;
           boundingBox.width = drObj.width;
           boundingBox.height = drObj.height;
-      break;
+        break;
+      case (DrType.CALLOUT):
+          let c: DrCallout = <DrCallout>drObj;
+          if (c.pointerLocked) {
+            boundingBox.y = drObj.y;
+            boundingBox.x = drObj.x;
+            boundingBox.width = drObj.width;
+            boundingBox.height = drObj.height;
+          }
+          else {
+            boundingBox.x = Math.min(c.x, c.pointerLocation.x);
+            boundingBox.y = Math.min(c.y, c.pointerLocation.y);
+            boundingBox.width = Math.max(c.x + c.width, c.pointerLocation.x) - boundingBox.x;
+            boundingBox.height = Math.max(c.y + c.height, c.pointerLocation.y) - boundingBox.y;
+          }
+          break;
       case (DrType.GROUPED_OBJECT): {
         boundingBox = this.getBoundingBox(drObj.objects);
         break;

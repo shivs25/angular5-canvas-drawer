@@ -15,6 +15,7 @@ import { ChangeHelperService } from '../services/change-helper.service';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 import { PreviewComponent } from '../preview/preview.component';
 import { TextRenderingService } from '../services/text-rendering.service';
+import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -28,6 +29,7 @@ import { TextRenderingService } from '../services/text-rendering.service';
     DrTextComponent,
     DrImageComponent,
     DrGroupedObjectComponent,
+    DrCalloutComponent,
     DynamicSvgDirective,
     PreviewComponent
   ], 
@@ -39,6 +41,7 @@ import { TextRenderingService } from '../services/text-rendering.service';
     DrPolygonComponent,
     DrTextComponent,
     DrImageComponent,
+    DrCalloutComponent,
     DrGroupedObjectComponent
   ]
 })
