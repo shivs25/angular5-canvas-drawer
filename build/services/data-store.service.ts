@@ -380,7 +380,8 @@ public getSvgText(item: DrObject): TextInfo[] {
   public groupObjects(items: DrObject[]): void {
     let itemToAdd: DrGroupedObject = createDrGroupedObject({
       id: this.getNextId(),
-      objects: items
+      objects: items,
+      name: this.getUniqueName("Group")
     });
 
 
