@@ -1,5 +1,6 @@
 <ng-template #elementTemplate>
-    <svg:polygon *ngIf="data && visualData" 
+
+    <svg:polygon *ngIf="data && visualData && data.isClosed" 
     [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
       (click)="onClick($event, data)"
       (mousedown)="onMouseDown($event, data)"
@@ -15,4 +16,21 @@
       [attr.opacity]="visualData.opacity">
       
     </svg:polygon>
+
+    <svg:polyline *ngIf="data && visualData && !data.isClosed" 
+    [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
+      (click)="onClick($event, data)"
+      (mousedown)="onMouseDown($event, data)"
+      (mousemove)="onMouseMove($event, data)"
+      (mouseup)="onMouseUp($event, data)"
+      [id]="elementId" 
+      [attr.transform]="visualData.rotation > 0 ? 'rotate(' + visualData.rotation + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
+      [attr.points]="getPoints()"
+      [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+      [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
+      [attr.stroke-width]="visualData.strokeWidth"
+      [attr.opacity]="visualData.opacity"
+      [attr.fill]="'transparent'">
+      
+    </svg:polyline>
 </ng-template>

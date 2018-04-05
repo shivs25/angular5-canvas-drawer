@@ -84,6 +84,20 @@ export class DrawerObjectHelperService {
     }
   }
 
+  public getBoundingBoxForPoints(points: DrPoint[]): BoundingBox {
+    let left: number = Math.min(...points.map((b: any) => b.x));
+    let right: number = Math.max(...points.map((b: any) => b.x));
+    let top: number = Math.min(...points.map((b: any) => b.y));
+    let bottom: number = Math.max(...points.map((b: any) => b.y));
+    return {
+      x: left,
+      y: top,
+      width: right - left,
+      height: bottom - top
+    }
+  }
+
+
   public getBoundingBoxForBounds(boundingBoxes: BoundingBox[]) {
 
     let left: number = Math.min(...boundingBoxes.map((b: any) => b.x));
@@ -219,6 +233,49 @@ export class DrawerObjectHelperService {
     returnValue.x = minX;
     returnValue.height = maxY - minY;
     returnValue.width = maxX - minX;
+    return returnValue;
+  }
+
+  public getRotatedPoints(drObj: DrObject): DrPoint[] {
+    let returnValue: DrPoint[] = [];
+
+    switch(drObj.drType){
+      case(DrType.ELLIPSE):
+        let e: DrEllipse = <DrEllipse>drObj;
+
+        returnValue.push(this.getRotatedPoint(e.x - e.rx, e.y - e.ry, e.x, e.y, e.rotation));
+        returnValue.push(this.getRotatedPoint(e.x + e.rx, e.y + e.ry, e.x, e.y, e.rotation));
+        returnValue.push(this.getRotatedPoint(e.x - e.rx, e.y + e.ry, e.x, e.y, e.rotation));
+        returnValue.push(this.getRotatedPoint(e.x + e.rx, e.y - e.ry, e.x, e.y, e.rotation));
+      break;
+      case(DrType.POLYGON):
+          let p: DrPolygon = <DrPolygon>drObj;
+          let b: BoundingBox = this.getBoundingBox([drObj]);
+
+          for(let k = 0; k < p.points.length; k++){
+            returnValue.push(this.getRotatedPoint(p.points[k].x, p.points[k].y, b.x + b.width / 2, b.y + b.height / 2, p.rotation));
+          }
+      break;
+      case(DrType.IMAGE):
+      case(DrType.TEXT):
+      case(DrType.RECTANGLE):
+          let r: DrRect = <DrRect>drObj;
+
+          returnValue.push(this.getRotatedPoint(r.x, r.y, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
+          returnValue.push(this.getRotatedPoint(r.x + r.width, r.y, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
+          returnValue.push(this.getRotatedPoint(r.x, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
+          returnValue.push(this.getRotatedPoint(r.x + r.width, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2, r.rotation));
+      break;
+      case (DrType.GROUPED_OBJECT): {
+        let pts: DrPoint[];
+        let g: DrGroupedObject = <DrGroupedObject>drObj;
+        for(let i: number = 0; i < g.objects.length; i++) {
+          returnValue = returnValue.concat(this.getRotatedPoints(g.objects[i]));
+        }
+        break;
+      }
+    }
+
     return returnValue;
   }
 
