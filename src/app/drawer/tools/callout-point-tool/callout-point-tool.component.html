@@ -1,0 +1,46 @@
+<div class="absolute-position fill-parent"
+  (mousedown)="onBackgroundMouseDown($event)"
+  (mousemove)="onBackgroundMouseMove($event)"
+  (mouseup)="onBackgroundMouseUp($event)">
+
+  <svg xmlns="http://www.w3.org/2000/svg" *ngIf="polyBounds && point1Bounds && point2Bounds && pointerBounds"
+    [ngStyle]="polyBounds" class="no-interact">
+    <svg:polygon
+      [attr.points]="getPoints()"
+      fill="transparent"
+      stroke="red"
+      stroke-width="1">
+    </svg:polygon>
+  </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="point1Bounds && (!mouseDown || sizer === 0)"
+      [ngStyle]="point1Bounds" [ngClass]="{ 'no-interact': mouseDown }">
+       <rect id='point1'
+            class='crosshair'
+            (mousedown)="onSizerMouseDown($event, 0)" 
+            [attr.width]="SIZER_SIZE" 
+            [attr.height]= "SIZER_SIZE" 
+            fill="green">
+        </rect>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="point2Bounds && (!mouseDown || sizer === 1)"
+      [ngStyle]="point2Bounds" [ngClass]="{ 'no-interact': mouseDown }">
+       <rect id='point2'
+            class='crosshair'
+            (mousedown)="onSizerMouseDown($event, 1)" 
+            [attr.width]="SIZER_SIZE" 
+            [attr.height]= "SIZER_SIZE" 
+            fill="green">
+        </rect>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" *ngIf="pointerBounds && (!mouseDown || sizer === 2)"
+      [ngStyle]="pointerBounds" [ngClass]="{ 'no-interact': mouseDown }">
+       <rect id='pointer'
+            class='crosshair'
+            (mousedown)="onSizerMouseDown($event, 2)" 
+            [attr.width]="SIZER_SIZE" 
+            [attr.height]= "SIZER_SIZE" 
+            fill="green">
+        </rect>
+    </svg>
+</div>

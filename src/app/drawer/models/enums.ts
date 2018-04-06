@@ -7,6 +7,7 @@ export enum DrType {
     ELLIPSE = 3,
     TEXT= 4,
     IMAGE = 5,
+    CALLOUT = 6,
     GROUPED_OBJECT = 100
 }
 
@@ -32,6 +33,7 @@ export enum EditorToolType {
     CALLOUT_ROUNDED_TOOL = 10,
     TRIANGLE_TOOL = 11,
     ROUNDED_RECTANGLE_TOOL = 12,
-    TEXT_EDIT_TOOL = 13
+    TEXT_EDIT_TOOL = 13,
+    CALLOUT_POINTER_TOOL = 14
 }
 

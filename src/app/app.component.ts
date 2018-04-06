@@ -15,6 +15,7 @@ import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-group
 import { createDrStyle } from '../../build/models/dr-style';
 import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
 import { } from ''
+import { DrCallout, createDrCallout } from './drawer/models/dr-callout';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -45,6 +46,13 @@ export class AppComponent implements OnInit {
   textEdit(): void {
     if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
       this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL;
+    }
+    
+  }
+
+  editCallout(): void {
+    if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.CALLOUT) {
+      this.dataStoreService.selectedTool = EditorToolType.CALLOUT_POINTER_TOOL;
     }
     
   }
@@ -188,6 +196,12 @@ export class AppComponent implements OnInit {
       this.viewBoxItem.width = 100;
     } else {
       this.viewBoxItem = null;
+    }
+  }
+
+  renameSelectedObject(): void {
+    if(this.dataStoreService.selectedObjects.length > 0){
+      this.dataStoreService.renameObjects(this.dataStoreService.selectedObjects, "I'm a New Object!");
     }
   }
 
@@ -413,6 +427,21 @@ export class AppComponent implements OnInit {
       ],
       rotation: 0
     });
+
+    let c: DrCallout = createDrCallout({
+      id: 300,
+      stroke: 'green',
+      fill: 'pink',
+      x: 200,
+      y: 200,
+      width: 200,
+      height: 100,
+      basePoint1: { x: 280, y: 250 },
+      basePoint2: { x: 320, y: 250 },
+      pointerLocation: { x: 300, y: 350 },
+      pointerLocked: false
+    });
+    elements.push(c);
 
     //elements.push(r);
     //elements.push(r2);

@@ -83,10 +83,15 @@ export class PenToolComponent implements OnInit {
   }
 
   onBackgroundMouseMove(evt): void {
+    
     if(this.currentObject) {
+      
       this._lastEvent = evt;
       if (this._delay) {
-        this.handleClick(this._clickPt.x, this._clickPt.y);
+        if(this._currentPt.x !== evt.offsetX && this._currentPt.y !== evt.offsetY){
+          this.handleClick(this._clickPt.x, this._clickPt.y);
+
+        }
       }
       else {
         if (this._currentPt) {

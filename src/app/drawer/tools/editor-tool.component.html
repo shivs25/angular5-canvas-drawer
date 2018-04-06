@@ -2,3 +2,4 @@
 <app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool"></app-pen-tool>
 <app-object-creation-tool *ngIf="shouldShowCreationTool()"></app-object-creation-tool>
 <app-text-edit-tool *ngIf="TEXT_EDIT_TOOL === (elementState | async)?.present.selectedTool"></app-text-edit-tool>
+<app-callout-point-tool *ngIf="CALLOUT_POINTER_TOOL === (elementState | async)?.present.selectedTool"></app-callout-point-tool>

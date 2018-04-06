@@ -7,6 +7,7 @@ import { DrPolygon } from '../models/dr-polygon';
 import { DrRect } from '../models/dr-rect';
 import { DrEllipse } from '../models/dr-ellipse';
 import { DrGroupedObject } from '../models/dr-grouped-object';
+import { DrCallout } from '../models/dr-callout';
 
 @Injectable()
 export class ChangeHelperService {
@@ -67,6 +68,44 @@ export class ChangeHelperService {
         return  {
           points: pts
         };
+      }
+      case DrType.CALLOUT: {
+        let c: DrCallout = <DrCallout>item;
+
+        let pctX = (c.x - oldBounds.x) / oldBounds.width;
+        let pctY = (c.y - oldBounds.y) / oldBounds.height;
+        let pctWidth = c.width / oldBounds.width;
+        let pctHeight = c.height / oldBounds.height;
+        
+        let pctBaseX1 = (c.basePoint1.x - c.x) / c.width;
+        let pctBaseY1 = (c.basePoint1.y - c.y) / c.height;
+        let pctBaseX2 = (c.basePoint2.x - c.x) / c.width;
+        let pctBaseY2 = (c.basePoint2.y - c.y) / c.height;
+
+        let newX: number = newBounds.x + newBounds.width * pctX;
+        let newY: number = newBounds.y + newBounds.height * pctY;
+        let newWidth: number = newBounds.width * pctWidth;
+        let newHeight: number = newBounds.height * pctHeight;
+
+        let r: any = {
+          x: newX,
+          y: newY,
+          width: newWidth,
+          height: newHeight,
+          basePoint1: { x: newX + newWidth * pctBaseX1, y: newY + newHeight * pctBaseY1 },
+          basePoint2: { x: newX + newWidth * pctBaseX2, y: newY + newHeight * pctBaseY2 }
+        };
+
+        if (!c.pointerLocked) {
+          let pctPointerX = (c.pointerLocation.x - oldBounds.x) / oldBounds.width;
+          let pctPointerY = (c.pointerLocation.y - oldBounds.y) / oldBounds.height;
+          r.pointerLocation = {
+            x: newBounds.x + newBounds.width * pctPointerX,
+            y: newBounds.y + newBounds.height * pctPointerY
+          };
+        }
+
+        return r;
       }
       case DrType.GROUPED_OBJECT: {
         let newObjects: DrObject[] = [];

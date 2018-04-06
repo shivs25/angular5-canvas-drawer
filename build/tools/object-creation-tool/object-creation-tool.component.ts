@@ -11,6 +11,8 @@ import { BoundingBox } from '../../models/bounding-box';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 import { createDrPolygon, DrPolygon } from '../../models/dr-polygon';
+import { createDrCallout } from '../../models/dr-callout';
+import { DrCallout } from '../../models/dr-callout';
 
 @Component({
   selector: 'app-object-creation-tool',
@@ -201,7 +203,7 @@ export class ObjectCreationToolComponent implements OnInit {
             case EditorToolType.TRIANGLE_TOOL:
             case EditorToolType.STAR_TOOL:
             case EditorToolType.ARROW_TOOL:
-            case EditorToolType.CALLOUT_SQUARE_TOOL: {
+            case EditorToolType.CALLOUT_SQUARE_TOOL:
               Object.assign(this.currentObject, 
                 this._changeService.getBoundsChanges(
                   this._mouseDownClone, 
@@ -215,8 +217,6 @@ export class ObjectCreationToolComponent implements OnInit {
                 )
               );
               break;
-            }
-              
           }
         }
       }
@@ -317,8 +317,7 @@ export class ObjectCreationToolComponent implements OnInit {
             break;
             case EditorToolType.TRIANGLE_TOOL:
             case EditorToolType.STAR_TOOL: 
-            case EditorToolType.ARROW_TOOL: 
-            case EditorToolType.CALLOUT_SQUARE_TOOL: {
+            case EditorToolType.ARROW_TOOL: {
               Object.assign(this.currentObject, 
                 this._changeService.getBoundsChanges(
                   this._mouseDownClone, 
@@ -336,8 +335,35 @@ export class ObjectCreationToolComponent implements OnInit {
                 points: (this.currentObject as DrPolygon).points
               });
               break;
-            }
               
+            }
+            case EditorToolType.CALLOUT_SQUARE_TOOL: {
+              let r: DrCallout = this.currentObject as DrCallout;
+              Object.assign(this.currentObject, 
+                this._changeService.getBoundsChanges(
+                  this._mouseDownClone, 
+                  {
+                    x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : this._mouseDownLocation.x - w,
+                    y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : this._mouseDownLocation.y - h,
+                    width: w,
+                    height: h
+                  },
+                  this._mouseDownBounds
+                )
+              );
+              objectToAdd = createDrCallout({
+                id: this.getNextId(),
+                x: r.x,
+                y: r.y,
+                width: r.width,
+                height: r.height,
+                basePoint1: r.basePoint1,
+                basePoint2: r.basePoint2,
+                pointerLocation: r.pointerLocation
+              });
+            }
+            
+            break;
         }
         
         objectToAdd.name = this.currentObject.name;
@@ -448,22 +474,20 @@ export class ObjectCreationToolComponent implements OnInit {
       height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
     }
 
-    this.currentObject = createDrPolygon({
+    this.currentObject = createDrCallout({
       id: 1000000,
       name: this._dataService.getUniqueName("Callout"),
       showFill: true,
       showStroke: true,
       fill: 'rgba(255,0,0,0.3)',
       stroke: 'red',
-      points: [
-        { x: b.x + b.width * 1, y: b.y + b.height * 0.08 },   //Top of star
-        { x: b.x + b.width * 0, y: b.y + b.height * 0.08 },
-        { x: b.x + b.width * 0, y: b.y + b.height * 0.688 },
-        { x: b.x + b.width * 0.619, y: b.y + b.height * 0.688 },
-        { x: b.x + b.width * 0.619, y: b.y + b.height * 0.912 },
-        { x: b.x + b.width * 0.753, y: b.y + b.height * 0.688 },
-        { x: b.x + b.width * 1, y: b.y + b.height * 0.688 }
-      ]
+      x: b.x, 
+      y: b.y,
+      width: b.width,
+      height: b.height * 0.688,
+      basePoint1: { x: b.x + b.width / 2 - (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+      basePoint2: { x: b.x + b.width / 2 + (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+      pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height }
     });
 
   }
