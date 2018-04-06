@@ -275,6 +275,22 @@ export class DataStoreService {
     this._duplicateOffset = 1;
   }
 
+  public renameObjects(items: DrObject[], newName: string) {
+    let changes: any[] = [];
+    for(let i of items){
+      changes.push({
+        id: i.id,
+        changes: {
+          name: newName
+        }
+      });
+    }
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes: changes
+    });
+    this._duplicateOffset = 1;
+  }
 
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({

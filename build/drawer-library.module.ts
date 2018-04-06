@@ -10,11 +10,10 @@ import { EditableDrawerComponent } from './editable-drawer/editable-drawer.compo
 import { EditableDrawerModule } from './editable-drawer/editable-drawer.module';
 import { DrawerComponent } from './drawer/drawer.component';
 import { PreviewComponent } from './preview/preview.component';
-import { DrCalloutComponent } from './dr-callout/dr-callout.component';
 
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
-export { DrPolygon, createDrPolygon, createDrPolygonArrow, createDrPolygonCallout, createDrPolygonStar, createDrPolygonTriangle } from './models/dr-polygon';
+export { DrPolygon, createDrPolygon, createDrPolyline, createDrPolygonArrow, createDrPolygonCallout, createDrPolygonStar, createDrPolygonTriangle } from './models/dr-polygon';
 export { DrEllipse, createDrEllipse } from './models/dr-ellipse';
 export { DrRect, createDrRect } from './models/dr-rect';
 export { DrType } from './models/dr-type.enum';
@@ -28,6 +27,7 @@ export { EditorToolType } from './models/enums';
 export { DrStyle, createDrStyle } from './models/dr-style';
 export { DrTextStyle, createDrTextStyle } from './models/dr-text-style';
 export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object'
+export { DrCallout, createDrCallout } from './models/dr-callout';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-obje
     DrawerComponent,
     PreviewComponent
   ],
-  declarations: [DrCalloutComponent],
+  declarations: [],
 })
 export class DrawerLibraryRootModule {
   constructor(ngRedux: NgRedux<IDrawerAppState>) {
