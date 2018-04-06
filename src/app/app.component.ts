@@ -50,6 +50,13 @@ export class AppComponent implements OnInit {
     
   }
 
+  editCallout(): void {
+    if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.CALLOUT) {
+      this.dataStoreService.selectedTool = EditorToolType.CALLOUT_POINTER_TOOL;
+    }
+    
+  }
+
   ellipse(): void {
     this.dataStoreService.selectedTool = EditorToolType.ELLIPSE_TOOL;
   }
