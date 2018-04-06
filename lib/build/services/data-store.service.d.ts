@@ -47,6 +47,7 @@ export declare class DataStoreService {
     setRotation(item: DrObject, rotation: number): void;
     setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox): void;
     setText(items: DrObject[], text: string): void;
+    renameObjects(items: DrObject[], newName: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     getSvgText(item: DrObject): TextInfo[];
     moveObjectsDown(items: DrObject[]): void;

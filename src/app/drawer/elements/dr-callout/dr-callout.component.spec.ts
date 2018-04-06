@@ -1,14 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrCalloutComponent } from './dr-callout.component';
+import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 
 describe('DrCalloutComponent', () => {
   let component: DrCalloutComponent;
   let fixture: ComponentFixture<DrCalloutComponent>;
-
+  let objectService: any = {};
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DrCalloutComponent ]
+      declarations: [ DrCalloutComponent ],
+      providers: [
+        { provide: DrawerObjectHelperService, useValue: objectService }
+      ]
     })
     .compileComponents();
   }));
