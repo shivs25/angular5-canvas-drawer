@@ -192,6 +192,12 @@ export class AppComponent implements OnInit {
     }
   }
 
+  renameSelectedObject(): void {
+    if(this.dataStoreService.selectedObjects.length > 0){
+      this.dataStoreService.renameObjects(this.dataStoreService.selectedObjects, "I'm a New Object!");
+    }
+  }
+
   up(): void {
     if (this.dataStoreService.selectedObjects.length > 0) {
       this.dataStoreService.moveObjectsUp(this.dataStoreService.selectedObjects);

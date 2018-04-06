@@ -17,7 +17,8 @@ export const DEFAULT_CALLOUT: DrCallout = Object.assign({}, DEFAULT_RECT, {
    pointerLocked: false,
    basePoint1: { x: 0, y: 0 },
    basePoint2: { x: 0, y: 0 },
-   pointerLocation: { x: 0, y: 0 }
+   pointerLocation: { x: 0, y: 0 },
+   drType: DrType.CALLOUT
 });
 
 export function createDrCallout(properties: any): DrCallout {

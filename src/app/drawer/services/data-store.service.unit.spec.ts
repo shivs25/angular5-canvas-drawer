@@ -11,7 +11,7 @@ import { createDrRect, DrRect } from '../models/dr-rect';
 import { DrObject } from '../models/dr-object';
 import { SET_ELEMENTS, SELECT_OBJECTS } from '../actions';
 import { CHANGE_OBJECTS_PROPERTIES } from '../actions';
-
+import { createDrStyledObject } from '../models/dr-styled-object';
 
 describe('DataStoreService', () => {
   let objectHelperService: any;
@@ -31,6 +31,30 @@ describe('DataStoreService', () => {
   it('should be created', () => {
     
     expect(service).toBeTruthy();
+  });
+
+  it('should rename the object', () => {
+    let items = [createDrStyledObject({ id: 1 })];
+
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+
+    spyOn(redux, "dispatch");
+
+    service.renameObjects([Object.assign({}, items[0]) as DrObject], "New Name");
+
+    expect(redux.dispatch).toHaveBeenCalledWith(
+      {type: 'CHANGE_OBJECTS_PROPERTIES', 
+        changes: [
+          { id: 1, 
+            changes: { name: 'New Name' } 
+          } ]
+        });
   });
 
   it('should move last object down', () => {
