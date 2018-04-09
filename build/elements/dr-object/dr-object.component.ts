@@ -102,7 +102,7 @@ export class DrObjectComponent implements OnInit {
   }
 
   constructor(
-    private _objectHelperService: DrawerObjectHelperService) { }
+    protected _objectHelperService: DrawerObjectHelperService) { }
 
   ngOnInit() {
   }

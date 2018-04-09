@@ -3,7 +3,7 @@ import { DrObject } from '../../models/dr-object';
 import { MouseEventData } from '../../models/mouse-event-data';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
 export declare class DrObjectComponent implements OnInit {
-    private _objectHelperService;
+    protected _objectHelperService: DrawerObjectHelperService;
     elementTemplate: TemplateRef<any>;
     data: DrObject;
     overrideProperties: any;

@@ -158,7 +158,13 @@ export class ObjectCreationToolComponent implements OnInit {
               this._mouseDownBounds = this._drawerObjectService.getBoundingBox([this._mouseDownClone]);
               break;
             case EditorToolType.CALLOUT_SQUARE_TOOL:
-              this.createCallout(evt);
+              this.createCallout(evt, false);
+              this._mouseDownClone = Object.assign({}, this.currentObject);
+              this._mouseDownBounds = this._drawerObjectService.getBoundingBox([this._mouseDownClone]);
+
+              break;
+            case EditorToolType.CALLOUT_ROUNDED_TOOL:
+              this.createCallout(evt, true);
               this._mouseDownClone = Object.assign({}, this.currentObject);
               this._mouseDownBounds = this._drawerObjectService.getBoundingBox([this._mouseDownClone]);
 
@@ -204,6 +210,7 @@ export class ObjectCreationToolComponent implements OnInit {
             case EditorToolType.STAR_TOOL:
             case EditorToolType.ARROW_TOOL:
             case EditorToolType.CALLOUT_SQUARE_TOOL:
+            case EditorToolType.CALLOUT_ROUNDED_TOOL:
               Object.assign(this.currentObject, 
                 this._changeService.getBoundsChanges(
                   this._mouseDownClone, 
@@ -337,7 +344,8 @@ export class ObjectCreationToolComponent implements OnInit {
               break;
               
             }
-            case EditorToolType.CALLOUT_SQUARE_TOOL: {
+            case EditorToolType.CALLOUT_SQUARE_TOOL:
+            case EditorToolType.CALLOUT_ROUNDED_TOOL: {
               let r: DrCallout = this.currentObject as DrCallout;
               Object.assign(this.currentObject, 
                 this._changeService.getBoundsChanges(
@@ -359,7 +367,8 @@ export class ObjectCreationToolComponent implements OnInit {
                 height: r.height,
                 basePoint1: r.basePoint1,
                 basePoint2: r.basePoint2,
-                pointerLocation: r.pointerLocation
+                pointerLocation: r.pointerLocation,
+                rounded: this._dataService.selectedTool === EditorToolType.CALLOUT_ROUNDED_TOOL
               });
             }
             
@@ -465,7 +474,7 @@ export class ObjectCreationToolComponent implements OnInit {
 
   }
 
-  private createCallout(evt): void {
+  private createCallout(evt, rounded): void {
     //100,8.8 0,8.8 0,68.8 61.9,68.8 61.9,91.2 75.3,68.8 100,68.8
     let b: BoundingBox = { 
       x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
@@ -487,7 +496,8 @@ export class ObjectCreationToolComponent implements OnInit {
       height: b.height * 0.688,
       basePoint1: { x: b.x + b.width / 2 - (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
       basePoint2: { x: b.x + b.width / 2 + (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
-      pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height }
+      pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height },
+      rounded: rounded
     });
 
   }

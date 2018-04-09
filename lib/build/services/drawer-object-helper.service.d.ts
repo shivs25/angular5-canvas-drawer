@@ -2,6 +2,8 @@ import { DrObject } from '../models/dr-object';
 import { DrPoint } from '../models/dr-point';
 import { BoundingBox } from '../models/bounding-box';
 export declare class DrawerObjectHelperService {
+    private clipper;
+    private clipperRequested;
     constructor();
     canResize(element: DrObject, checkRotation: boolean): boolean;
     getObjects(ids: number[], availableElements: DrObject[]): DrObject[];
@@ -18,5 +20,6 @@ export declare class DrawerObjectHelperService {
     getRotatedBounds(item: DrObject): BoundingBox;
     getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox;
     getRotatedPoints(drObj: DrObject): DrPoint[];
+    getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[];
     private getBoundingBoxForObject(drObj);
 }

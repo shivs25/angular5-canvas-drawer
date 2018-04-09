@@ -38,7 +38,7 @@
     ></ng-container>
 
     <ng-container *ngFor="let s of sizers; let i = index;">
-        <rect [id]="'resizer-' + i"  *ngIf="(i % 2 === 0 || !isShiftDown()) &&
+        <rect [id]="'resizer-' + i"  *ngIf="(i % 2 === 0 || !shouldPreserveAspectRatio()) &&
                                             (elementState | async)?.present.selectedBounds && 
                                             boundingBoxObject && 
                                             canResize && 

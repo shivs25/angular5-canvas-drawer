@@ -75,6 +75,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     getResizerX(index: number): number;
     getResizerY(index: number): number;
     getResizerCursor(index: number): string;
+    shouldPreserveAspectRatio(): boolean;
     private microMoveObjects(diffX, diffY);
     private getDistanceBetweenTwoPoints(point1, point2);
     private getRelativeChildPointFromEvent(evt);
@@ -84,7 +85,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     private rotateObject(location, shiftKey);
     private getRotationAngle(a, b);
     private getRotationAngleFromMouseDownPoint(location);
-    private resizeObjects(location, shiftKey);
+    private resizeObjects(location, preserveAspectRatio);
     private resizeH(b, location, opposite, shiftKey, stationaryPt, quadrantMultiplier);
     private resizeV(b, location, opposite, shiftKey, stationaryPt, quadrantMultiplier);
     private getRotatedPoint(point, originX, originY, angle);
