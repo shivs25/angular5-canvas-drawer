@@ -213,6 +213,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         { x: this.cssBounds.left + evt.offsetX,
           y: this.cssBounds.top + evt.offsetY }, this._originalBounds.x + this._originalBounds.width / 2, 
                                                  this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
+      
       this.onMouseDown({ 
         location: pt, 
         data: null,
@@ -220,6 +221,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         ctrlKey: evt.ctrlKey,
         altKey: evt.altKey
       });
+      
     }
     
   }
@@ -261,6 +263,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBoundsMouseDown(data: MouseEventData): void {
+    
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -275,6 +278,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseDown(data: MouseEventData): void {
+    
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -328,6 +332,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this._dataStoreService.beginEdit();
       
       let b: BoundingBox = this._objectHelperService.getBoundingBox(this.selectedObjects);
+
       this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2};
       this._mouseDownLocation = data.location;
 
@@ -468,6 +473,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         }
         
       }
+      console.log(this.boundingBoxObject);
       this.setupBounds();
 
       this.cursor = "grabber";
@@ -640,6 +646,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private setupBounds(): void {
     if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
+      console.log(this.boundingBoxObject);
+      console.log(this._dataStoreService.selectedBounds);
       let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
       this.rotation = objs.length === 1 ? objs[0].rotation : 0;
 
@@ -696,7 +704,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
                        this.canAllResize(this.selectedObjects);
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
-
+      console.log(this.boundingBoxObject);
       if (this.selectedObjects.length > 1) {
         this.selectionStyle = Object.assign({}, SELECTION_STYLE);
       }

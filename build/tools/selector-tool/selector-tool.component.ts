@@ -695,7 +695,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
                        this.canAllResize(this.selectedObjects);
-      this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType;
+      this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
 
       if (this.selectedObjects.length > 1) {
         this.selectionStyle = Object.assign({}, SELECTION_STYLE);

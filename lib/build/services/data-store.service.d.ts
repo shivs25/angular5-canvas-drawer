@@ -10,6 +10,7 @@ import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
 import { TextRenderingService } from './text-rendering.service';
 import { TextInfo } from '../models/text-info';
+import { DrPoint } from '../models/dr-point';
 export declare class DataStoreService {
     private _ngRedux;
     private _objectHelperService;
@@ -41,6 +42,7 @@ export declare class DataStoreService {
     alignObjectsTop(items: DrObject[]): void;
     alignObjectsMiddle(items: DrObject[]): void;
     alignObjectsBottom(items: DrObject[]): void;
+    setCalloutPointer(item: DrObject, basePoint1: DrPoint, basePoint2: DrPoint, pointerLocation: DrPoint): void;
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
     setVisibility(items: DrObject[], visibility: boolean): void;
     setUrls(items: DrObject[], url: string): void;

@@ -174,6 +174,20 @@ export class DataStoreService {
     }
   }
 
+  public setCalloutPointer(item: DrObject, basePoint1: DrPoint, basePoint2: DrPoint, pointerLocation: DrPoint):void {
+    this._ngRedux.dispatch({
+      type: CHANGE_OBJECTS_PROPERTIES,
+      changes:[
+        { 
+          id: item.id, 
+          changes: { basePoint1: basePoint1, basePoint2: basePoint2, pointerLocation: pointerLocation, pointerLocked: true } 
+        }
+      ]
+    });
+    this.resetSelection();
+    this._duplicateOffset = 1;
+  }
+
   public moveObjects(items: DrObject[], newBounds: BoundingBox): void {
     let b: BoundingBox = this.selectedBounds;
 
