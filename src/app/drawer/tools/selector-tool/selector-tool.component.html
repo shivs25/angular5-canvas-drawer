@@ -7,7 +7,7 @@
   >
 </app-drawer>
 
-<svg *ngIf="cssBounds" [ngStyle]="cssBounds" [ngClass]="{ 'no-interact': mouseDown }"
+<svg *ngIf="cssBounds" [ngStyle]="pixelizeBounds(cssBounds)" [ngClass]="{ 'no-interact': mouseDown }"
       
   xmlns="http://www.w3.org/2000/svg"
   (mousedown)="onBackgroundMouseDown($event)"
@@ -57,7 +57,7 @@
 </svg>
 
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
-  [ngStyle]="rotateRightBounds" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
+  [ngStyle]="pixelizeBounds(rotateRightBounds)" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
    <rect id='rotate-right'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 0)" 
@@ -71,7 +71,7 @@
     </rect>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
-  [ngStyle]="rotateBottomBounds" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
+  [ngStyle]="pixelizeBounds(rotateBottomBounds)" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
   <rect id='rotate-bottom'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 1)" 

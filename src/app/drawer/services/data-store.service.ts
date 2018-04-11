@@ -31,6 +31,7 @@ import { DrGroupedObject, createDrGroupedObject } from '../models/dr-grouped-obj
 import { cloneDeep, updateChildItemIds } from '../utilities';
 import { DrImage } from '../models/dr-image';
 import { DrText } from '../models/dr-text';
+import { DrCallout } from '../models/dr-callout';
 import { TextRenderingService } from './text-rendering.service';
 import { TextInfo } from '../models/text-info';
 import { DrPoint } from '../models/dr-point';
@@ -321,6 +322,11 @@ public getSvgText(item: DrObject): TextInfo[] {
 
   return item.drType === DrType.TEXT ? this._textRenderService.getSvgText(item as DrText) : null;
 }
+
+  public getCalloutPath(item: DrObject): string {
+
+    return item.drType === DrType.CALLOUT ? this._objectHelperService.getCalloutPath(item as DrCallout) : null;
+  }
 
   public moveObjectsDown(items: DrObject[]): void {
 

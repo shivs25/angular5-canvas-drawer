@@ -14,6 +14,8 @@ import { DrCallout } from '../models/dr-callout';
 import { Observable } from 'rxjs';
 import * as clipperLib from 'js-angusj-clipper';
 
+const RADIUS: number = 16;
+
 @Injectable()
 export class DrawerObjectHelperService {
 
@@ -323,6 +325,136 @@ export class DrawerObjectHelperService {
     return null !== polyResult ? polyResult[0] : null;
   }
 
+  public getCalloutPath(v: DrCallout): string {
+    let b: DrPoint[] = [
+      { x: v.x, y: v.y },
+      { x: v.x, y: v.y + v.height },
+      { x: v.x + v.width, y: v.y + v.height },
+      { x: v.x + v.width, y: v.y }
+    ];
+
+    let points: DrPoint[];
+
+    if (v.drawPointer || !v.pointerLocked) {
+      try {
+        points = this.getUnionOfShapes(b, [
+          v.basePoint1,
+          v.basePoint2,
+          v.pointerLocation
+        ]);
+      }
+      catch (e) {
+        points = [b[2], b[1], b[0], b[3]];
+      }
+    }
+    else {
+      points = [b[2], b[1], b[0], b[3]];  //Points have to be in this order for the for loop below to work.
+    }
+    let returnValue: string = "";
+    if (null !== points) {
+      if (v.rounded && v.width > 32 && v.height > 32) {
+        let p: DrPoint;
+        let c: number;
+
+        let d: string[] = [];
+
+        for (let i: number = 0; i < points.length; i++) {
+          p = points[i];
+          c = this.getCorner(b, p);
+          switch (c) {
+            case 0:
+              if (i === 0) {
+                d.push("M");
+              }
+              else {
+                d.push("L");
+              }
+              d.push(...[
+                p.x.toString(),
+                (p.y + 16).toString(),
+                "A", RADIUS.toString(), RADIUS.toString(), "0", "0", "1", (p.x + RADIUS).toString(), p.y.toString()
+              ]);
+              break;
+            case 1:
+              if (i === 0) {
+                d.push("M");
+              }
+              else {
+                d.push("L");
+              }
+              d.push(...[
+                (p.x + RADIUS).toString(),
+                p.y.toString(),
+                "A", RADIUS.toString(), RADIUS.toString(), "0", "0", "1", p.x.toString(), (p.y - RADIUS).toString()
+              ]);
+              break;
+            case 2:
+              if (i === 0) {
+                d.push("M");
+              }
+              else {
+                d.push("L");
+              }
+              d.push(...[
+                p.x.toString(),
+                (p.y - RADIUS).toString(),
+                "A", RADIUS.toString(), RADIUS.toString(), "0", "0", "1", (p.x - RADIUS).toString(), p.y.toString()
+              ]);
+              break;
+            case 3:
+              if (i === 0) {
+                d.push("M");
+              }
+              else {
+                d.push("L");
+              }
+              d.push(...[
+                (p.x - RADIUS).toString(),
+                p.y.toString(),
+                "A", RADIUS.toString(), RADIUS.toString(), "0", "0", "1", p.x.toString(), (p.y + RADIUS).toString()
+              ]);
+              break;
+            default:
+              if (i === 0) {
+                d.push("M");
+              }
+              else {
+                d.push("L");
+              }
+
+              d.push(...[
+                p.x.toString(),
+                p.y.toString()
+              ]);
+              break;
+          }
+        }
+        d.push("Z");
+
+        returnValue = d.join(" ");
+
+      }
+      else {
+        for (let i: number = 0; i < points.length; i++) {
+          if (0 === i) {
+            returnValue += "M" + points[i].x + "," + points[i].y + " ";
+          }
+          else {
+            returnValue += "L" + points[i].x + "," + points[i].y + " ";
+          }
+
+        }
+        returnValue += "Z";
+      }
+    }
+
+
+    return returnValue;
+  }
+
+  private getCorner(b: DrPoint[], p: DrPoint): number {
+    return b.findIndex((d) => Math.abs(d.x - p.x) < 1 && Math.abs(d.y - p.y) < 1);
+  }
 
                                 //currently set to any because when trying to access individual items it errored on compilation
   private getBoundingBoxForObject(drObj: any): BoundingBox {

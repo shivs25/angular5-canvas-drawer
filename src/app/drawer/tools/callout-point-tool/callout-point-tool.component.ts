@@ -167,6 +167,27 @@ export class CalloutPointToolComponent implements OnInit {
     }
   }
 
+
+  pixelizeBounds(bounds): any {
+    let returnValue: any = Object.assign({}, bounds);
+
+    if (bounds.left) {
+      returnValue.left = bounds.left + "px";
+    }
+    if (bounds.top) {
+      returnValue.top = bounds.top + "px";
+    }
+    if (bounds.width) {
+      returnValue.width = bounds.width + "px";
+    }
+    if (bounds.height) {
+      returnValue.height = bounds.height + "px";
+    }
+
+    return returnValue;
+  }
+
+  
   private isInBounds(x: number, y: number):boolean {
     if (x >= this.objectBounds.x && x <= this.objectBounds.x + this.objectBounds.width &&
         y >= this.objectBounds.y && y <= this.objectBounds.y + this.objectBounds.height) {

@@ -208,6 +208,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseDown(evt): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
         { x: this.cssBounds.left + evt.offsetX,
@@ -227,6 +229,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseMove(evt): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
         { x: this.cssBounds.left + evt.offsetX,
@@ -245,6 +249,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseUp(evt): void {
+    evt.preventDefault();
+    evt.stopPropagation();
+
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
         { x: this.cssBounds.left + evt.offsetX,
@@ -293,6 +300,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(data: MouseEventData): void {
+
     if (null === data.data || !data.data.clickable) {
       this._dataStoreService.selectObjects([]);
       this.setupBounds();
@@ -487,6 +495,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   onResizerMouseDown(evt: any, index: number): void {
     evt.stopPropagation();
+    evt.preventDefault();
 
     this._dataStoreService.beginEdit();
 
@@ -524,12 +533,17 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onResizerMouseMove(evt: any, index: number): void {
+    evt.preventDefault();
+    evt.stopPropagation();
   }
 
   onResizerMouseUp(evt: any, index: number): void {
+    evt.preventDefault();
+    evt.stopPropagation();
   }
 
   onRotateMouseDown(evt: any, index: number): void {
+    evt.preventDefault();
     evt.stopPropagation();
 
     this.cursor = "crosshair";
@@ -546,9 +560,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onRotateMouseMove(evt: any, index: number): void {
+    evt.preventDefault();
+    evt.stopPropagation();
   }
 
   onRotateMouseUp(evt: any, index: number): void {
+    evt.preventDefault();
+    evt.stopPropagation();
 
   }
 
@@ -604,6 +622,25 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   shouldPreserveAspectRatio(): boolean {
     return this.isShiftDown() || this._dataStoreService.selectedObjects.filter((d) => d.drType === DrType.IMAGE).length > 0;
+  }
+
+  pixelizeBounds(bounds): any {
+    let returnValue: any = Object.assign({}, bounds);
+
+    if (bounds.left) {
+      returnValue.left = bounds.left + "px";
+    }
+    if (bounds.top) {
+      returnValue.top = bounds.top + "px";
+    }
+    if (bounds.width) {
+      returnValue.width = bounds.width + "px";
+    }
+    if (bounds.height) {
+      returnValue.height = bounds.height + "px";
+    }
+
+    return returnValue;
   }
 
   private microMoveObjects(diffX: number, diffY: number) {
