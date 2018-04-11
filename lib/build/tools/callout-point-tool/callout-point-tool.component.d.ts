@@ -27,5 +27,6 @@ export declare class CalloutPointToolComponent implements OnInit {
     onBackgroundMouseDown(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundMouseUp(evt: any): void;
+    pixelizeBounds(bounds: any): any;
     private isInBounds(x, y);
 }

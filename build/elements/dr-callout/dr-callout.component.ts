@@ -14,10 +14,11 @@ import { DrPoint } from '../../models/dr-point';
 export class DrCalloutComponent extends DrObjectComponent {
 
   getPath(): string {
-    //let r: DrCallout = this.data as DrCallout;
+    let r: DrCallout = this.data as DrCallout;
     let v: DrCallout = this.visualData as DrCallout;
-
-    return this._objectHelperService.getCalloutPath(v);
+    return this._objectHelperService.getCalloutPath(Object.assign({}, r, {
+      drawPointer: v.drawPointer
+    }));
   }
     
 }

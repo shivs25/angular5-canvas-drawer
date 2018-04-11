@@ -41,7 +41,6 @@ export class DrObjectComponent implements OnInit {
   @Output()
   public mouseMove: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
-
   @Output()
   public mouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
@@ -58,12 +57,16 @@ export class DrObjectComponent implements OnInit {
 
   onClick(evt: any, data:DrObject): void {
     evt.stopPropagation();
+    evt.preventDefault();
+
     this.click.emit(data);
   }
 
 
   onMouseDown(evt: any, data:DrObject): void {
     evt.stopPropagation();
+    evt.preventDefault();
+    
     this.mouseDown.emit({ 
       location: { 
         x: evt.clientX, y: evt.clientY 
@@ -77,6 +80,8 @@ export class DrObjectComponent implements OnInit {
 
   onMouseMove(evt: any, data:DrObject): void {
     evt.stopPropagation();
+    evt.preventDefault();
+
     this.mouseMove.emit({ 
       location: { 
         x: evt.clientX, y: evt.clientY
@@ -90,6 +95,8 @@ export class DrObjectComponent implements OnInit {
 
   onMouseUp(evt: any, data:DrObject): void {
     evt.stopPropagation();
+    evt.preventDefault();
+
     this.mouseUp.emit({ 
       location: { 
         x: evt.clientX, y: evt.clientY 

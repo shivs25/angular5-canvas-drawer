@@ -22,6 +22,7 @@ export declare class TextEditToolComponent implements OnInit {
     onTextAreaInput(evt: any): void;
     onTextAreaLoaded(evt: any): void;
     onClick(): void;
+    pixelizeBounds(bounds: any): any;
     ngOnInit(): void;
     private getTop();
     private getBottom();
