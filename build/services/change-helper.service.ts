@@ -71,7 +71,6 @@ export class ChangeHelperService {
       }
       case DrType.CALLOUT: {
         let c: DrCallout = <DrCallout>item;
-
         let pctX = (c.x - oldBounds.x) / oldBounds.width;
         let pctY = (c.y - oldBounds.y) / oldBounds.height;
         let pctWidth = c.width / oldBounds.width;
@@ -104,7 +103,6 @@ export class ChangeHelperService {
             y: newBounds.y + newBounds.height * pctPointerY
           };
         }
-
         return r;
       }
       case DrType.GROUPED_OBJECT: {

@@ -10,7 +10,7 @@ import { EditorToolType } from '../../models/enums';
 const HALF_SIZER: number = 4;
 @Component({
   selector: 'app-callout-point-tool',
-  template: "\n    <div class=\"absolute-position fill-parent\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\">\n\n      <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"polyBounds && point1Bounds && point2Bounds && pointerBounds\"\n        [ngStyle]=\"polyBounds\" class=\"no-interact\">\n        <svg:polygon\n          [attr.points]=\"getPoints()\"\n          fill=\"transparent\"\n          stroke=\"red\"\n          stroke-width=\"1\">\n        </svg:polygon>\n      </svg>\n\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"point1Bounds && (!mouseDown || sizer === 0)\"\n          [ngStyle]=\"point1Bounds\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='point1'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 0)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"point2Bounds && (!mouseDown || sizer === 1)\"\n          [ngStyle]=\"point2Bounds\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='point2'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 1)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"pointerBounds && (!mouseDown || sizer === 2)\"\n          [ngStyle]=\"pointerBounds\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='pointer'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 2)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n    </div>\n  ",
+  template: "\n    <div class=\"absolute-position fill-parent\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\">\n\n      <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"polyBounds && point1Bounds && point2Bounds && pointerBounds\"\n        [ngStyle]=\"pixelizeBounds(polyBounds)\" class=\"no-interact\">\n        <svg:polygon\n          [attr.points]=\"getPoints()\"\n          fill=\"transparent\"\n          stroke=\"red\"\n          stroke-width=\"1\">\n        </svg:polygon>\n      </svg>\n\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"point1Bounds && (!mouseDown || sizer === 0)\"\n          [ngStyle]=\"pixelizeBounds(point1Bounds)\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='point1'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 0)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"point2Bounds && (!mouseDown || sizer === 1)\"\n          [ngStyle]=\"pixelizeBounds(point2Bounds)\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='point2'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 1)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n        <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"pointerBounds && (!mouseDown || sizer === 2)\"\n          [ngStyle]=\"pixelizeBounds(pointerBounds)\" [ngClass]=\"{ 'no-interact': mouseDown }\">\n           <rect id='pointer'\n                class='crosshair'\n                (mousedown)=\"onSizerMouseDown($event, 2)\" \n                [attr.width]=\"SIZER_SIZE\" \n                [attr.height]= \"SIZER_SIZE\" \n                fill=\"green\">\n            </rect>\n        </svg>\n    </div>\n  ",
   styles: ["\n\n  "]
 })
 export class CalloutPointToolComponent implements OnInit {
@@ -167,6 +167,27 @@ export class CalloutPointToolComponent implements OnInit {
     }
   }
 
+
+  pixelizeBounds(bounds): any {
+    let returnValue: any = Object.assign({}, bounds);
+
+    if (bounds.left) {
+      returnValue.left = bounds.left + "px";
+    }
+    if (bounds.top) {
+      returnValue.top = bounds.top + "px";
+    }
+    if (bounds.width) {
+      returnValue.width = bounds.width + "px";
+    }
+    if (bounds.height) {
+      returnValue.height = bounds.height + "px";
+    }
+
+    return returnValue;
+  }
+
+  
   private isInBounds(x: number, y: number):boolean {
     if (x >= this.objectBounds.x && x <= this.objectBounds.x + this.objectBounds.width &&
         y >= this.objectBounds.y && y <= this.objectBounds.y + this.objectBounds.height) {

@@ -133,6 +133,27 @@ export class TextEditToolComponent implements OnInit {
     this._dataService.selectedTool = EditorToolType.SELECTOR_TOOL;
   }
 
+
+  pixelizeBounds(bounds): any {
+    let returnValue: any = Object.assign({}, bounds);
+
+    if (bounds.left) {
+      returnValue.left = bounds.left + "px";
+    }
+    if (bounds.top) {
+      returnValue.top = bounds.top + "px";
+    }
+    if (bounds.width) {
+      returnValue.width = bounds.width + "px";
+    }
+    if (bounds.height) {
+      returnValue.height = bounds.height + "px";
+    }
+
+    return returnValue;
+  }
+
+  
   ngOnInit() {
     this._offset = this._elementRef.nativeElement.getBoundingClientRect();
     this.rotation = this._dataService.selectedObjects[0].rotation;

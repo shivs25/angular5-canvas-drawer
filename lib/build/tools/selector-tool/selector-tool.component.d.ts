@@ -76,6 +76,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     getResizerY(index: number): number;
     getResizerCursor(index: number): string;
     shouldPreserveAspectRatio(): boolean;
+    pixelizeBounds(bounds: any): any;
     private microMoveObjects(diffX, diffY);
     private getDistanceBetweenTwoPoints(point1, point2);
     private getRelativeChildPointFromEvent(evt);
