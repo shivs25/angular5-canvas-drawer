@@ -4,7 +4,7 @@
   (mouseup)="onBackgroundMouseUp($event)">
 
   <svg xmlns="http://www.w3.org/2000/svg" *ngIf="polyBounds && point1Bounds && point2Bounds && pointerBounds"
-    [ngStyle]="polyBounds" class="no-interact">
+    [ngStyle]="pixelizeBounds(polyBounds)" class="no-interact">
     <svg:polygon
       [attr.points]="getPoints()"
       fill="transparent"
@@ -14,7 +14,7 @@
   </svg>
 
     <svg xmlns="http://www.w3.org/2000/svg" *ngIf="point1Bounds && (!mouseDown || sizer === 0)"
-      [ngStyle]="point1Bounds" [ngClass]="{ 'no-interact': mouseDown }">
+      [ngStyle]="pixelizeBounds(point1Bounds)" [ngClass]="{ 'no-interact': mouseDown }">
        <rect id='point1'
             class='crosshair'
             (mousedown)="onSizerMouseDown($event, 0)" 
@@ -24,7 +24,7 @@
         </rect>
     </svg>
     <svg xmlns="http://www.w3.org/2000/svg" *ngIf="point2Bounds && (!mouseDown || sizer === 1)"
-      [ngStyle]="point2Bounds" [ngClass]="{ 'no-interact': mouseDown }">
+      [ngStyle]="pixelizeBounds(point2Bounds)" [ngClass]="{ 'no-interact': mouseDown }">
        <rect id='point2'
             class='crosshair'
             (mousedown)="onSizerMouseDown($event, 1)" 
@@ -34,7 +34,7 @@
         </rect>
     </svg>
     <svg xmlns="http://www.w3.org/2000/svg" *ngIf="pointerBounds && (!mouseDown || sizer === 2)"
-      [ngStyle]="pointerBounds" [ngClass]="{ 'no-interact': mouseDown }">
+      [ngStyle]="pixelizeBounds(pointerBounds)" [ngClass]="{ 'no-interact': mouseDown }">
        <rect id='pointer'
             class='crosshair'
             (mousedown)="onSizerMouseDown($event, 2)" 
