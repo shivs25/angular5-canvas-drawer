@@ -269,9 +269,11 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
-    this.textObjectChanged.emit(items);
   }
 
+  public onTextObjectsChanged(items: DrObject[]) {
+    this.textObjectChanged.emit(items);
+  }
 
   public setText(items: DrObject[], text: string) {
     let changes: any[] = [];
@@ -290,7 +292,6 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
-    this.textObjectChanged.emit(items);
   }
 
   public renameObjects(items: DrObject[], newName: string) {

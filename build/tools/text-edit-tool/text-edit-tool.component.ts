@@ -131,6 +131,7 @@ export class TextEditToolComponent implements OnInit {
 
     }
     this._dataService.selectedTool = EditorToolType.SELECTOR_TOOL;
+    this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
   }
 
 
