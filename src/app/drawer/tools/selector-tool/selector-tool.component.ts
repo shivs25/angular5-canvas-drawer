@@ -356,7 +356,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
-          this.resizeObjects(data.location, this._modifierKeys.shift);
+          this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
         }
         else {
           this.rotateObject(data.location, this._modifierKeys.shift);
@@ -410,7 +410,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
-          this.resizeObjects(data.location, this._modifierKeys.shift);
+          this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
 
           if (this.rotation > 0) {
             let rotationPoint: DrPoint = { 
@@ -602,6 +602,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
   }
 
+  shouldPreserveAspectRatio(): boolean {
+    return this.isShiftDown() || this._dataStoreService.selectedObjects.filter((d) => d.drType === DrType.IMAGE).length > 0;
+  }
+
   private microMoveObjects(diffX: number, diffY: number) {
     Object.assign(this.cssBounds, {
       left: this.cssBounds.left + diffX,
@@ -706,10 +710,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
       console.log(this.boundingBoxObject);
       if (this.selectedObjects.length > 1) {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE);
+        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { drawPointer: false });
       }
       else {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0 });
+        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0, drawPointer: false });
       }
       
     }
@@ -750,7 +754,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     return this.getRotationAngle(location, this._mouseDownCentroid);
   }
 
-  private resizeObjects(location: DrPoint, shiftKey: boolean): void {
+  private resizeObjects(location: DrPoint, preserveAspectRatio: boolean): void {
     let b: BoundingBox = this._dataStoreService.selectedBounds;
 
     let hChanges = null;
@@ -782,12 +786,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 1 ? -1 : 1);
-        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y + b.height }, quadrant === 1 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
         break;
       }
       case 1: 
-        hChanges = this.resizeH(b, location, false, shiftKey, null, 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, null, 1);
         break;
       case 2: {
         let quadrant: number = 0;
@@ -808,12 +812,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 4 ? -1 : 1);
-        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 2 ? -1 : 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y }, quadrant === 4 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, { x: b.x + b.width, y: b.y }, quadrant === 2 ? -1 : 1);
         break;
       }
       case 3:
-        vChanges = this.resizeV(b, location, true, shiftKey, null, 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 4: {
           
@@ -835,12 +839,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 3 ? -1 : 1);
-        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, { x: b.x, y: b.y }, quadrant === 3 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
         break;
       }
       case 5: 
-        hChanges = this.resizeH(b, location, true, shiftKey, null, 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 6: {
         let quadrant: number = 0;
@@ -861,12 +865,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 2 ? -1 : 1);
-        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 4 ? -1 : 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, { x: b.x, y: b.y + b.height }, quadrant === 2 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, { x: b.x, y: b.y + b.height }, quadrant === 4 ? -1 : 1);
         break;
       }
       case 7:
-        vChanges = this.resizeV(b, location, false, shiftKey, null, 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, null, 1);
         break;
     }
 

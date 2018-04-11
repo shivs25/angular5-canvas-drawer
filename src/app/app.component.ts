@@ -73,6 +73,11 @@ export class AppComponent implements OnInit {
     this.dataStoreService.selectedTool = EditorToolType.CALLOUT_SQUARE_TOOL;
   }
 
+  roundedCallout(): void {
+
+    this.dataStoreService.selectedTool = EditorToolType.CALLOUT_ROUNDED_TOOL;
+  }
+
   image(): void {
     this.dataStoreService.selectedTool = EditorToolType.IMAGE_TOOL;
   }
@@ -432,6 +437,8 @@ export class AppComponent implements OnInit {
       id: 300,
       stroke: 'green',
       fill: 'pink',
+      showStroke: true,
+      showFill: true,
       x: 200,
       y: 200,
       width: 200,
@@ -439,7 +446,8 @@ export class AppComponent implements OnInit {
       basePoint1: { x: 280, y: 250 },
       basePoint2: { x: 320, y: 250 },
       pointerLocation: { x: 300, y: 350 },
-      pointerLocked: false
+      pointerLocked: false,
+      rounded: true
     });
     elements.push(c);
 

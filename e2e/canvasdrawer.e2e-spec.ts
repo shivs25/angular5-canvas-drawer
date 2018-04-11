@@ -351,10 +351,9 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      var el = element(by.css(containerCss + "polygon"));
- 
+      var el = element(by.css(containerCss + "clipPath"));
+      
       expect(el.isDisplayed()).toBeTruthy();
-      el.getAttribute('points').then(function (item) { expect(item.split(' ').length).toEqual(14); });
     });
     it('CanvasDrawer_AddTriangle_ExpectCalloutObjectOnCanvas', () => {
       utilities.normalPause();

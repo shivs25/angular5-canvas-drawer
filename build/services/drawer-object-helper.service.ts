@@ -11,11 +11,18 @@ import { DrType } from '../models/dr-type.enum';
 import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/bounding-box';
 import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/compiler';
 import { DrCallout } from '../models/dr-callout';
+import { Observable } from 'rxjs';
+import * as clipperLib from 'js-angusj-clipper';
 
 @Injectable()
 export class DrawerObjectHelperService {
 
-  constructor() { }
+  private clipper: any = null;
+  private clipperRequested: boolean = false;
+  
+  constructor() { 
+
+  }
 
   public canResize(element: DrObject, checkRotation: boolean): boolean {
     let returnValue: boolean = true;
@@ -291,6 +298,31 @@ export class DrawerObjectHelperService {
 
     return returnValue;
   }
+
+  getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[] {
+    if (null === this.clipper && !this.clipperRequested) {
+      this.clipperRequested = true;
+      clipperLib.loadNativeClipperLibInstanceAsync(
+        clipperLib.NativeClipperLibRequestedFormat.WasmWithAsmJsFallback
+      ).then((val) => {
+        this.clipper = val;
+      });
+    }
+    
+
+    let polyResult: any = null !== this.clipper ? this.clipper.clipToPaths({
+      clipType: clipperLib.ClipType.Union,
+      subjectInputs: [
+        { data: shape1 }
+      ],
+      clipInputs: [
+        { data: shape2 }
+      ],
+      subjectFillType: clipperLib.PolyFillType.EvenOdd
+    }) : null;
+    return null !== polyResult ? polyResult[0] : null;
+  }
+
 
                                 //currently set to any because when trying to access individual items it errored on compilation
   private getBoundingBoxForObject(drObj: any): BoundingBox {

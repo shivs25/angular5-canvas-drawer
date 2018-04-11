@@ -42,7 +42,7 @@ const INVISIBLE_STYLE: any = {
 
 @Component({
   selector: 'app-selector-tool',
-  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\" [ngClass]=\"{ 'no-interact': mouseDown }\"\n      \n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <svg:g>\n          <ng-container \n            *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n            [elementId]=\"1000001\"\n            [componentData]=\"boundingBoxObject\"\n            [hoverClass]=\"cursor\" \n  \n            (mouseDown)=\"onBoundsMouseDown($event)\"\n            (mouseMove)=\"onBoundsMouseMove($event)\"\n            (mouseUp)=\"onBoundsMouseUp($event)\">\n          </ng-container>\n        </svg:g>\n   \n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onSelectionMouseDown($event)\"\n          (mouseMove)=\"onSelectionMouseMove($event)\"\n          (mouseUp)=\"onSelectionMouseUp($event)\"\n          [hoverClass]=\"cursor\"\n        ></ng-container>\n\n        <ng-container *ngFor=\"let s of sizers; let i = index;\">\n            <rect [id]=\"'resizer-' + i\"  *ngIf=\"(i % 2 === 0 || !isShiftDown()) &&\n                                                (elementState | async)?.present.selectedBounds && \n                                                boundingBoxObject && \n                                                canResize && \n                                                mouseDownRotator < 0 &&\n                                                ((!mouseDown && !keyDown) || mouseDownSizer >= 0)\"\n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" fill=\"green\" \n            [attr.x]=\"getResizerX(i)\" \n            [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateRightBounds\" fill=\"green\"[ngClass]=\"{ 'no-interact': mouseDown }\">\n       <rect id='rotate-right'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 0)\" \n            (mousemove)=\"onRotateMouseMove($event, 0)\"\n            (mouseup)=\"onRotateMouseUp($event, 0)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\" \n            fill=\"red\">\n        </rect>\n    </svg>\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateBottomBounds\" fill=\"green\"[ngClass]=\"{ 'no-interact': mouseDown }\">\n      <rect id='rotate-bottom'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 1)\" \n            (mousemove)=\"onRotateMouseMove($event, 1)\"\n            (mouseup)=\"onRotateMouseUp($event, 1)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\"\n            fill=\"red\">\n        </rect>\n    </svg>\n  ",
+  template: "\n\n\n    <app-drawer [overrideProperties]=\"invisibleStyle\"  [hoverClass]=\"'clickable'\"\n      (mouseDownObject)=\"onMouseDown($event)\"\n      (mouseMoveObject)=\"onMouseMove($event)\"\n      (mouseUpObject)=\"onMouseUp($event)\"\n      >\n    </app-drawer>\n\n    <svg *ngIf=\"cssBounds\" [ngStyle]=\"cssBounds\" [ngClass]=\"{ 'no-interact': mouseDown }\"\n      \n      xmlns=\"http://www.w3.org/2000/svg\"\n      (mousedown)=\"onBackgroundMouseDown($event)\"\n      (mousemove)=\"onBackgroundMouseMove($event)\"\n      (mouseup)=\"onBackgroundMouseUp($event)\"\n      [ngClass]=\"cursor\"\n      >\n      <svg:g [attr.transform]=\"selectionTransform\">\n    \n        <svg:g>\n          <ng-container \n            *ngIf=\"(elementState | async)?.present.selectedBounds && boundingBoxObject\" dynamic-svg \n            [elementId]=\"1000001\"\n            [componentData]=\"boundingBoxObject\"\n            [hoverClass]=\"cursor\" \n  \n            (mouseDown)=\"onBoundsMouseDown($event)\"\n            (mouseMove)=\"onBoundsMouseMove($event)\"\n            (mouseUp)=\"onBoundsMouseUp($event)\">\n          </ng-container>\n        </svg:g>\n   \n        <ng-container  *ngFor=\"let s of selectedObjects\" dynamic-svg [componentData]=\"s\" [overrideProperties]=\"selectionStyle\" [elementId]=\"s.id\"\n          (mouseDown)=\"onSelectionMouseDown($event)\"\n          (mouseMove)=\"onSelectionMouseMove($event)\"\n          (mouseUp)=\"onSelectionMouseUp($event)\"\n          [hoverClass]=\"cursor\"\n        ></ng-container>\n\n        <ng-container *ngFor=\"let s of sizers; let i = index;\">\n            <rect [id]=\"'resizer-' + i\"  *ngIf=\"(i % 2 === 0 || !shouldPreserveAspectRatio()) &&\n                                                (elementState | async)?.present.selectedBounds && \n                                                boundingBoxObject && \n                                                canResize && \n                                                mouseDownRotator < 0 &&\n                                                ((!mouseDown && !keyDown) || mouseDownSizer >= 0)\"\n            (mousedown)=\"onResizerMouseDown($event, i)\" \n            (mousemove)=\"onResizerMouseMove($event, i)\"\n            (mouseup)=\"onResizerMouseUp($event, i)\"\n            [ngClass]=\"getResizerCursor(i)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" fill=\"green\" \n            [attr.x]=\"getResizerX(i)\" \n            [attr.y]=\"getResizerY(i)\"></rect>\n        </ng-container>\n      </svg:g>\n    </svg>\n\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateRightBounds\" fill=\"green\"[ngClass]=\"{ 'no-interact': mouseDown }\">\n       <rect id='rotate-right'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 0)\" \n            (mousemove)=\"onRotateMouseMove($event, 0)\"\n            (mouseup)=\"onRotateMouseUp($event, 0)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\" \n            fill=\"red\">\n        </rect>\n    </svg>\n    <svg xmlns=\"http://www.w3.org/2000/svg\" *ngIf=\"canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)\"\n      [ngStyle]=\"rotateBottomBounds\" fill=\"green\"[ngClass]=\"{ 'no-interact': mouseDown }\">\n      <rect id='rotate-bottom'\n            class='crosshair'\n            (mousedown)=\"onRotateMouseDown($event, 1)\" \n            (mousemove)=\"onRotateMouseMove($event, 1)\"\n            (mouseup)=\"onRotateMouseUp($event, 1)\"\n            [attr.width]=\"SIZER_SIZE\" \n            [attr.height]= \"SIZER_SIZE\" \n            [attr.rx]= \"HALF_SIZER\" \n            [attr.rx]= \"HALF_SIZER\"\n            fill=\"red\">\n        </rect>\n    </svg>\n  ",
   styles: ["\n\n  "]
 })
 export class SelectorToolComponent implements OnInit, OnDestroy {
@@ -213,6 +213,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         { x: this.cssBounds.left + evt.offsetX,
           y: this.cssBounds.top + evt.offsetY }, this._originalBounds.x + this._originalBounds.width / 2, 
                                                  this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
+      
       this.onMouseDown({ 
         location: pt, 
         data: null,
@@ -220,6 +221,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         ctrlKey: evt.ctrlKey,
         altKey: evt.altKey
       });
+      
     }
     
   }
@@ -261,6 +263,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBoundsMouseDown(data: MouseEventData): void {
+    
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -275,6 +278,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseDown(data: MouseEventData): void {
+    
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -328,6 +332,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this._dataStoreService.beginEdit();
       
       let b: BoundingBox = this._objectHelperService.getBoundingBox(this.selectedObjects);
+
       this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2};
       this._mouseDownLocation = data.location;
 
@@ -351,7 +356,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
-          this.resizeObjects(data.location, this._modifierKeys.shift);
+          this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
         }
         else {
           this.rotateObject(data.location, this._modifierKeys.shift);
@@ -405,7 +410,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
-          this.resizeObjects(data.location, this._modifierKeys.shift);
+          this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
 
           if (this.rotation > 0) {
             let rotationPoint: DrPoint = { 
@@ -468,6 +473,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         }
         
       }
+      console.log(this.boundingBoxObject);
       this.setupBounds();
 
       this.cursor = "grabber";
@@ -596,6 +602,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
   }
 
+  shouldPreserveAspectRatio(): boolean {
+    return this.isShiftDown() || this._dataStoreService.selectedObjects.filter((d) => d.drType === DrType.IMAGE).length > 0;
+  }
+
   private microMoveObjects(diffX: number, diffY: number) {
     Object.assign(this.cssBounds, {
       left: this.cssBounds.left + diffX,
@@ -640,6 +650,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private setupBounds(): void {
     if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
+      console.log(this.boundingBoxObject);
+      console.log(this._dataStoreService.selectedBounds);
       let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
       this.rotation = objs.length === 1 ? objs[0].rotation : 0;
 
@@ -696,12 +708,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
                        this.canAllResize(this.selectedObjects);
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
-
+      console.log(this.boundingBoxObject);
       if (this.selectedObjects.length > 1) {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE);
+        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { drawPointer: false });
       }
       else {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0 });
+        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0, drawPointer: false });
       }
       
     }
@@ -742,7 +754,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     return this.getRotationAngle(location, this._mouseDownCentroid);
   }
 
-  private resizeObjects(location: DrPoint, shiftKey: boolean): void {
+  private resizeObjects(location: DrPoint, preserveAspectRatio: boolean): void {
     let b: BoundingBox = this._dataStoreService.selectedBounds;
 
     let hChanges = null;
@@ -774,12 +786,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 1 ? -1 : 1);
-        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y + b.height }, quadrant === 1 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
         break;
       }
       case 1: 
-        hChanges = this.resizeH(b, location, false, shiftKey, null, 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, null, 1);
         break;
       case 2: {
         let quadrant: number = 0;
@@ -800,12 +812,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, false, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 4 ? -1 : 1);
-        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x + b.width, y: b.y }, quadrant === 2 ? -1 : 1);
+        hChanges = this.resizeH(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y }, quadrant === 4 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, { x: b.x + b.width, y: b.y }, quadrant === 2 ? -1 : 1);
         break;
       }
       case 3:
-        vChanges = this.resizeV(b, location, true, shiftKey, null, 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 4: {
           
@@ -827,12 +839,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 3 ? -1 : 1);
-        vChanges = this.resizeV(b, location, true, shiftKey, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, { x: b.x, y: b.y }, quadrant === 3 ? -1 : 1);
+        vChanges = this.resizeV(b, location, true, preserveAspectRatio, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
         break;
       }
       case 5: 
-        hChanges = this.resizeH(b, location, true, shiftKey, null, 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 6: {
         let quadrant: number = 0;
@@ -853,12 +865,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
 
-        hChanges = this.resizeH(b, location, true, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 2 ? -1 : 1);
-        vChanges = this.resizeV(b, location, false, shiftKey, { x: b.x, y: b.y + b.height }, quadrant === 4 ? -1 : 1);
+        hChanges = this.resizeH(b, location, true, preserveAspectRatio, { x: b.x, y: b.y + b.height }, quadrant === 2 ? -1 : 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, { x: b.x, y: b.y + b.height }, quadrant === 4 ? -1 : 1);
         break;
       }
       case 7:
-        vChanges = this.resizeV(b, location, false, shiftKey, null, 1);
+        vChanges = this.resizeV(b, location, false, preserveAspectRatio, null, 1);
         break;
     }
 

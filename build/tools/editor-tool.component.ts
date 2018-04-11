@@ -34,6 +34,7 @@ export class EditorToolComponent implements OnInit {
       case EditorToolType.ARROW_TOOL:
       case EditorToolType.ROUNDED_RECTANGLE_TOOL:
       case EditorToolType.CALLOUT_SQUARE_TOOL:
+      case EditorToolType.CALLOUT_ROUNDED_TOOL:
         return  true;
     }
     return  false;

@@ -5,6 +5,7 @@ export interface DrCallout extends DrRect {
     basePoint1: DrPoint;
     basePoint2: DrPoint;
     pointerLocation: DrPoint;
+    drawPointer: boolean;
 }
 export declare const DEFAULT_CALLOUT: DrCallout;
 export declare function createDrCallout(properties: any): DrCallout;

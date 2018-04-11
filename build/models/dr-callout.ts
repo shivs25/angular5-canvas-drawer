@@ -10,7 +10,7 @@ export interface DrCallout extends DrRect {
   basePoint1: DrPoint;
   basePoint2: DrPoint;
   pointerLocation: DrPoint;
-    
+  drawPointer: boolean;
 }
 
 export const DEFAULT_CALLOUT: DrCallout = Object.assign({}, DEFAULT_RECT, {
@@ -18,6 +18,7 @@ export const DEFAULT_CALLOUT: DrCallout = Object.assign({}, DEFAULT_RECT, {
    basePoint1: { x: 0, y: 0 },
    basePoint2: { x: 0, y: 0 },
    pointerLocation: { x: 0, y: 0 },
+   drawPointer: true,
    drType: DrType.CALLOUT
 });
 
