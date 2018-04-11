@@ -52,6 +52,7 @@ export declare class DataStoreService {
     renameObjects(items: DrObject[], newName: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     getSvgText(item: DrObject): TextInfo[];
+    getCalloutPath(item: DrObject): string;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
     addObjects(items: DrObject[]): void;
