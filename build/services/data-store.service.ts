@@ -50,6 +50,7 @@ export class DataStoreService {
   selectedBoundsChanged: EventEmitter<BoundingBox> = new EventEmitter<BoundingBox>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  textObjectChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
 
   private _duplicateOffset: number = 1;
 
@@ -268,6 +269,7 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
+    this.textObjectChanged.emit(items);
   }
 
 
@@ -288,6 +290,7 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
+    this.textObjectChanged.emit(items);
   }
 
   public renameObjects(items: DrObject[], newName: string) {

@@ -24,6 +24,7 @@ export declare class DataStoreService {
     selectedBoundsChanged: EventEmitter<BoundingBox>;
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
+    textObjectChanged: EventEmitter<DrObject[]>;
     private _duplicateOffset;
     constructor(_ngRedux: NgRedux<IDrawerAppState>, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _textRenderService: TextRenderingService);
     elements: DrObject[];

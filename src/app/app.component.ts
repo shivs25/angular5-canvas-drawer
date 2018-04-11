@@ -305,7 +305,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let elements = [];
-    
+    this.dataStoreService.textObjectChanged.subscribe((items) => {
+      console.log("Text Changed!")
+      console.log(items);
+    });
     this.dataStoreService.objectsAdded.subscribe(() => {
       console.log(this.dataStoreService.elements);
       if(this.dataStoreService.elements[this.dataStoreService.elements.length - 1].drType === DrType.TEXT){
