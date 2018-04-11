@@ -1,6 +1,7 @@
 import { DrObject } from '../models/dr-object';
 import { DrPoint } from '../models/dr-point';
 import { BoundingBox } from '../models/bounding-box';
+import { DrCallout } from '../models/dr-callout';
 export declare class DrawerObjectHelperService {
     private clipper;
     private clipperRequested;
@@ -21,5 +22,7 @@ export declare class DrawerObjectHelperService {
     getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox;
     getRotatedPoints(drObj: DrObject): DrPoint[];
     getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[];
+    getCalloutPath(v: DrCallout): string;
+    private getCorner(b, p);
     private getBoundingBoxForObject(drObj);
 }
