@@ -9,7 +9,7 @@ import { EditableTextAreaComponent } from '../editable-text-area/editable-text-a
 import * as d3Plus from 'd3plus-text';
 import { BoundingBox } from '../../models/bounding-box';
 import { DrPoint } from '../../models/dr-point';
-import { TEXT_PADDING, SPACE_PLACEHOLDER, TextRenderingService } from '../../services/text-rendering.service';
+import { TEXT_PADDING, SPACE_PLACEHOLDER, TextRenderingService, LINE_HEIGHT_RATIO } from '../../services/text-rendering.service';
 
 @Component({
   selector: 'app-text-edit-tool',
@@ -89,9 +89,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   onClick(): void {
-
     let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
-
     if (this.currentObject.fitText) {
       this._dataService.setText(this._dataService.selectedObjects, newText);
     }
@@ -112,7 +110,7 @@ export class TextEditToolComponent implements OnInit {
           bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
           break;
         case DrTextAlignment.FAR:
-          bounds.y -= textAreaHeight;
+          bounds.y = bounds.y + bounds.height - textAreaHeight;
           break;
       }
       bounds.height = textAreaHeight;
@@ -122,7 +120,7 @@ export class TextEditToolComponent implements OnInit {
           bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
           break;
         case DrTextAlignment.FAR:
-          bounds.x -= textAreaWidth;
+          bounds.x = bounds.x + bounds.width - textAreaWidth;
           break;
       }
       bounds.width = textAreaWidth;
@@ -154,6 +152,9 @@ export class TextEditToolComponent implements OnInit {
     return returnValue;
   }
 
+  divify():string {
+    return this._textRenderingService.getDivText(this.currentObject);
+  }
   
   ngOnInit() {
     this._offset = this._elementRef.nativeElement.getBoundingClientRect();
@@ -181,8 +182,9 @@ export class TextEditToolComponent implements OnInit {
       "opacity": "0",
       "color": this.currentObject.fontColor,
       "font-size": this.currentObject.size + "pt",
-      "line-height": (this.currentObject.size + TEXT_PADDING) + "px",
+      "line-height": (this.currentObject.size * LINE_HEIGHT_RATIO) + "px",
       "font-family": this.currentObject.fontFamily,
+      "font-weight": this.currentObject.bold ? "bold" : "normal",
       "text-align": this.getHAlign(),
       "white-space": this.currentObject.fitText ? "normal" : "nowrap",
       padding: TEXT_PADDING + "px",
@@ -210,7 +212,7 @@ export class TextEditToolComponent implements OnInit {
   private getTop(): string {
     switch(this.currentObject.vAlignment) {
       case DrTextAlignment.NEAR:
-        return "-1px";
+        return -(this._textRenderingService.getAscent(this.currentObject) / 2) + "px";
       case DrTextAlignment.CENTER:
         return "50%";
       case DrTextAlignment.FAR:
@@ -225,7 +227,7 @@ export class TextEditToolComponent implements OnInit {
       case DrTextAlignment.CENTER:
         return "";
       case DrTextAlignment.FAR:
-        return "-1px";
+        return -(this._textRenderingService.getAscent(this.currentObject) / 2) + "px"
     }
   }
 
@@ -285,7 +287,5 @@ export class TextEditToolComponent implements OnInit {
     }
   }
 
-  private divify():string {
-    return this._textRenderingService.getDivText(this.currentObject);
-  }
+  
 }

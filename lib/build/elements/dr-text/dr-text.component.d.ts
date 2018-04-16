@@ -5,13 +5,15 @@ import { TextRenderingService } from '../../services/text-rendering.service';
 export declare class DrTextComponent extends DrObjectComponent {
     private _textService;
     TEXT_PADDING: number;
+    LINE_HEIGHT_RATIO: number;
+    MATH: any;
     lineData: any;
+    firstLine: number;
     private _data;
     constructor(_textService: TextRenderingService, _objectHelperService: DrawerObjectHelperService);
     visualData: DrObject;
     getTextX(): number;
     getTextY(): number;
     getMultiLineTextY(): number;
-    getVAlignment(): string;
     getHAlignment(): string;
 }
