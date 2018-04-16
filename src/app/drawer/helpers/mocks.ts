@@ -20,6 +20,7 @@ export class MockRedux extends NgRedux<any> {
   
   }
 
+  
   export class MockChangeHelperService extends ChangeHelperService {
   }
 

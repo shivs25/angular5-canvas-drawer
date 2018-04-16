@@ -72,8 +72,8 @@
                 
                 
                 <tspan class="preserve-white-space" [attr.x]="getTextX()" 
-                      [attr.y]="i === 0 ? getMultiLineTextY() : ''" 
-                      [attr.dy]="i !== 0 ? ((visualData.size + TEXT_PADDING) * l.lineHeightMultiplier) : ''" 
+                      [attr.y]="i === firstLine ? getMultiLineTextY() : ''" 
+                      [attr.dy]="i !== 0 ? (MATH.round(visualData.size * (LINE_HEIGHT_RATIO)) * l.lineHeightMultiplier) : ''" 
                       *ngFor="let l of lineData; let i = index;">{{ l.text}}</tspan>
              
               

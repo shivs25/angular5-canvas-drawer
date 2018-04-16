@@ -249,8 +249,151 @@ describe('TextRenderingService', () => {
     expect(r).toEqual("Billy Shivers <div>&nbsp;&nbsp;</div><div>whats up</div><div><br></div>");
   });
 
+  it('should not add lines of text', () => {
+    let d = createDrText({ 
+      x: 100, 
+      y: 100,
+      width: 200,
+      height: 100,
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "\n" + "Text",
+      id: 6,
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
+    });
+
+    
+    let r = service.getDivText(d);
+    let u = service.undoHtmlText(r);
+    d.text = u;
+    r = service.getDivText(d);
+    u = service.undoHtmlText(r);
+    d.text = u;
+
+    expect(d.text).toEqual("\nText");
+  });
+
+  it('should remove span', () => {
+
+    let u = service.undoHtmlText('<div><span style="font-size: 16pt;">Text</span><br></div>');
+
+    expect(u).toEqual("Text");
+  });
+
+  it('should include first and last line', () => {
+
+    let u = service.undoHtmlText('<div><br></div>Text<div><br></div>');
+
+    expect(u).toEqual("\nText\n");
+  });
+
+  it('should include last line', () => {
+
+    let u = service.undoHtmlText('Text<div><br></div>');
+
+    expect(u).toEqual("Text\n");
+  });
+
+
+  it('should have beginning break', () => {
+    let d = createDrText({ 
+      x: 100, 
+      y: 100,
+      width: 200,
+      height: 100,
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "\n" + "Text",
+      id: 6,
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
+    });
+    
+    let u = service.getDivText(d);
+
+    expect(u).toEqual("<div><br></div>Text");
+  });
+  
+  it('should have end break', () => {
+    let d = createDrText({ 
+      x: 100, 
+      y: 100,
+      width: 200,
+      height: 100,
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "Text" + "\n",
+      id: 6,
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
+    });
+    
+    let u = service.getDivText(d);
+
+    expect(u).toEqual("Text<div><br></div>");
+  });
+
+  it('should have new line', () => {
+    let d = createDrText({ 
+      x: 100, 
+      y: 100,
+      width: 200,
+      height: 100,
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "Text" + "\n" + "Billy",
+      id: 6,
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
+    });
+    
+    let u = service.getDivText(d);
+
+    expect(u).toEqual("Text<div>Billy</div>");
+  });
+
+  it('should break because out of space', () => {
+    let d = createDrText({ 
+      x: 100, 
+      y: 100,
+      width: 80,
+      height: 253,
+      vAlignment: DrTextAlignment.NEAR,
+      hAlignment:  DrTextAlignment.NEAR, 
+      text: "Text" + "\n" + "\n" + "dsf" + "\n" + "\n" + "a" + "\n" + "bilasdf" + "\n",
+      id: 6,
+      size: 16,
+      fontFamily: 'Courier New',
+      rotation: 0,
+      italic: false,
+      showStroke: true,
+      stroke: 'black'
+    });
+    
+    let u = service.getSvgText(d);
+    expect(u.length).toEqual(8);
+
+  });
 });
 
 /*
-
+Text<div><br></div><div>dsf</div><div><br></div><div>a</div><div>bilasdf</div>
+253, width
 */

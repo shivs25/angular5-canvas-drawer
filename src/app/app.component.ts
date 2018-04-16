@@ -340,21 +340,45 @@ export class AppComponent implements OnInit {
     let text: DrText = createDrText({
       x: 100, 
       y: 100,
-      width: 100,
+      width: 200,
       height: 100,
-      vAlignment: DrTextAlignment.NEAR,
-      hAlignment:  DrTextAlignment.NEAR, 
+      vAlignment: DrTextAlignment.FAR,
+      hAlignment:  DrTextAlignment.FAR, 
       text: "Text",
       id: 6,
       size: 16,
-      fontFamily: 'Courier New',
+      fontFamily: 'Times New Roman',
       rotation: 0,
+      bold: true,
       italic: false,
       showStroke: true,
       stroke: 'black'
     });
     elements.push(text);
     
+    /*for(let i = 64; i >= 12; i--) {
+      text = createDrText({
+        id: 10 * i,
+        x: 100 + i * 5, 
+        y: 100 + i * 5,
+        width: 200,
+        height: 100,
+        vAlignment: DrTextAlignment.CENTER,
+        hAlignment:  DrTextAlignment.NEAR, 
+        text: i.toString(),
+        size: i,
+        fontFamily: 'Times New Roman',
+        rotation: 0,
+        bold: true,
+        italic: false,
+        showStroke: true,
+        showFill: true,
+        fill: 'white',
+        stroke: 'black'
+      });
+      elements.push(text);
+    }*/
+
     let e: DrEllipse = createDrEllipse({
       id: 4,
       x: 400,
@@ -400,7 +424,7 @@ export class AppComponent implements OnInit {
     let t3: DrRect = createDrRect({
       id: 3,
       x: 100,
-      y: 100,
+      y: 136,
       width: 200,
       height: 200,
       strokeWidth: 1,
@@ -409,7 +433,7 @@ export class AppComponent implements OnInit {
       clickable: true,
       rotation:0
     });
-    //elements.push(t3);
+    elements.push(t3);
 
     //elements.push(t);
     let r: DrPolygon = createDrPolygon({
@@ -445,17 +469,17 @@ export class AppComponent implements OnInit {
       fill: 'pink',
       showStroke: true,
       showFill: true,
-      x: 200,
-      y: 200,
-      width: 200,
+      x: 150,
+      y: 136,
+      width: 150,
       height: 100,
-      basePoint1: { x: 280, y: 250 },
-      basePoint2: { x: 320, y: 250 },
-      pointerLocation: { x: 300, y: 350 },
+      basePoint1: { x: 230, y: 186 },
+      basePoint2: { x: 290, y: 186 },
+      pointerLocation: { x: 250, y: 286 },
       pointerLocked: false,
       rounded: true
     });
-    elements.push(c);
+    //elements.push(c);
 
     //elements.push(r);
     //elements.push(r2);

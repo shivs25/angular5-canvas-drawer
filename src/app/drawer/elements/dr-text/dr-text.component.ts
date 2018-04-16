@@ -6,7 +6,8 @@ import { DrawerObjectHelperService } from '../../services/drawer-object-helper.s
 
 
 import { DrObject } from '../../models/dr-object';
-import { TextRenderingService, TEXT_PADDING } from '../../services/text-rendering.service';
+import { TextRenderingService, TEXT_PADDING, LINE_HEIGHT_RATIO } from '../../services/text-rendering.service';
+import { TextInfo } from '../../models/text-info';
 
 
 @Component({
@@ -18,8 +19,11 @@ import { TextRenderingService, TEXT_PADDING } from '../../services/text-renderin
 export class DrTextComponent extends DrObjectComponent {
 
   TEXT_PADDING: number = TEXT_PADDING;
+  LINE_HEIGHT_RATIO: number = LINE_HEIGHT_RATIO;
+  MATH: any = Math;
 
   lineData: any = null;
+  firstLine: number = 0;
 
   private _data: DrObject = null;
 
@@ -37,8 +41,10 @@ export class DrTextComponent extends DrObjectComponent {
   set visualData(value: DrObject) {
     if (this._data !== value) {
       let d: DrText = value as DrText;
-      this.lineData = this._textService.getSvgText(d);
-      this._data = value;
+      let ti: TextInfo[] = this._textService.getSvgText(d);
+      this.firstLine = ti.findIndex((t) => t.text.length > 0);
+      this.lineData = ti;
+      this._data = value; 
     }
   }
 
@@ -73,34 +79,22 @@ export class DrTextComponent extends DrObjectComponent {
     }
   }
 
+  
+
+  
+
   getMultiLineTextY(): number {
     let o: DrText = this.visualData as DrText;
-
     switch(o.vAlignment){
       case DrTextAlignment.NEAR:
-        return o.y + o.size + TEXT_PADDING;
+        return o.y + this._textService.getLineHeight(o) - this._textService.getAscent(o) + TEXT_PADDING;
       case DrTextAlignment.CENTER:
         return (o.y + o.height / 2) -     //center y of box
                 (
-                  (this.lineData.length - 1) * (o.size + TEXT_PADDING) / 2 - //total lines
-                  ((o.size) / 2)      //Half a line because v alignment doesnt apply
-                );
+                  (this.lineData.length * this._textService.getLineHeight(o)) / 2
+                ) + this._textService.getLineHeight(o) - this._textService.getAscent(o) / 2;
       case DrTextAlignment.FAR:
-        return o.y + o.height - (this.lineData.length - 1) * (o.size + TEXT_PADDING) - TEXT_PADDING;
-
-    }
-  }
-
-  getVAlignment(): string {
-    let o: DrText = this.visualData as DrText;
-
-    switch(o.vAlignment){
-      case DrTextAlignment.NEAR:
-        return 'hanging';
-      case DrTextAlignment.CENTER:
-        return 'middle';
-      case DrTextAlignment.FAR:
-        return  'alphabetical';
+        return o.y + o.height - TEXT_PADDING;
 
     }
   }
