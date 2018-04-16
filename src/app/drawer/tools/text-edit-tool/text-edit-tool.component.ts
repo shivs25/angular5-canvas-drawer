@@ -153,7 +153,6 @@ export class TextEditToolComponent implements OnInit {
   }
 
   divify():string {
-    console.log(this.currentObject.text);
     return this._textRenderingService.getDivText(this.currentObject);
   }
   

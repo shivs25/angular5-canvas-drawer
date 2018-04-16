@@ -194,4 +194,30 @@ describe('Store Tests', () => {
         currentState = store.getState();
         expect((store.getState().elementState.present.elements[3] as DrGroupedObject).objects.length).toEqual(2);
     });
+
+    it('SHould set new elements', () => {
+        let state = INITIAL_STATE;
+
+        state.elementState.present.elements = [
+            createDrRect({ id: 1}), 
+            createDrEllipse({ id: 2 }),
+            createDrRect({ id: 3})
+        ];
+
+        let store = createStore(rootReducer, state);
+
+        store.dispatch({
+            type: SET_ELEMENTS,
+            elements: [
+                Object.assign({}, state.elementState.present.elements[0]),
+                Object.assign({}, state.elementState.present.elements[2]),
+                Object.assign({}, state.elementState.present.elements[1])
+            ]
+        });
+
+        let currentState = store.getState();
+        expect(currentState.elementState.present.elements[0].id).toEqual(1);
+        expect(currentState.elementState.present.elements[1].id).toEqual(3);
+        expect(currentState.elementState.present.elements[2].id).toEqual(2);
+    });
 });
