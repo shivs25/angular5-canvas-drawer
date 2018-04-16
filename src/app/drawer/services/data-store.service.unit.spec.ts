@@ -485,4 +485,32 @@ describe('DataStoreService', () => {
     
   });
 
+  it('should reorder with proper ids', () => {
+    let items = [
+      createDrRect({ id: 1, name: "circle 1"}),
+      createDrRect({ id: 2, name: "circle 2"}),
+      createDrRect({ id: 3, name: "circle 3"}),
+    ];
+
+    spyOn(redux, "getState").and.returnValue(Object.assign({}, INITIAL_STATE, {
+      elementState: {
+        present: {
+          elements: items
+        }
+      }
+    }));
+    spyOn(redux, "dispatch");
+
+    service.moveObjectsDown([Object.assign({}, items[2]) as DrObject]);
+    
+    expect(redux.dispatch).toHaveBeenCalledWith({
+      type: SET_ELEMENTS,
+      elements: [
+        items[0],
+        items[2],
+        items[1]
+      ]}
+    );
+  });
+
 });
