@@ -687,8 +687,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private setupBounds(): void {
     if (null !== this._dataStoreService.selectedBounds && this._dataStoreService.selectedObjects.length > 0) {
-      console.log(this.boundingBoxObject);
-      console.log(this._dataStoreService.selectedBounds);
       let objs: DrObject[] = this._objectHelperService.getObjects(this._dataStoreService.selectedObjects.map((d) => d.id), this._dataStoreService.elements);
       this.rotation = objs.length === 1 ? objs[0].rotation : 0;
 

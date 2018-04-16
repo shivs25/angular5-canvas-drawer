@@ -23,6 +23,7 @@ export declare class TextEditToolComponent implements OnInit {
     onTextAreaLoaded(evt: any): void;
     onClick(): void;
     pixelizeBounds(bounds: any): any;
+    divify(): string;
     ngOnInit(): void;
     private getTop();
     private getBottom();
@@ -31,5 +32,4 @@ export declare class TextEditToolComponent implements OnInit {
     private getMarginTop(offsetHeight);
     private getMarginLeft(offsetWidth);
     private getHAlign();
-    private divify();
 }
