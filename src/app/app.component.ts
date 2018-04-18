@@ -428,8 +428,8 @@ export class AppComponent implements OnInit {
       width: 200,
       height: 200,
       strokeWidth: 1,
-      showFill: false,
-      fill: 'blue',
+      showFill: true,
+      fill: 'rgba(0,0,255,0.5)',
       clickable: true,
       rotation:0
     });

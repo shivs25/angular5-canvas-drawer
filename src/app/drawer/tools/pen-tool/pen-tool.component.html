@@ -12,6 +12,7 @@
       <rect [id]="'resizer-pen'" 
         *ngIf="currentObject && currentObject.points.length > 1"
         (click)="onResizerClick($event)"
+        (mousemove)="onResizerMouseMove($event)"
         width="8" height= "8" fill="green" [attr.x]="getResizerX()" [attr.y]="getResizerY()"></rect>
   </svg>
 

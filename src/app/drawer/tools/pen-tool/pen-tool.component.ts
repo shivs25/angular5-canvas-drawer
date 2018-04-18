@@ -82,6 +82,24 @@ export class PenToolComponent implements OnInit {
     }
   }
 
+  onResizerMouseMove(evt): void {
+    evt.stopPropagation();
+    evt.preventDefault();
+    if (this._currentPt) {
+
+      let pt: DrPoint = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+
+      Object.assign(this._currentPt, {
+        x: pt.x,
+        y: pt.y
+      });
+    }
+    else {
+      this._currentPt = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+      this.currentObject.points.push(this._currentPt);
+    }
+  }
+
   onBackgroundMouseMove(evt): void {
     
     if(this.currentObject) {
