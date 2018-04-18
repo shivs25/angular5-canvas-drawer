@@ -25,7 +25,7 @@ const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 const DOUBLE_CLICK_TIME: number = 250;
 
 const SELECTION_STYLE: any = {
-  showFill: true,
+  showFill: false,
   fill: "rgba(255, 0, 0, 0.3)",
   dashedLine: false,
   showStroke: true,
@@ -481,7 +481,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         }
         
       }
-      console.log(this.boundingBoxObject);
       this.setupBounds();
 
       this.cursor = "grabber";
@@ -743,7 +742,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
                        this.canAllResize(this.selectedObjects);
       this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
-      console.log(this.boundingBoxObject);
       if (this.selectedObjects.length > 1) {
         this.selectionStyle = Object.assign({}, SELECTION_STYLE, { drawPointer: false });
       }

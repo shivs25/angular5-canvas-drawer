@@ -267,7 +267,8 @@ export class DataStoreService {
         { id: i.id, 
           changes: Object.assign(this._changeService.getBoundsChanges(i, bounds, this.selectedBounds), {
             text: text,
-            fitText: true
+            fitText: true,
+            initial: false
           })
         });
       }
@@ -291,29 +292,31 @@ export class DataStoreService {
   }
 
   public setText(items: DrObject[], text: string) {
-    let changes: any[] = [];
-    for(let i of items) {
-      changes.push(
-      { 
-        id: i.id, 
-        changes: {
-          text: text,
-          initial: false
-        }
+    if (!(1 === items.length && text === ((items[0] as DrText).text))) {
+      let changes: any[] = [];
+      for(let i of items) {
+        changes.push(
+        { 
+          id: i.id, 
+          changes: {
+            text: text,
+            initial: false
+          }
+        });
+      }
+      this._ngRedux.dispatch({
+        type: CHANGE_OBJECTS_PROPERTIES,
+        changes: changes
       });
+      this.resetSelection();
+      this._duplicateOffset = 1;
+      if (1 === items.length && ((items[0]) as DrText).initial) {
+        //Remove the creation of this object from history.
+        let state = this._ngRedux.getState();
+        state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
+      }
     }
-    this._ngRedux.dispatch({
-      type: CHANGE_OBJECTS_PROPERTIES,
-      changes: changes
-    });
-    this.resetSelection();
-    this._duplicateOffset = 1;
-
-    if (1 === items.length && ((items[0]) as DrText).initial) {
-      //Remove the creation of this object from history.
-      let state = this._ngRedux.getState();
-      state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
-    }
+    
   }
 
   public renameObjects(items: DrObject[], newName: string) {
@@ -741,6 +744,7 @@ public getSvgText(item: DrObject): TextInfo[] {
   //=========History=========
   public undo(): void {
     this._ngRedux.dispatch(ActionCreators.undo());
+
     this.undid.emit();
   }
 
