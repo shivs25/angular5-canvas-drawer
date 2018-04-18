@@ -300,15 +300,23 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(data: MouseEventData): void {
-
     if (null === data.data || !data.data.clickable) {
       this._dataStoreService.selectObjects([]);
-      this.setupBounds();
     }
     else if (data.data) {
-      if (data.data.id !== this.boundingBoxObjectUniqueId) {
-        //Not the selected bounds object
-        let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === data.data.id);
+      //Not the selected bounds object
+      let intersectedObjects:DrObject[] = this._objectHelperService.getObjectsAtPoint(this._dataStoreService.elements.filter((t) => t.clickable), data.location.x, data.location.y);
+      let topSelectedObject: DrObject = null;
+      if (intersectedObjects.length > 0) {
+        intersectedObjects = intersectedObjects.sort((a, b) => {
+          return this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === b.id)) 
+                  -
+                  this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === a.id));
+        });
+        topSelectedObject = intersectedObjects[0];
+
+        let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === topSelectedObject.id);
+      
         if (selected) {
           let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
           if (this._modifierKeys.shift) {
@@ -324,15 +332,20 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             //Add to selection.
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects,
-              data.data
+              topSelectedObject
             ]);
           }
           else {
             //Select new
-            this._dataStoreService.selectObjects([data.data]);
+            this._dataStoreService.selectObjects([topSelectedObject]);
           }
-        }
+        } 
       }
+      else {
+        console.log("NOT SELECTED");
+        this._dataStoreService.selectObjects([]);
+      }
+      
     }
     
     this.setupBounds();

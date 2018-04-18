@@ -87,7 +87,7 @@ export class PenToolComponent implements OnInit {
     evt.preventDefault();
     if (this._currentPt) {
 
-      let pt: DrPoint = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+      let pt: DrPoint = this.getActivePoint(this.getResizerX() + HALF_SIZER, this.getResizerY() + HALF_SIZER);
 
       Object.assign(this._currentPt, {
         x: pt.x,
@@ -95,7 +95,7 @@ export class PenToolComponent implements OnInit {
       });
     }
     else {
-      this._currentPt = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+      this._currentPt = this.getActivePoint(this.getResizerX() + HALF_SIZER, this.getResizerY() + HALF_SIZER);
       this.currentObject.points.push(this._currentPt);
     }
   }

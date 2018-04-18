@@ -4,8 +4,8 @@ import { BoundingBox } from '../models/bounding-box';
 import { DrCallout } from '../models/dr-callout';
 export declare class DrawerObjectHelperService {
     private clipper;
-    private clipperRequested;
     constructor();
+    getObjectsAtPoint(elements: DrObject[], x: any, y: any): DrObject[];
     canResize(element: DrObject, checkRotation: boolean): boolean;
     getObjects(ids: number[], availableElements: DrObject[]): DrObject[];
     projectObject(item: DrObject, bounds: BoundingBox, offsetX: number, offsetY: number): void;

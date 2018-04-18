@@ -20,10 +20,87 @@ const RADIUS: number = 16;
 export class DrawerObjectHelperService {
 
   private clipper: any = null;
-  private clipperRequested: boolean = false;
   
   constructor() { 
+    if (null === this.clipper) {
+      clipperLib.loadNativeClipperLibInstanceAsync(
+        clipperLib.NativeClipperLibRequestedFormat.WasmWithAsmJsFallback
+      ).then((val) => {
+        this.clipper = val;
+      });
+    }
+  }
 
+  public getObjectsAtPoint(elements: DrObject[], x, y): DrObject[] {
+    let returnValue: DrObject[] = [];
+
+    let bBoxObjects: DrObject[] = [];
+    let bBox: BoundingBox;
+    for(let e of elements) {
+      bBox = this.getBoundingBox([e]);
+      if (x >= bBox.x && x <= bBox.x + bBox.width && 
+          y >= bBox.y && y <= bBox.y + bBox.height) {
+
+            bBoxObjects.push(e);
+          }
+    }
+
+    //Now that we have the bounding box objects, lets get 
+    //the actual objects for what is remaining
+    for(let e of bBoxObjects) {
+      switch(e.drType) {
+        case DrType.IMAGE:
+        case DrType.RECTANGLE:
+        case DrType.TEXT:
+          returnValue.push(e);
+          break;
+        case DrType.ELLIPSE: {
+            let ell: DrEllipse = (e as DrEllipse);
+            let normalized: DrPoint = { x: x - ell.x, y: y - ell.y };
+            let result: number = ((normalized.x * normalized.x) / 
+                                  (ell.rx * ell.rx)) + ((normalized.y * normalized.y) / (ell.ry * ell.ry));
+            if (result <= 1) {
+              returnValue.push(e);
+            }
+
+          }
+          break;
+        case DrType.POLYGON: {
+            let p: DrPolygon = (e as DrPolygon);
+            let poly = p.points;
+            let inpoly = this.clipper.pointInPolygon({ x: x, y: y }, poly);
+            if (0 !== inpoly) {
+              returnValue.push(e);
+            }
+          }
+          break;
+        case DrType.CALLOUT: {
+          let c: DrCallout = (e as DrCallout);
+          if (x >= c.x && x <= c.x + c.width && 
+            y >= c.y && y <= bBox.y + c.height) {
+  
+              returnValue.push(e);
+            }
+          else {
+            //Check the pointer
+            let poly = [c.basePoint1, c.basePoint2, c.pointerLocation];
+            let inpoly = this.clipper.pointInPolygon({ x: x, y: y }, poly);
+            if (0 !== inpoly) {
+              returnValue.push(e);
+            }
+          }
+        }
+          
+          break;
+        case DrType.GROUPED_OBJECT:
+          if (this.getObjectsAtPoint((e as DrGroupedObject).objects, x, y).length > 0) {
+            returnValue.push(e);
+          }
+          break;
+      }
+    }
+
+    return returnValue;
   }
 
   public canResize(element: DrObject, checkRotation: boolean): boolean {
@@ -302,14 +379,7 @@ export class DrawerObjectHelperService {
   }
 
   getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[] {
-    if (null === this.clipper && !this.clipperRequested) {
-      this.clipperRequested = true;
-      clipperLib.loadNativeClipperLibInstanceAsync(
-        clipperLib.NativeClipperLibRequestedFormat.WasmWithAsmJsFallback
-      ).then((val) => {
-        this.clipper = val;
-      });
-    }
+    
     
 
     let polyResult: any = null !== this.clipper ? this.clipper.clipToPaths({
