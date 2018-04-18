@@ -8,7 +8,8 @@ export const REPLACE_OBJECTS = "REPLACE_OBJECTS";
 export const CLEAR_OBJECTS = "CLEAR_OBJECTS";
 export const SET_TOOL = "SET_TOOL";
 export const SET_HIDE_SELECTION = "SET_HIDE_SELECTION";
-
+export const ADD_TEMP_OBJECTS = "ADD_TEMP_OBJECTS";
+export const REMOVE_TEMP_OBJECTS = "REMOVE_TEMP_OBJECTS";
 
 export const BEGIN_EDIT = "BEGIN_EDIT";
 export const END_EDIT = "END_EDIT";

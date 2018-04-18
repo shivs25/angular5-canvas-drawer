@@ -14,8 +14,8 @@ export interface DrText extends DrRect {
     hAlignment: DrTextAlignment;
     vAlignment: DrTextAlignment; 
     showText: boolean;
+    initial: boolean;
 }
-
 
 export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     text: " ",
@@ -30,7 +30,8 @@ export const DEFAULT_TEXT: DrText = Object.assign({}, DEFAULT_RECT, {
     hAlignment: DrTextAlignment.NEAR,
     vAlignment: DrTextAlignment.NEAR,
     drType: DrType.TEXT,
-    showText: true
+    showText: true,
+    initial: true
 });
 
 export function createDrText(properties: any): DrText {

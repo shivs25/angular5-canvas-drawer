@@ -18,7 +18,9 @@ import {
   INIT_ELEMENTS,
   SET_PREVIEW_ELEMENTS,
   CHANGE_PREVIEW_STYLES,
-  SET_HIDE_SELECTION
+  SET_HIDE_SELECTION,
+  ADD_TEMP_OBJECTS,
+  REMOVE_TEMP_OBJECTS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -235,11 +237,16 @@ export class DataStoreService {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
       changes: items.map((x: DrObject) => { 
-        return { id: x.id, changes: { url: url } }; 
+        return { id: x.id, changes: { url: url, initial: false } }; 
       })
     });
     this.resetSelection();
     this._duplicateOffset = 1;
+
+    if (1 === items.length && ((items[0]) as DrImage).initial) {
+      let state = this._ngRedux.getState();
+      state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
+    }
   }
 
   public setRotation(item: DrObject, rotation: number) {
@@ -252,6 +259,8 @@ export class DataStoreService {
   }
 
   public setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox) {
+
+
     let changes: any[] = [];
     for(let i of items) {
       changes.push(
@@ -269,6 +278,12 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
+
+    if (1 === items.length && ((items[0]) as DrText).initial) {
+      //Remove the creation of this object from history.
+      let state = this._ngRedux.getState();
+      state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
+    }
   }
 
   public onTextObjectsChanged(items: DrObject[]) {
@@ -282,7 +297,8 @@ export class DataStoreService {
       { 
         id: i.id, 
         changes: {
-          text: text
+          text: text,
+          initial: false
         }
       });
     }
@@ -292,6 +308,12 @@ export class DataStoreService {
     });
     this.resetSelection();
     this._duplicateOffset = 1;
+
+    if (1 === items.length && ((items[0]) as DrText).initial) {
+      //Remove the creation of this object from history.
+      let state = this._ngRedux.getState();
+      state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
+    }
   }
 
   public renameObjects(items: DrObject[], newName: string) {
@@ -397,6 +419,15 @@ public getSvgText(item: DrObject): TextInfo[] {
     this._duplicateOffset = 1;
   }
 
+  public addTempObjects(items: DrObject[]): void {
+    this._ngRedux.dispatch({
+      type: ADD_TEMP_OBJECTS,
+      newItems: items
+    });
+    this.objectsAdded.emit(items);
+    this._duplicateOffset = 1;
+  }
+
   public addObjects(items: DrObject[]): void {
     this._ngRedux.dispatch({
       type: ADD_OBJECTS,
@@ -418,12 +449,28 @@ public getSvgText(item: DrObject): TextInfo[] {
     this._duplicateOffset = 1;
   }
 
-  public groupObjects(items: DrObject[]): void {
-    let itemToAdd: DrGroupedObject = createDrGroupedObject({
-      id: this.getNextId(),
-      objects: items,
-      name: this.getUniqueName("Group")
+  public removeTempObjects(items: DrObject[]): void {
+    let ids: number[] = items.map((x:DrObject) => x.id);
+    let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
+    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
+    this._ngRedux.dispatch({
+      type: REMOVE_TEMP_OBJECTS,
+      ids: items.map((x: any) => x.id)
     });
+    this.selectObjects(newSelectedObjects);
+    this._duplicateOffset = 1;
+
+    
+    let state = this._ngRedux.getState();
+    if (state.elementState.past.length > 0) {
+      //REmove the creation of this object from history.
+      state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
+    }
+    
+  }
+
+  public groupObjects(items: DrObject[]): void {
+    
 
 
     let groupedObject: DrObject;
@@ -438,6 +485,18 @@ public getSvgText(item: DrObject): TextInfo[] {
             }
         }
     }
+    
+    items = items.sort((a, b) => {
+      return this.elements.indexOf(this.elements.find((t) => t.id === a.id))
+             - 
+             this.elements.indexOf(this.elements.find((t) => t.id === b.id));
+    });
+
+    let itemToAdd: DrGroupedObject = createDrGroupedObject({
+      id: this.getNextId(),
+      objects: items,
+      name: this.getUniqueName("Group")
+    });
 
     this._ngRedux.dispatch({
       type: REPLACE_OBJECTS,

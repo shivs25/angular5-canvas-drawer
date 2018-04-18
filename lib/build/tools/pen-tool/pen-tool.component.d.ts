@@ -16,6 +16,7 @@ export declare class PenToolComponent implements OnInit {
     ngOnInit(): void;
     onKeyDown(evt: any): void;
     onKeyUp(evt: any): void;
+    onResizerMouseMove(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundClick(evt: any): void;
     onResizerClick(evt: any): void;
