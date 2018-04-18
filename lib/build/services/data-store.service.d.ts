@@ -57,8 +57,10 @@ export declare class DataStoreService {
     getCalloutPath(item: DrObject): string;
     moveObjectsDown(items: DrObject[]): void;
     moveObjectsUp(items: DrObject[]): void;
+    addTempObjects(items: DrObject[]): void;
     addObjects(items: DrObject[]): void;
     removeObjects(items: DrObject[]): void;
+    removeTempObjects(items: DrObject[]): void;
     groupObjects(items: DrObject[]): void;
     ungroupObject(item: DrGroupedObject): void;
     duplicateObjects(items: DrObject[]): void;

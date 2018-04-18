@@ -11,6 +11,7 @@ export interface DrText extends DrRect {
     hAlignment: DrTextAlignment;
     vAlignment: DrTextAlignment;
     showText: boolean;
+    initial: boolean;
 }
 export declare const DEFAULT_TEXT: DrText;
 export declare function createDrText(properties: any): DrText;

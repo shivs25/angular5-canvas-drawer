@@ -15,7 +15,7 @@ const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 
 @Component({
   selector: 'app-pen-tool',
-  template: "\n    <div class=\"absolute-position fill-parent\">\n    \n      <svg (click)=\"onBackgroundClick($event)\" (mousemove)=\"onBackgroundMouseMove($event)\" \n            [ngClass]=\"'crosshair'\"\n            class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\">\n          <ng-container *ngIf=\"currentObject && currentObject.points.length > 1\" dynamic-svg \n            [componentData]=\"currentObject\" \n            [overrideProperties]=\"objectStyle\" \n            [canInteract]=\"false\" elementId=\"1000000\">\n          </ng-container>\n\n          <rect [id]=\"'resizer-pen'\" \n            *ngIf=\"currentObject && currentObject.points.length > 1\"\n            (click)=\"onResizerClick($event)\"\n            width=\"8\" height= \"8\" fill=\"green\" [attr.x]=\"getResizerX()\" [attr.y]=\"getResizerY()\"></rect>\n      </svg>\n\n     </div>\n  ",
+  template: "\n    <div class=\"absolute-position fill-parent\">\n    \n      <svg (click)=\"onBackgroundClick($event)\" (mousemove)=\"onBackgroundMouseMove($event)\" \n            [ngClass]=\"'crosshair'\"\n            class=\"absolute-position fill-parent\" xmlns=\"http://www.w3.org/2000/svg\">\n          <ng-container *ngIf=\"currentObject && currentObject.points.length > 1\" dynamic-svg \n            [componentData]=\"currentObject\" \n            [overrideProperties]=\"objectStyle\" \n            [canInteract]=\"false\" elementId=\"1000000\">\n          </ng-container>\n\n          <rect [id]=\"'resizer-pen'\" \n            *ngIf=\"currentObject && currentObject.points.length > 1\"\n            (click)=\"onResizerClick($event)\"\n            (mousemove)=\"onResizerMouseMove($event)\"\n            width=\"8\" height= \"8\" fill=\"green\" [attr.x]=\"getResizerX()\" [attr.y]=\"getResizerY()\"></rect>\n      </svg>\n\n     </div>\n  ",
   styles: ["\n\n  "]
 })
 export class PenToolComponent implements OnInit {
@@ -79,6 +79,24 @@ export class PenToolComponent implements OnInit {
           this.reset();
           break;
       }
+    }
+  }
+
+  onResizerMouseMove(evt): void {
+    evt.stopPropagation();
+    evt.preventDefault();
+    if (this._currentPt) {
+
+      let pt: DrPoint = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+
+      Object.assign(this._currentPt, {
+        x: pt.x,
+        y: pt.y
+      });
+    }
+    else {
+      this._currentPt = this.getActivePoint(evt.offsetX + this.getResizerX(), evt.offsetY + this.getResizerY());
+      this.currentObject.points.push(this._currentPt);
     }
   }
 
