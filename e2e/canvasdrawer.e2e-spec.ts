@@ -351,7 +351,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      var el = element(by.css(containerCss + "clipPath"));
+      var el = element(by.css(containerCss + "path"));
       
       expect(el.isDisplayed()).toBeTruthy();
     });
