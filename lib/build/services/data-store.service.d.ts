@@ -8,6 +8,7 @@ import { DrawerObjectHelperService } from '../services/drawer-object-helper.serv
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
+import { DrImage } from '../models/dr-image';
 import { TextRenderingService } from './text-rendering.service';
 import { TextInfo } from '../models/text-info';
 import { DrPoint } from '../models/dr-point';
@@ -47,6 +48,7 @@ export declare class DataStoreService {
     moveObjects(items: DrObject[], newBounds: BoundingBox): void;
     setVisibility(items: DrObject[], visibility: boolean): void;
     setUrls(items: DrObject[], url: string): void;
+    setInitialUrls(items: DrImage[], url: string): void;
     setRotation(item: DrObject, rotation: number): void;
     setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox): void;
     onTextObjectsChanged(items: DrObject[]): void;

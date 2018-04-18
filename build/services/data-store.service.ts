@@ -20,7 +20,8 @@ import {
   CHANGE_PREVIEW_STYLES,
   SET_HIDE_SELECTION,
   ADD_TEMP_OBJECTS,
-  REMOVE_TEMP_OBJECTS
+  REMOVE_TEMP_OBJECTS,
+  SET_INITIAL_URLS
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
@@ -247,6 +248,17 @@ export class DataStoreService {
       let state = this._ngRedux.getState();
       state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
     }
+  }
+
+  public setInitialUrls(items: DrImage[], url: string) {
+    this._ngRedux.dispatch({
+      type: SET_INITIAL_URLS,
+      changes: items.map((x: DrObject) => { 
+        return { id: x.id, changes: { url: url } }; 
+      })
+    });
+    this.resetSelection();
+    this._duplicateOffset = 1;
   }
 
   public setRotation(item: DrObject, rotation: number) {

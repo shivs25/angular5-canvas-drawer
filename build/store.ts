@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION, ADD_TEMP_OBJECTS, REMOVE_TEMP_OBJECTS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION, ADD_TEMP_OBJECTS, REMOVE_TEMP_OBJECTS, SET_INITIAL_URLS } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -105,6 +105,11 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         case CHANGE_OBJECTS_PROPERTIES: {
             
             
+            return Object.assign({}, state, {
+                elements: findAndReplaceNestedItems(state.elements, action.changes)
+            });
+        }
+        case SET_INITIAL_URLS: {
             return Object.assign({}, state, {
                 elements: findAndReplaceNestedItems(state.elements, action.changes)
             });
@@ -247,8 +252,8 @@ const ACTIONS_TO_IGNORE = [
     SET_PREVIEW_ELEMENTS, 
     CHANGE_PREVIEW_STYLES, 
     SET_HIDE_SELECTION, 
-    //ADD_TEMP_OBJECTS, 
-    REMOVE_TEMP_OBJECTS
+    REMOVE_TEMP_OBJECTS,
+    SET_INITIAL_URLS
 ];
 
 export const undoableElementsReducer: any = undoable(elementsReducer, {
