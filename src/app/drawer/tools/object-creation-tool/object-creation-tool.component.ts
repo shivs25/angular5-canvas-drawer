@@ -5,8 +5,8 @@ import { DataStoreService } from '../../services/data-store.service';
 import { EditorToolType, DrType, DrTextAlignment } from '../../models/enums';
 import { createDrRect, DrRect } from '../../models/dr-rect';
 import { DrEllipse, createDrEllipse } from '../../models/dr-ellipse';
-import { createDrText } from '../../models/dr-text';
-import { createDrImage } from '../../models/dr-image';
+import { createDrText, DrText } from '../../models/dr-text';
+import { createDrImage, DrImage } from '../../models/dr-image';
 import { BoundingBox } from '../../models/bounding-box';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
@@ -252,8 +252,41 @@ export class ObjectCreationToolComponent implements OnInit {
         }
 
         switch(this._dataService.selectedTool) {
-          case EditorToolType.IMAGE_TOOL:
-          case EditorToolType.TEXT_TOOL:
+          case EditorToolType.IMAGE_TOOL: {
+            let r: DrRect = this.currentObject as DrRect;
+            let image: DrImage = createDrImage({
+                id: this.getNextId(),
+                name: this._dataService.getUniqueName('Image'),
+                x: r.x,
+                y: r.y,
+                width: r.width,
+                height: r.height
+              });
+              image.name = this.currentObject.name;
+
+
+              this._dataService.addTempObjects([image]);
+              this._dataService.selectObjects([image]);
+            }
+            break;
+          case EditorToolType.TEXT_TOOL: {
+            let r: DrRect = this.currentObject as DrRect;
+            let text: DrText = createDrText({
+                id: this.getNextId(),
+                name: this._dataService.getUniqueName('Text'),
+                x: r.x,
+                y: r.y,
+                width: r.width,
+                height: r.height,
+                hAlignment: DrTextAlignment.CENTER
+              });
+              text.name = this.currentObject.name;
+
+
+              this._dataService.addTempObjects([text]);
+              this._dataService.selectObjects([text]);
+            }
+            break;
           case EditorToolType.RECTANGLE_TOOL: 
           case EditorToolType.ROUNDED_RECTANGLE_TOOL: {
             Object.assign(this.currentObject, {
@@ -265,29 +298,6 @@ export class ObjectCreationToolComponent implements OnInit {
 
             let r: DrRect = this.currentObject as DrRect;
             switch(this._dataService.selectedTool) {
-                case EditorToolType.IMAGE_TOOL: {
-                  objectToAdd = createDrImage({
-                    id: this.getNextId(),
-                    x: r.x,
-                    y: r.y,
-                    width: r.width,
-                    height: r.height
-                   });
-                   
-                }
-                break;
-                case EditorToolType.TEXT_TOOL: {
-                  objectToAdd = createDrText({
-                    id: this.getNextId(),
-                    x: r.x,
-                    y: r.y,
-                    width: r.width,
-                    height: r.height,
-                    hAlignment: DrTextAlignment.CENTER
-                   });
-                   
-                }
-                break;
                 case EditorToolType.RECTANGLE_TOOL: 
                 case EditorToolType.ROUNDED_RECTANGLE_TOOL: {
                   objectToAdd = createDrRect({
@@ -375,9 +385,12 @@ export class ObjectCreationToolComponent implements OnInit {
             break;
         }
         
-        objectToAdd.name = this.currentObject.name;
-        this._dataService.addObjects([objectToAdd]);
-        this._dataService.selectObjects([objectToAdd]);
+        if (null !== objectToAdd) {
+          objectToAdd.name = this.currentObject.name;
+          this._dataService.addObjects([objectToAdd]);
+          this._dataService.selectObjects([objectToAdd]);
+        }
+        
       }
       else {
         if (EditorToolType.TEXT_TOOL === this._dataService.selectedTool) {
@@ -391,15 +404,13 @@ export class ObjectCreationToolComponent implements OnInit {
             hAlignment: DrTextAlignment.NEAR
           });
 
-          this._dataService.addObjects([objectToAdd]);
+          this._dataService.addTempObjects([objectToAdd]);
           this._dataService.selectObjects([objectToAdd]);
         }
       }
       this.currentObject = null;
       this._mouseDown = false;
       this._mouseDownLocation = null;
-
-      
     }
   }
 

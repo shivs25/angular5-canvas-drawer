@@ -45,6 +45,13 @@
     <button (click)="setBoundingBox()">Bounding Box</button>
     <button (click)="renameSelectedObject()">Rename Object</button>
 </div>
+
+<!-- UNCOMMENT TO SEE HISTORY
+<pre>
+    {{ (elementState | async)?.past | json }}
+</pre>
+-->
+
 <div style="position:relative; width: 600px; height: 600px; border: 1px solid red">
 
     <app-editable-drawer [itemViewBox]="viewBoxItem">
