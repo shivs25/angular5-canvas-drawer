@@ -8,7 +8,7 @@ fdescribe('Maps', function () {
 
   let utilities: Utilities = new Utilities();
   let canvas: CanvasPage = new CanvasPage();
-  let containerCss = "app-editable-drawer app-editor-tool ";
+  let containerCss = "app-editor-tool app-drawer div svg ";
   let sizeBuffer = 3;
 
     beforeAll(() => {
@@ -306,8 +306,8 @@ fdescribe('Maps', function () {
 
       canvas.selectButton("Selector");
       utilities.shortPause();
-
-      expect(element(by.css(containerCss + "rect")).isDisplayed()).toBeTruthy();
+      
+      expect(element(by.css(containerCss + "image")).isDisplayed()).toBeTruthy();
     });
     it('CanvasDrawer_AddText_ExpectTextFieldObjectOnCanvas', () => {
       utilities.normalPause();
@@ -322,8 +322,7 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       //both are pointing to the same object, but it's good to test both selectors
-      expect(element(by.css(containerCss + "rect")).isDisplayed()).toBeTruthy();
-      //expect(element(by.xpath('.//*[.="TEXT"]')).isDisplayed()).toBeTruthy();
+      expect(element(by.css(containerCss + "clipPath")).isDisplayed()).toBeTruthy();
     });
     it('CanvasDrawer_AddRoundedRectangle_ExpectRoundedRectangleObjectOnCanvas', () => {
       utilities.normalPause();
@@ -537,7 +536,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Group");
       utilities.shortPause();
 
-      expect(element(by.css(containerCss + "svg.fill-parent g")).isPresent()).toBeTruthy();
+      expect(element(by.css(containerCss + "g")).isPresent()).toBeTruthy();
     });
     it('CanvasDrawer_UngroupObjects_ExpectGroupedObjectsToSeparate', () => {
       utilities.normalPause();
@@ -592,7 +591,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Duplicate");
       utilities.shortPause();
 
-      element.all(by.css(containerCss + "app-selector-tool app-drawer svg.fill-parent rect")).then(function (elements) {
+      element.all(by.css(containerCss + "rect")).then(function (elements) {
         expect(elements.length).toEqual(2);
       });
     });
@@ -641,7 +640,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Styles");
       utilities.shortPause();
 
-      expect(element(by.css("app-editable-drawer app-drawer rect")).getCssValue("fill")).toEqual("rgb(255, 0, 0)");
+      expect(element(by.css("app-editor-tool app-selector-tool svg g g rect.grabber")).getCssValue("stroke")).toEqual("rgb(255, 0, 0)");
     });
 
     //Directionals
@@ -713,7 +712,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
 
-      element(by.css(containerCss + "svg.fill-parent rect.clickable")).click();
+      element(by.css(containerCss + "rect.clickable")).click();
       utilities.normalPause();
 
       canvas.selectButton("Up");
@@ -726,9 +725,9 @@ fdescribe('Maps', function () {
         click().
         perform();
       utilities.normalPause();
-
+      
       //the order of the children elements determines the "layer" they rest on
-      element.all(by.css(containerCss + "svg.fill-parent > *")).each(function (element, index) {
+      element.all(by.css(containerCss + "> *")).each(function (element, index) {
         if (index == 0) {
           expect(element.getTagName()).toEqual("ellipse");
         } else if (index == 1) {
@@ -986,11 +985,12 @@ fdescribe('Maps', function () {
 
       canvas.rotateSelectedObject("#rotate-right", 50, 50);
       utilities.normalPause();
-
-      //utilities.debugPause();
       
-      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
-        expect(value.includes("transform: rotate(15deg)")).toBeTruthy();
+      element.all(by.css("app-selector-tool > svg")).then(function (elements) {
+        expect(elements.length).toEqual(3);
+        elements[0].getAttribute("style").then(function (value) {
+          expect(value.includes("transform: rotate(15deg)")).toBeTruthy();
+        });
       });
     });
     it('CanvasDrawer_RotateBottomHandle_ExpectObjectToRotate', () => {
@@ -1008,10 +1008,11 @@ fdescribe('Maps', function () {
       canvas.rotateSelectedObject("#rotate-bottom", 50, 50);
       utilities.normalPause();
 
-      //utilities.debugPause();
-
-      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
-        expect(value.includes("transform: rotate(345deg)")).toBeTruthy();
+      element.all(by.css("app-selector-tool > svg")).then(function (elements) {
+        expect(elements.length).toEqual(3);
+        elements[0].getAttribute("style").then(function (value) {
+          expect(value.includes("transform: rotate(345deg)")).toBeTruthy();
+        });
       });
     });
     it('CanvasDrawer_SelectMultipleItems_ExpectRotationHandlesToNotAppear', () => {
@@ -1028,6 +1029,8 @@ fdescribe('Maps', function () {
 
       canvas.selectButton("Selector");
       utilities.shortPause();
+
+      //utilities.debugPause();
       
       browser.actions().
         sendKeys(protractor.Key.SHIFT).
@@ -1054,14 +1057,17 @@ fdescribe('Maps', function () {
 
       canvas.rotateSelectedObject("#rotate-right", 50, 50);
       utilities.normalPause();
+      
+      element.all(by.css("app-selector-tool > svg")).then(function (elements) {
+        expect(elements.length).toEqual(3);
+        elements[0].getAttribute("style").then(function (valueRed) {
+          valueRed = valueRed.split("rotate(")[1].replace("deg);", "");
 
-      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (valueRed) {
-        valueRed = valueRed.split("rotate(")[1].replace("deg);", "");
-        
-        element(by.css("app-selector-tool app-drawer rect")).getAttribute("transform").then(function (valueObj) {
-          valueObj = valueObj.split(",")[0].replace("rotate(", "");
+          element(by.css("app-selector-tool app-drawer rect")).getAttribute("transform").then(function (valueObj) {
+            valueObj = valueObj.split(",")[0].replace("rotate(", "");
 
-          expect(valueRed).toEqual(valueObj);
+            expect(valueRed).toEqual(valueObj);
+          });
         });
       });
 
@@ -1089,10 +1095,11 @@ fdescribe('Maps', function () {
         sendKeys(protractor.Key.NULL).
         perform();
 
-      //utilities.debugPause();
-
-      element(by.css("app-selector-tool > svg")).getAttribute("style").then(function (value) {
-        expect(value.includes("transform: rotate(315deg)")).toBeTruthy();
+      element.all(by.css("app-selector-tool > svg")).then(function (elements) {
+        expect(elements.length).toEqual(3);
+        elements[0].getAttribute("style").then(function (value) {
+          expect(value.includes("transform: rotate(315deg)")).toBeTruthy();
+        });
       });
     });
 
@@ -1122,7 +1129,7 @@ fdescribe('Maps', function () {
 
       utilities.normalPause();
 
-      expect(element(by.css("ellipse")).getSize()).toEqual(jasmine.objectContaining({
+      expect(element(by.css(containerCss + "ellipse")).getSize()).toEqual(jasmine.objectContaining({
         width: 172.07049560546875,
         height: 172.07049560546875
       }));
@@ -1451,5 +1458,30 @@ fdescribe('Maps', function () {
       });
 
       utilities.normalPause();
+    });
+
+    //Image Url
+    it('CanvasDrawer_AddImageThenAddUrl_ExpectImageToAppear', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Image");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.selectButton("Image Url");
+      utilities.shortPause();
+
+      element(by.css(containerCss + "image")).getAttribute("xlink:href").then(function (data) {
+        console.log("Data returned:");
+        console.log(data);
+        expect(data.includes("https")).toBeTruthy();
+      });
+
+      utilities.normalPause():
     });
 });
