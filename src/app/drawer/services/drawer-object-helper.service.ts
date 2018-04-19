@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import * as clipperLib from 'js-angusj-clipper';
 
 const RADIUS: number = 16;
+const POINT_BUFFER: number = 5;
 
 @Injectable()
 export class DrawerObjectHelperService {
@@ -37,17 +38,33 @@ export class DrawerObjectHelperService {
     let bBoxObjects: DrObject[] = [];
     let bBox: BoundingBox;
     for(let e of elements) {
-      bBox = this.getBoundingBox([e]);
+      if(e.rotation !== 0){
+        bBox = this.getRotatedBoundingBox(this.getBoundingBox([e]), e.rotation)
+      } else {
+        bBox = this.getBoundingBox([e]);
+      }
+      if(bBox.width === 0 || bBox.height === 0){
+        bBox.x -= POINT_BUFFER;
+        bBox.y -= POINT_BUFFER;
+        bBox.width += POINT_BUFFER * 2;
+        bBox.height += POINT_BUFFER * 2;
+      }
       if (x >= bBox.x && x <= bBox.x + bBox.width && 
-          y >= bBox.y && y <= bBox.y + bBox.height) {
-
-            bBoxObjects.push(e);
-          }
+        y >= bBox.y && y <= bBox.y + bBox.height) {
+          bBoxObjects.push(e);
+      }
     }
 
     //Now that we have the bounding box objects, lets get 
     //the actual objects for what is remaining
     for(let e of bBoxObjects) {
+      let rotatedX:number = x;
+      let rotatedY:number = y;
+      if(e.rotation !== 0){
+        let rotatedXY = this.getRotatedPointForSinglePoint(rotatedX, rotatedY,e);
+        rotatedX = rotatedXY.x;
+        rotatedY = rotatedXY.y;
+      }
       switch(e.drType) {
         case DrType.IMAGE:
         case DrType.RECTANGLE:
@@ -56,7 +73,7 @@ export class DrawerObjectHelperService {
           break;
         case DrType.ELLIPSE: {
             let ell: DrEllipse = (e as DrEllipse);
-            let normalized: DrPoint = { x: x - ell.x, y: y - ell.y };
+            let normalized: DrPoint = { x: rotatedX - ell.x, y: rotatedY - ell.y };
             let result: number = ((normalized.x * normalized.x) / 
                                   (ell.rx * ell.rx)) + ((normalized.y * normalized.y) / (ell.ry * ell.ry));
             if (result <= 1) {
@@ -67,16 +84,51 @@ export class DrawerObjectHelperService {
           break;
         case DrType.POLYGON: {
             let p: DrPolygon = (e as DrPolygon);
-            let poly = p.points;
-            let inpoly = this.clipper.pointInPolygon({ x: x, y: y }, poly);
-            if (0 !== inpoly) {
-              returnValue.push(e);
+            if(p.isClosed){
+              let poly = p.points;
+              let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
+              if (0 !== inpoly) {
+                returnValue.push(e);
+              }
+            } else {
+              let allXMatch = true;
+              let allYMatch = true;
+              for(let pi = 0; pi < p.points.length - 1; pi++) {
+                if(p.points[pi].x !== p.points[pi + 1].x) { 
+                  allXMatch = false;
+                }
+                if(p.points[pi].y !== p.points[pi + 1].y) {
+                  allYMatch = false;
+                }
+              }
+              if(allYMatch || allXMatch){
+                let poly = [];
+                //Top Left
+                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[0].y - POINT_BUFFER});
+                //Top Right
+                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[0].y - POINT_BUFFER});
+                //Bottom Right
+                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+                //Bottom Left
+                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+
+                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: y }, poly);
+                if (0 !== inpoly) {
+                  returnValue.push(e);
+                }
+              } else {
+                let poly = p.points;
+                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
+                if (0 !== inpoly) {
+                  returnValue.push(e);
+                }
+              }
             }
           }
           break;
         case DrType.CALLOUT: {
           let c: DrCallout = (e as DrCallout);
-          if (x >= c.x && x <= c.x + c.width && 
+          if (rotatedX >= c.x && x <= c.x + c.width && 
             y >= c.y && y <= bBox.y + c.height) {
   
               returnValue.push(e);
@@ -84,7 +136,7 @@ export class DrawerObjectHelperService {
           else {
             //Check the pointer
             let poly = [c.basePoint1, c.basePoint2, c.pointerLocation];
-            let inpoly = this.clipper.pointInPolygon({ x: x, y: y }, poly);
+            let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
             if (0 !== inpoly) {
               returnValue.push(e);
             }
@@ -250,6 +302,13 @@ export class DrawerObjectHelperService {
     return boundingBox;
   }
 
+  public getRotatedPointForSinglePoint(x: number, y: number, item: DrObject) : DrPoint {
+    let bbi: BoundingBox = this.getBoundingBox([item]);
+    let centerX: number = bbi.x + (bbi.width / 2);
+    let centerY: number = bbi.y + (bbi.height / 2);
+
+    return this.getRotatedPoint(x, y, centerX, centerY, item.rotation);
+  }
 
   public getRotatedPoint(x: number, y: number, originX: number, originY: number, angle: number): DrPoint {
     let radians = angle * Math.PI / 180;

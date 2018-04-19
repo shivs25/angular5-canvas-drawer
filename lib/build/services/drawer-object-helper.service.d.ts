@@ -17,6 +17,7 @@ export declare class DrawerObjectHelperService {
         height: number;
     };
     getBoundingBox(drObjs: DrObject[]): BoundingBox;
+    getRotatedPointForSinglePoint(x: number, y: number, item: DrObject): DrPoint;
     getRotatedPoint(x: number, y: number, originX: number, originY: number, angle: number): DrPoint;
     getRotatedBounds(item: DrObject): BoundingBox;
     getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox;

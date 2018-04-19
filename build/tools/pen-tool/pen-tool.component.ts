@@ -226,6 +226,10 @@ export class PenToolComponent implements OnInit {
   }
 
   private completeObject(isClosed: boolean): void {
+    if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x
+    && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+      this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
+    }
     if(this.currentObject &&
       null !== this.currentObject &&
       this.currentObject.points.length > 1) {;
