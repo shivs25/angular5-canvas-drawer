@@ -61,7 +61,7 @@ export class DrawerObjectHelperService {
       let rotatedX:number = x;
       let rotatedY:number = y;
       if(e.rotation !== 0){
-        let rotatedXY = this.getRotatedPointForSinglePoint(rotatedX, rotatedY,e);
+        let rotatedXY = this.getRotatedPointForSinglePointRelatedToObject(rotatedX, rotatedY,e);
         rotatedX = rotatedXY.x;
         rotatedY = rotatedXY.y;
       }
@@ -103,21 +103,37 @@ export class DrawerObjectHelperService {
               }
               if(allYMatch || allXMatch){
                 let poly = [];
-                //Top Left
-                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[0].y - POINT_BUFFER});
-                //Top Right
-                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[0].y - POINT_BUFFER});
-                //Bottom Right
-                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
-                //Bottom Left
-                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
-
-                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: y }, poly);
+                if(p.rotation !== 0){
+                  let startEnd: DrPoint[] = this.getRotatedPoints(p);
+                  //Top Left
+                  poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[0].y - POINT_BUFFER});
+                  //Top Right
+                  poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[0].y - POINT_BUFFER});
+                  //Bottom Right
+                  poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
+                  //Bottom Left
+                  poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
+                } else {
+                  //Top Left
+                  poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[0].y - POINT_BUFFER});
+                  //Top Right
+                  poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[0].y - POINT_BUFFER});
+                  //Bottom Right
+                  poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+                  //Bottom Left
+                  poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+                }
+                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
                 if (0 !== inpoly) {
                   returnValue.push(e);
                 }
               } else {
-                let poly = p.points;
+                let poly = [];
+                if(p.rotation !== 0){
+                  poly = this.getRotatedPoints(p);
+                } else {
+                  poly = p.points;
+                }
                 let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
                 if (0 !== inpoly) {
                   returnValue.push(e);
@@ -302,7 +318,7 @@ export class DrawerObjectHelperService {
     return boundingBox;
   }
 
-  public getRotatedPointForSinglePoint(x: number, y: number, item: DrObject) : DrPoint {
+  public getRotatedPointForSinglePointRelatedToObject(x: number, y: number, item: DrObject) : DrPoint {
     let bbi: BoundingBox = this.getBoundingBox([item]);
     let centerX: number = bbi.x + (bbi.width / 2);
     let centerY: number = bbi.y + (bbi.height / 2);
