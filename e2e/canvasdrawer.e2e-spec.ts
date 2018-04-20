@@ -430,10 +430,10 @@ fdescribe('Maps', function () {
     });
     xit('CanvasDrawer_AddPenLine_ExpectPolygonLineOnCanvas', () => {
       //this test is to expose a bug - only two points for a polygon should not be possible
-  });
+    });
 
     //Permanence
-    fit('CanvasDrawer_AddTextThenChangeTools_ExpectTextToStayTheSame', () => {
+    it('CanvasDrawer_AddTextThenChangeTools_ExpectTextToStayTheSame', () => {
       utilities.normalPause();
 
       canvas.selectButton("Text");
@@ -442,16 +442,12 @@ fdescribe('Maps', function () {
       canvas.drawSquareSize(200);
       utilities.longPause();
 
-      element(by.css("#text_1")).click();
+      element(by.css("app-editable-text-area div")).sendKeys("TESTING");
       utilities.normalPause();
 
-      element(by.css("#text_1")).sendKeys("TESTING");
-      utilities.normalPause();
-
-      canvas.selectButton("Triangle");
+      canvas.selectButton("Selector");
       utilities.shortPause();
       
-      //both are pointing to the same object, but it's good to test both selectors
       expect(element(by.xpath('.//*[.="TESTING"]')).isPresent()).toBeTruthy();
     });
 
@@ -992,7 +988,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("460px");
     });
-
+    
     //Rotation
     it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
       utilities.normalPause();
