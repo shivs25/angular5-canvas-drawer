@@ -1482,6 +1482,6 @@ fdescribe('Maps', function () {
         expect(data.includes("https")).toBeTruthy();
       });
 
-      utilities.normalPause():
+      utilities.normalPause();
     });
 });
