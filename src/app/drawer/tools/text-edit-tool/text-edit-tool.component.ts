@@ -10,6 +10,7 @@ import * as d3Plus from 'd3plus-text';
 import { BoundingBox } from '../../models/bounding-box';
 import { DrPoint } from '../../models/dr-point';
 import { TEXT_PADDING, SPACE_PLACEHOLDER, TextRenderingService, LINE_HEIGHT_RATIO } from '../../services/text-rendering.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-text-edit-tool',
@@ -41,6 +42,8 @@ export class TextEditToolComponent implements OnInit {
 
   _offset: DrPoint = null;
   
+  private _toolChangedEvent: Subscription;
+
   constructor(
     private _dataService: DataStoreService, 
     private _textRenderingService: TextRenderingService,
@@ -157,6 +160,12 @@ export class TextEditToolComponent implements OnInit {
   }
   
   ngOnInit() {
+    this._toolChangedEvent = this._dataService.toolChanged.subscribe(() => {
+      if(this._dataService.selectedTool === EditorToolType.TEXT_EDIT_TOOL){
+        this.finalize();
+      }
+    });
+
     this._offset = this._elementRef.nativeElement.getBoundingClientRect();
     this.rotation = this._dataService.selectedObjects[0].rotation;
 
@@ -207,6 +216,49 @@ export class TextEditToolComponent implements OnInit {
       
     }, 1);
     
+  }
+
+  finalize(): void {
+    let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
+    if (this.currentObject.fitText) {
+      this._dataService.setText(this._dataService.selectedObjects, newText);
+    }
+    else {
+
+      let bounds: BoundingBox = {
+        x: this.currentObject.x,
+        y: this.currentObject.y,
+        width: this.currentObject.width,
+        height: this.currentObject.height
+      }
+  
+      let textAreaHeight: number = this._textArea.newHeight;
+      let textAreaWidth: number = this._textArea.newWidth;
+
+      switch(this.currentObject.vAlignment) {
+        case DrTextAlignment.CENTER:
+          bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
+          break;
+        case DrTextAlignment.FAR:
+          bounds.y = bounds.y + bounds.height - textAreaHeight;
+          break;
+      }
+      bounds.height = textAreaHeight;
+
+      switch(this.currentObject.hAlignment) {
+        case DrTextAlignment.CENTER:
+          bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
+          break;
+        case DrTextAlignment.FAR:
+          bounds.x = bounds.x + bounds.width - textAreaWidth;
+          break;
+      }
+      bounds.width = textAreaWidth;
+
+      this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
+
+    }
+    this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
   }
 
   private getTop(): string {

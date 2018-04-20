@@ -186,7 +186,10 @@ export class CalloutPointToolComponent implements OnInit {
 
     return returnValue;
   }
-
+  
+  finalize(): void {
+    //Not Implemented
+  }
   
   private isInBounds(x: number, y: number):boolean {
     if (x >= this.objectBounds.x && x <= this.objectBounds.x + this.objectBounds.width &&

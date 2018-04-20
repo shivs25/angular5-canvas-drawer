@@ -164,6 +164,10 @@ export class PenToolComponent implements OnInit {
     return this.currentObject.points[0].y - HALF_SIZER;
   }
 
+  finalize(): void {
+    //Not Implemented
+  }
+
   private handleClick(x: number, y: number): void {
     if (this._delay) {
       this._delay.unsubscribe();

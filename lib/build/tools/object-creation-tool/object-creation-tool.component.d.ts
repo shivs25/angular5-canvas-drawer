@@ -22,6 +22,7 @@ export declare class ObjectCreationToolComponent implements OnInit {
     onBackgroundMouseDown(evt: any): void;
     onBackgroundMouseMove(evt: any): void;
     onBackgroundMouseUp(evt: any): void;
+    finalize(): void;
     private getNextId();
     private createStar(evt);
     private createArrow(evt);

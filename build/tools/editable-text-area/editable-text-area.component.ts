@@ -69,5 +69,7 @@ export class EditableTextAreaComponent implements OnInit {
     
   }
 
-  
+  finalize(): void {
+    //Not Implemented
+  }
 }

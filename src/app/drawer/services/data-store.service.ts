@@ -54,6 +54,7 @@ export class DataStoreService {
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   textObjectChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  toolChanged: EventEmitter<void> = new EventEmitter<void>();
 
   private _duplicateOffset: number = 1;
 
@@ -87,6 +88,7 @@ export class DataStoreService {
   }
 
   public set selectedTool(tool: EditorToolType) {
+    this.toolChanged.emit();
     switch(tool) {
       case EditorToolType.TEXT_EDIT_TOOL: 
         this.setHideSelection(true);
