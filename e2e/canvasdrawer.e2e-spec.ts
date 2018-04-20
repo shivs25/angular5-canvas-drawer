@@ -432,6 +432,25 @@ fdescribe('Maps', function () {
       //this test is to expose a bug - only two points for a polygon should not be possible
     });
 
+    //Permanence
+    it('CanvasDrawer_AddTextThenChangeTools_ExpectTextToStayTheSame', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("app-editable-text-area div")).sendKeys("TESTING");
+      utilities.normalPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+      
+      expect(element(by.xpath('.//*[.="TESTING"]')).isPresent()).toBeTruthy();
+    });
+
     //Adding objects while holding shift key
     it('CanvasDrawer_AddEllipseThenHoldShiftKey_ExpectObjectSizeToBecomeSquareVertically', () => {
       utilities.normalPause();
@@ -969,7 +988,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("460px");
     });
-
+    
     //Rotation
     it('CanvasDrawer_RotateRightHandle_ExpectObjectToRotate', () => {
       utilities.normalPause();
@@ -1482,6 +1501,6 @@ fdescribe('Maps', function () {
         expect(data.includes("https")).toBeTruthy();
       });
 
-      utilities.normalPause():
+      utilities.normalPause();
     });
 });
