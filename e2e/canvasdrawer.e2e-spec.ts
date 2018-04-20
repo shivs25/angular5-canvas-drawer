@@ -449,6 +449,26 @@ fdescribe('Maps', function () {
       utilities.shortPause();
       
       expect(element(by.xpath('.//*[.="TESTING"]')).isPresent()).toBeTruthy();
+  });
+    it('CanvasDrawer_AddTextWithSpecialCharacters_ExpectCharactersToRemainAfterDeselectAndEdit', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("app-editable-text-area div")).sendKeys("& > < |");
+      utilities.normalPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.selectButton("Edit Text");
+      utilities.shortPause();
+
+      expect(element(by.xpath('.//*[.="& > < |"]')).isPresent()).toBeTruthy();
     });
 
     //Adding objects while holding shift key
