@@ -5,6 +5,7 @@ import * as d3Plus from 'd3plus-text';
 import { DrText } from '../models/dr-text';
 
 export const SPACE_PLACEHOLDER: string = "~";
+export const PIPE_CHAR_PLACEHOLDER: string = "`";
 export const TEXT_PADDING: number = 4;
 
 export const LINE_HEIGHT_RATIO: number = 1.618;
@@ -33,7 +34,10 @@ export class TextRenderingService {
       returnValue = returnValue.substring(0, idx) + returnValue.substring(endIdx + 1);
       idx = returnValue.indexOf("<span");
     }
-
+    returnValue = returnValue
+    .replace(/&amp;/, "&")
+    .replace(/&gt;/, ">")
+    .replace(/&lt;/, "<");
     return returnValue;
   }
 
@@ -48,7 +52,8 @@ export class TextRenderingService {
 
       let returnValue: string = "";
 
-      let exp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
+      let spaceExp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
+      let pipeCharExp: RegExp = new RegExp(PIPE_CHAR_PLACEHOLDER, "g");
 
       let u;
       let w: number;
@@ -57,7 +62,7 @@ export class TextRenderingService {
         u = userLineBreaks[x];
 
         if (0 !== u.length) {
-          let lineData = c(this.replaceSpaces(u));
+          let lineData = c(this.replaceSpecialCases(u));
           let l;
           
 
@@ -66,14 +71,14 @@ export class TextRenderingService {
 
 
             if (0 === returnValue.length) {
-              returnValue = l.replace(exp, "&nbsp;");
+              returnValue = l.replace(pipeCharExp, "|").replace(spaceExp, "&nbsp;");
             }
             else {
               if (prevHasDiv && x === userLineBreaks.length - 1 && i === lineData.lines.length - 1) {
-                returnValue += l.replace(exp, "&nbsp;");
+                returnValue += l.replace(pipeCharExp, "|").replace(spaceExp, "&nbsp;");
               }
               else {
-                returnValue += "<div>" + l.replace(exp, "&nbsp;") + "</div>";  
+                returnValue += "<div>" + l.replace(pipeCharExp, "|").replace(spaceExp, "&nbsp;") + "</div>";  
               }         
             }
 
@@ -85,6 +90,7 @@ export class TextRenderingService {
           prevHasDiv = true;
         }
       }
+
     return returnValue;
   }
 
@@ -106,15 +112,17 @@ export class TextRenderingService {
       let userLineBreaks: string[] = d.text.split("\n");
 
       let multiplier: number = 1;
-      let exp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
+      let spaceExp: RegExp = new RegExp(SPACE_PLACEHOLDER + " ", "g");
+      let pipeCharExp: RegExp = new RegExp(PIPE_CHAR_PLACEHOLDER, "g");
+
       let lineData;
 
       for(let u of userLineBreaks) {
         if (0 !== u.length) {
-          lineData = c(this.replaceSpaces(u));
+          lineData = c(this.replaceSpecialCases(u));
           for(let l of lineData.lines) {
             returnValue.push({
-              text: l.replace(exp, " "),
+              text: l.replace(pipeCharExp, "|").replace(spaceExp, " "),
               lineHeightMultiplier: multiplier
             })
           }
@@ -147,6 +155,12 @@ export class TextRenderingService {
     return (this.getLineHeight(o) - o.size);
   }
 
+  private replaceSpecialCases(s: string): string {
+    s = this.replaceSpaces(s);
+    s = this.replacePipeChar(s);
+    return s;
+  }
+
   private replaceSpaces(s: string): string {
     let normalSplit: string[] = s.split(" ");
     let newSentence: string = "";
@@ -159,6 +173,12 @@ export class TextRenderingService {
         newSentence += normalSplit[i].length > 0 ? (normalSplit[i] + " ") : SPACE_PLACEHOLDER + " ";
       }
     }
+    return newSentence;
+  }
+  private replacePipeChar(s: string): string {
+    let normalSplit: string[] = s.split("|");
+    let newSentence: string = normalSplit.join(PIPE_CHAR_PLACEHOLDER);
+
     return newSentence;
   }
 }

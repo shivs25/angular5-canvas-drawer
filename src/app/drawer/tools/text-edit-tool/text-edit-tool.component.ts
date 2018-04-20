@@ -43,6 +43,7 @@ export class TextEditToolComponent implements OnInit {
   _offset: DrPoint = null;
   
   private _toolChangedEvent: Subscription;
+  private _needsToFinalize: boolean = true;
 
   constructor(
     private _dataService: DataStoreService, 
@@ -92,6 +93,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   onClick(): void {
+    this._needsToFinalize = false;
     let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
     if (this.currentObject.fitText) {
       this._dataService.setText(this._dataService.selectedObjects, newText);
@@ -162,7 +164,9 @@ export class TextEditToolComponent implements OnInit {
   ngOnInit() {
     this._toolChangedEvent = this._dataService.toolChanged.subscribe(() => {
       if(this._dataService.selectedTool === EditorToolType.TEXT_EDIT_TOOL){
-        this.finalize();
+        if(this._needsToFinalize){
+          this.finalize();
+        }
       }
     });
 

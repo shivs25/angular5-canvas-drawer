@@ -19,6 +19,7 @@ export declare class TextEditToolComponent implements OnInit {
     selectionStyle: any;
     _offset: DrPoint;
     private _toolChangedEvent;
+    private _needsToFinalize;
     constructor(_dataService: DataStoreService, _textRenderingService: TextRenderingService, _elementRef: ElementRef);
     onTextAreaInput(evt: any): void;
     onTextAreaLoaded(evt: any): void;

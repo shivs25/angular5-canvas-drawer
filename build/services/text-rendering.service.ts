@@ -33,7 +33,10 @@ export class TextRenderingService {
       returnValue = returnValue.substring(0, idx) + returnValue.substring(endIdx + 1);
       idx = returnValue.indexOf("<span");
     }
-
+    returnValue = returnValue
+    .replace(/&amp;/, "&")
+    .replace(/&gt;/, ">")
+    .replace(/&lt;/, "<");
     return returnValue;
   }
 
