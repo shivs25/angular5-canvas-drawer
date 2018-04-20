@@ -22,6 +22,7 @@ export declare class PenToolComponent implements OnInit {
     onResizerClick(evt: any): void;
     getResizerX(): number;
     getResizerY(): number;
+    finalize(): void;
     private handleClick(x, y);
     private getActivePoint(x, y);
     private pointOnLine(x, y, angle, distance);

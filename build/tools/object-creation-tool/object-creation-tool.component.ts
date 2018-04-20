@@ -414,6 +414,10 @@ export class ObjectCreationToolComponent implements OnInit {
     }
   }
 
+  finalize(): void {
+    //Not Implemented
+  }
+
   private getNextId(): number {
     return 0 === this._dataService.elements.length ? 1 :
           Math.max(...this._dataService.elements.map(o => o.id)) + 1;

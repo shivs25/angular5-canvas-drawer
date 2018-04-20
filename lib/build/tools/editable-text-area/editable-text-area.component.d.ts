@@ -13,4 +13,5 @@ export declare class EditableTextAreaComponent implements OnInit {
     constructor();
     ngOnInit(): void;
     onInput(evt: any): void;
+    finalize(): void;
 }
