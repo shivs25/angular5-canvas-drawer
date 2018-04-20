@@ -12,6 +12,7 @@ import { DrObject } from '../models/dr-object';
 import { SET_ELEMENTS, SELECT_OBJECTS } from '../actions';
 import { CHANGE_OBJECTS_PROPERTIES } from '../actions';
 import { createDrStyledObject } from '../models/dr-styled-object';
+import { EditorToolType } from '../models/enums';
 
 describe('DataStoreService', () => {
   let objectHelperService: any;
@@ -513,4 +514,21 @@ describe('DataStoreService', () => {
     );
   });
 
+  it('should emit the toolChanged event when you set the tool', () =>{
+    spyOn(service.toolChanged, 'emit');
+
+    service.selectedTool = EditorToolType.SELECTOR_TOOL;
+
+    expect(service.toolChanged.emit).toHaveBeenCalled();
+  });
+
+  it('should emit the toolChanged event multiple times', () =>{
+    spyOn(service.toolChanged, 'emit');
+
+    service.selectedTool = EditorToolType.SELECTOR_TOOL;
+    service.selectedTool = EditorToolType.RECTANGLE_TOOL;
+    service.selectedTool = EditorToolType.ROUNDED_RECTANGLE_TOOL;
+
+    expect(service.toolChanged.emit).toHaveBeenCalledTimes(3);
+  });
 });
