@@ -84,60 +84,48 @@ export class DrawerObjectHelperService {
           break;
         case DrType.POLYGON: {
             let p: DrPolygon = (e as DrPolygon);
-            if(p.isClosed){
-              let poly = p.points;
+            let allXMatch = true;
+            let allYMatch = true;
+            let straightLine = this.determinePolylineIsStraight(p.points);
+            for(let pi = 0; pi < p.points.length - 1; pi++) {
+              if(p.points[pi].x !== p.points[pi + 1].x) { 
+                allXMatch = false;
+              }
+              if(p.points[pi].y !== p.points[pi + 1].y) {
+                allYMatch = false;
+              }
+            }
+            if(allYMatch || allXMatch || straightLine){
+              let poly = [];
+              if(p.rotation !== 0){
+                let startEnd: DrPoint[] = this.getRotatedPoints(p);
+                //Top Left
+                poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[0].y - POINT_BUFFER});
+                //Top Right
+                poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[0].y - POINT_BUFFER});
+                //Bottom Right
+                poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
+                //Bottom Left
+                poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
+              } else {
+                //Top Left
+                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[0].y - POINT_BUFFER});
+                //Top Right
+                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[0].y - POINT_BUFFER});
+                //Bottom Right
+                poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+                //Bottom Left
+                poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
+              }
               let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
               if (0 !== inpoly) {
                 returnValue.push(e);
               }
             } else {
-              let allXMatch = true;
-              let allYMatch = true;
-              for(let pi = 0; pi < p.points.length - 1; pi++) {
-                if(p.points[pi].x !== p.points[pi + 1].x) { 
-                  allXMatch = false;
-                }
-                if(p.points[pi].y !== p.points[pi + 1].y) {
-                  allYMatch = false;
-                }
-              }
-              if(allYMatch || allXMatch){
-                let poly = [];
-                if(p.rotation !== 0){
-                  let startEnd: DrPoint[] = this.getRotatedPoints(p);
-                  //Top Left
-                  poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[0].y - POINT_BUFFER});
-                  //Top Right
-                  poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[0].y - POINT_BUFFER});
-                  //Bottom Right
-                  poly.push({x: startEnd[startEnd.length - 1].x + (POINT_BUFFER * 2), y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
-                  //Bottom Left
-                  poly.push({x: startEnd[0].x - POINT_BUFFER, y: startEnd[startEnd.length - 1].y + (POINT_BUFFER * 2)});
-                } else {
-                  //Top Left
-                  poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[0].y - POINT_BUFFER});
-                  //Top Right
-                  poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[0].y - POINT_BUFFER});
-                  //Bottom Right
-                  poly.push({x: p.points[p.points.length - 1].x + (POINT_BUFFER * 2), y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
-                  //Bottom Left
-                  poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
-                }
-                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
-                if (0 !== inpoly) {
-                  returnValue.push(e);
-                }
-              } else {
-                let poly = [];
-                if(p.rotation !== 0){
-                  poly = this.getRotatedPoints(p);
-                } else {
-                  poly = p.points;
-                }
-                let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
-                if (0 !== inpoly) {
-                  returnValue.push(e);
-                }
+              let poly = p.points;
+              let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
+              if (0 !== inpoly) {
+                returnValue.push(e);
               }
             }
           }
@@ -596,7 +584,25 @@ export class DrawerObjectHelperService {
 
     return returnValue;
   }
+  private determinePolylineIsStraight(points: DrPoint[]): boolean {
+    if(points.length === 2){
+      return true;
+    } else {
+      let returnValue = true;
 
+      let startEndSlope = (points[points.length - 1].y - points[0].y) / (points[points.length - 1].x - points[0].x);
+
+      for(let i = 0; i < points.length - 1; i ++){
+        let slope = (points[i + 1].y - points[i].y) / (points[i + 1].x - points[i].x);
+        if(slope !== startEndSlope){
+          returnValue = false;
+          break;
+        }
+      }
+
+      return returnValue;
+    }
+  }
   private getCorner(b: DrPoint[], p: DrPoint): number {
     return b.findIndex((d) => Math.abs(d.x - p.x) < 1 && Math.abs(d.y - p.y) < 1);
   }

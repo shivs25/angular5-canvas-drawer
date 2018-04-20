@@ -17,13 +17,14 @@ export declare class DrawerObjectHelperService {
         height: number;
     };
     getBoundingBox(drObjs: DrObject[]): BoundingBox;
-    getRotatedPointForSinglePoint(x: number, y: number, item: DrObject): DrPoint;
+    getRotatedPointForSinglePointRelatedToObject(x: number, y: number, item: DrObject): DrPoint;
     getRotatedPoint(x: number, y: number, originX: number, originY: number, angle: number): DrPoint;
     getRotatedBounds(item: DrObject): BoundingBox;
     getRotatedBoundingBox(bb: BoundingBox, rotation: number): BoundingBox;
     getRotatedPoints(drObj: DrObject): DrPoint[];
     getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[];
     getCalloutPath(v: DrCallout): string;
+    private determinePolylineIsStraight(points);
     private getCorner(b, p);
     private getBoundingBoxForObject(drObj);
 }
