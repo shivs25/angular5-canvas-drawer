@@ -430,6 +430,29 @@ fdescribe('Maps', function () {
     });
     xit('CanvasDrawer_AddPenLine_ExpectPolygonLineOnCanvas', () => {
       //this test is to expose a bug - only two points for a polygon should not be possible
+  });
+
+    //Permanence
+    fit('CanvasDrawer_AddTextThenChangeTools_ExpectTextToStayTheSame', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("#text_1")).click();
+      utilities.normalPause();
+
+      element(by.css("#text_1")).sendKeys("TESTING");
+      utilities.normalPause();
+
+      canvas.selectButton("Triangle");
+      utilities.shortPause();
+      
+      //both are pointing to the same object, but it's good to test both selectors
+      expect(element(by.xpath('.//*[.="TESTING"]')).isPresent()).toBeTruthy();
     });
 
     //Adding objects while holding shift key
@@ -1482,6 +1505,6 @@ fdescribe('Maps', function () {
         expect(data.includes("https")).toBeTruthy();
       });
 
-      utilities.normalPause():
+      utilities.normalPause();
     });
 });
