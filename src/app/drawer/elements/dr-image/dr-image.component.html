@@ -16,7 +16,7 @@
         [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
         [attr.opacity]="visualData.opacity">
       </svg:rect>
-      <svg:image 
+      <svg:image *ngIf="visualData.showImage"
       [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
           (click)="onClick($event, data)"
           (mousedown)="onMouseDown($event, data)"

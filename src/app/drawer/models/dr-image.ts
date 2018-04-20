@@ -4,7 +4,7 @@ import { DrType } from "./dr-type.enum";
 export interface DrImage extends DrRect {
     initial: boolean;
     url: string;
-    
+    showImage: boolean;
 }
 
 export const DEFAULT_IMAGE: DrImage = Object.assign({}, DEFAULT_RECT, {
@@ -14,7 +14,8 @@ export const DEFAULT_IMAGE: DrImage = Object.assign({}, DEFAULT_RECT, {
     stroke: "#000000",
     fill: "#ffffff",
     drType: DrType.IMAGE,
-    initial: true
+    initial: true,
+    showImage: true
 });
 
 export function createDrImage(properties: any): DrImage {

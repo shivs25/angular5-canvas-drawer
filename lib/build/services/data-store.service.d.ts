@@ -26,6 +26,7 @@ export declare class DataStoreService {
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
     textObjectChanged: EventEmitter<DrObject[]>;
+    toolChanged: EventEmitter<void>;
     private _duplicateOffset;
     constructor(_ngRedux: NgRedux<IDrawerAppState>, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _textRenderService: TextRenderingService);
     elements: DrObject[];

@@ -31,13 +31,15 @@ const SELECTION_STYLE: any = {
   showStroke: true,
   stroke: 'red',
   strokeWidth: 1,
-  showText: false
+  showText: false,
+  showImage: false
 };
 
 const INVISIBLE_STYLE: any = {
   showFill: false,
   showStroke: false,
-  showText: false
+  showText: false,
+  showImage: false
 };
 
 @Component({
@@ -653,6 +655,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
 
     return returnValue;
+  }
+
+  finalize(): void {
+    //Not Implemented
   }
 
   private microMoveObjects(diffX: number, diffY: number) {

@@ -18,6 +18,7 @@ export declare class TextEditToolComponent implements OnInit {
     inputBorder: boolean;
     selectionStyle: any;
     _offset: DrPoint;
+    private _toolChangedEvent;
     constructor(_dataService: DataStoreService, _textRenderingService: TextRenderingService, _elementRef: ElementRef);
     onTextAreaInput(evt: any): void;
     onTextAreaLoaded(evt: any): void;
@@ -25,6 +26,7 @@ export declare class TextEditToolComponent implements OnInit {
     pixelizeBounds(bounds: any): any;
     divify(): string;
     ngOnInit(): void;
+    finalize(): void;
     private getTop();
     private getBottom();
     private getLeft();
