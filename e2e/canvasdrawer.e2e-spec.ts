@@ -1519,8 +1519,6 @@ fdescribe('Maps', function () {
       utilities.shortPause();
       
       element(by.css("image")).getAttribute("xlink:href").then(function (data) {
-        console.log("Data returned:");
-        console.log(data);
         expect(data.includes("https")).toBeTruthy();
       });
 
