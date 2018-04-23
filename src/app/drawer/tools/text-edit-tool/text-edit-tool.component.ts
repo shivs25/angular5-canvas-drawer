@@ -223,46 +223,48 @@ export class TextEditToolComponent implements OnInit {
   }
 
   finalize(): void {
-    let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
-    if (this.currentObject.fitText) {
-      this._dataService.setText(this._dataService.selectedObjects, newText);
+    if(this._dataService.selectedObjects.find((x:any) => x.id === this.currentObject.id)){
+      let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
+      if (this.currentObject.fitText) {
+        this._dataService.setText(this._dataService.selectedObjects, newText);
+      }
+      else {
+
+        let bounds: BoundingBox = {
+          x: this.currentObject.x,
+          y: this.currentObject.y,
+          width: this.currentObject.width,
+          height: this.currentObject.height
+        }
+    
+        let textAreaHeight: number = this._textArea.newHeight;
+        let textAreaWidth: number = this._textArea.newWidth;
+
+        switch(this.currentObject.vAlignment) {
+          case DrTextAlignment.CENTER:
+            bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
+            break;
+          case DrTextAlignment.FAR:
+            bounds.y = bounds.y + bounds.height - textAreaHeight;
+            break;
+        }
+        bounds.height = textAreaHeight;
+
+        switch(this.currentObject.hAlignment) {
+          case DrTextAlignment.CENTER:
+            bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
+            break;
+          case DrTextAlignment.FAR:
+            bounds.x = bounds.x + bounds.width - textAreaWidth;
+            break;
+        }
+        bounds.width = textAreaWidth;
+
+        this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
+
+      }
+      this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
     }
-    else {
-
-      let bounds: BoundingBox = {
-        x: this.currentObject.x,
-        y: this.currentObject.y,
-        width: this.currentObject.width,
-        height: this.currentObject.height
-      }
-  
-      let textAreaHeight: number = this._textArea.newHeight;
-      let textAreaWidth: number = this._textArea.newWidth;
-
-      switch(this.currentObject.vAlignment) {
-        case DrTextAlignment.CENTER:
-          bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
-          break;
-        case DrTextAlignment.FAR:
-          bounds.y = bounds.y + bounds.height - textAreaHeight;
-          break;
-      }
-      bounds.height = textAreaHeight;
-
-      switch(this.currentObject.hAlignment) {
-        case DrTextAlignment.CENTER:
-          bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
-          break;
-        case DrTextAlignment.FAR:
-          bounds.x = bounds.x + bounds.width - textAreaWidth;
-          break;
-      }
-      bounds.width = textAreaWidth;
-
-      this._dataService.setTextAndBounds(this._dataService.selectedObjects, newText, bounds);
-
-    }
-    this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
   }
 
   private getTop(): string {

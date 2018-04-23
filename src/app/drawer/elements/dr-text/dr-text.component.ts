@@ -45,6 +45,7 @@ export class DrTextComponent extends DrObjectComponent {
       this.firstLine = ti.findIndex((t) => t.text.length > 0);
       this.lineData = ti;
       this._data = value; 
+      console.log(this.visualData);
     }
   }
 
