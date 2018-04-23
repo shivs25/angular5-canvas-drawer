@@ -451,7 +451,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
       
-      expect(element(by.xpath('.//*[.="TESTING"]')).isPresent()).toBeTruthy();
+      expect(element(by.xpath('.//*[.="TESTING"]')).isDisplayed()).toBeTruthy();
   });
     it('CanvasDrawer_AddTextWithSpecialCharacters_ExpectCharactersToRemainAfterDeselectAndEdit', () => {
       utilities.normalPause();
@@ -472,6 +472,36 @@ fdescribe('Maps', function () {
       utilities.shortPause();
 
       expect(element(by.xpath('.//*[.="& > < |"]')).isPresent()).toBeTruthy();
+  });
+    it('CanvasDrawer_AddTextThenChangeToolsTwice_ExpectTextFromBothTimesToBeDisplayed', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("app-editable-text-area div")).sendKeys("TESTING");
+      utilities.normalPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("app-editable-text-area div")).sendKeys("ANOTHER");
+      utilities.normalPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      expect(element(by.xpath('.//*[.="TESTING"]')).isDisplayed()).toBeTruthy();
+      expect(element(by.xpath('.//*[.="ANOTHER"]')).isDisplayed()).toBeTruthy();
     });
 
     //Adding objects while holding shift key
