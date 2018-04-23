@@ -307,7 +307,10 @@ fdescribe('Maps', function () {
       canvas.selectButton("Selector");
       utilities.shortPause();
       
-      expect(element(by.css(containerCss + "image")).isDisplayed()).toBeTruthy();
+      //expect(element(by.css(containerCss + "image")).isDisplayed()).toBeTruthy();
+      element.all(by.css(containerCss + "g rect")).then(function (elms) {
+        expect(elms.length).toEqual(2);
+      });
     });
     it('CanvasDrawer_AddText_ExpectTextFieldObjectOnCanvas', () => {
       utilities.normalPause();
@@ -1514,8 +1517,8 @@ fdescribe('Maps', function () {
 
       canvas.selectButton("Image Url");
       utilities.shortPause();
-
-      element(by.css(containerCss + "image")).getAttribute("xlink:href").then(function (data) {
+      
+      element(by.css("image")).getAttribute("xlink:href").then(function (data) {
         console.log("Data returned:");
         console.log(data);
         expect(data.includes("https")).toBeTruthy();
