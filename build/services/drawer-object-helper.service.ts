@@ -132,8 +132,8 @@ export class DrawerObjectHelperService {
           break;
         case DrType.CALLOUT: {
           let c: DrCallout = (e as DrCallout);
-          if (rotatedX >= c.x && x <= c.x + c.width && 
-            y >= c.y && y <= bBox.y + c.height) {
+          if (rotatedX >= c.x && rotatedX <= c.x + c.width && 
+            rotatedY >= c.y && rotatedY <= c.y + c.height) {
   
               returnValue.push(e);
             }
