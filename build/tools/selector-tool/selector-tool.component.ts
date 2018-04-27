@@ -344,7 +344,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         } 
       }
       else {
-        console.log("NOT SELECTED");
         this._dataStoreService.selectObjects([]);
       }
       
