@@ -223,6 +223,8 @@ export class TextEditToolComponent implements OnInit {
   }
 
   finalize(): void {
+    //This temporarily fixes the text object...
+    this._needsToFinalize = false;
     if(this._dataService.selectedObjects.find((x:any) => x.id === this.currentObject.id)){
       let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
       if (this.currentObject.fitText) {
