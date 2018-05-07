@@ -416,17 +416,25 @@ fdescribe('Maps', function () {
 
       canvas.drawSquareSize(80);
       utilities.longPause();
-      
+
+      canvas.selectButton("Rectangle");
+
+      canvas.drawSquareSize(-80);
+      utilities.longPause();
+
       canvas.selectButton("Pen");
       utilities.shortPause();
       
       browser.actions().
-        mouseDown(element(by.css("ellipse"))).
-        mouseUp().
-        mouseMove({ x: 200, y: 200 }).
-        click().
-        mouseMove({ x: -100, y: 0 }).
-        doubleClick().
+        click(element(by.css("ellipse"))).
+        click(element(by.css("rect"))).
+        click(element(by.css("rect"))).
+        //mouseDown(element(by.css("ellipse"))).
+        //mouseMove({ x: 100, y: 100 }).
+        //mouseUp().
+        //click().
+        //mouseMove(element(by.css("ellipse")), { x: -20, y: 0 }).
+        //doubleClick().
         perform();
 
       utilities.debugPause();
@@ -716,7 +724,7 @@ fdescribe('Maps', function () {
     });
 
     //Directionals
-    it('CanvasDrawer_DownButton_ExpectObjectToBeLayeredBelowAnother', () => {
+    it('CanvasDrawer_DownButtonSingleObject_ExpectObjectToBeLayeredBelowAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -760,7 +768,76 @@ fdescribe('Maps', function () {
         }
       });
     });
-    it('CanvasDrawer_UpButton_ExpectObjectToBeLayeredAboveAnother', () => {
+    xit('CanvasDrawer_DownButtonGroupedObjects_ExpectObjectsToBeLayeredBelowOthers', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      utilities.normalPause();
+
+      canvas.selectButton("Clear");
+
+      canvas.selectButton("Image");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(100);
+      utilities.longPause();
+      
+      canvas.selectButton("Ellipse");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(80);
+      utilities.longPause();
+
+      canvas.selectButton("Rectangle");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(20);
+      utilities.longPause();
+
+      canvas.selectButton("Selector");
+      utilities.shortPause();
+
+      browser.actions().
+        mouseDown(element(by.css(containerCss + "ellipse"))).
+        mouseUp().
+        sendKeys(protractor.Key.SHIFT).
+        mouseDown(element(by.css(containerCss + "rect"))).
+        mouseUp().
+        sendKeys(protractor.Key.NULL).
+        perform();
+      utilities.normalPause();
+      console.log("Selected multiple");
+
+      canvas.selectButton("Group");
+      utilities.normalPause();
+      console.log("Group clicked");
+
+      canvas.selectButton("Down");
+      utilities.normalPause();
+      console.log("Down clicked");
+
+      //click away from the object
+      browser.actions().
+        mouseMove(element(by.css(containerCss + "ellipse"))).
+        mouseMove({ x: -200, y: 0 }).
+        click().
+        perform();
+      utilities.normalPause();
+
+      //the order of the children elements determines the "layer" they rest on
+      element.all(by.css(containerCss + "svg.fill-parent > *")).each(function (element, index) {
+        console.log(element);
+        if (index == 0) {
+          expect(element.getTagName()).toEqual("ellipse");
+        } else if (index == 1) {
+          expect(element.getTagName()).toEqual("rect");
+        }
+      });
+
+      utilities.debugPause();
+    });
+    it('CanvasDrawer_UpButtonSingleObject_ExpectObjectToBeLayeredAboveAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -807,7 +884,7 @@ fdescribe('Maps', function () {
         }
       });
     });
-    it('CanvasDrawer_LeftButton_ExpectObjectToBeLeftAlignedToAnother', () => {
+    it('CanvasDrawer_LeftButtonSingleObject_ExpectObjectToBeLeftAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -846,7 +923,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cx")).toEqual("340px");
     });
-    it('CanvasDrawer_RightButton_ExpectObjectToBeRightAlignedToAnother', () => {
+    it('CanvasDrawer_RightButtonSingleObject_ExpectObjectToBeRightAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -885,7 +962,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cx")).toEqual("460px");
     });
-    it('CanvasDrawer_CenterButton_ExpectObjectToBeCenterAlignedToAnother', () => {
+    it('CanvasDrawer_CenterButtonSingleObject_ExpectObjectToBeCenterAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -924,7 +1001,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cx")).toEqual("400px");
     });
-    it('CanvasDrawer_TopButton_ExpectObjectToBeTopAlignedToAnother', () => {
+    it('CanvasDrawer_TopButtonSingleObject_ExpectObjectToBeTopAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -963,7 +1040,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("340px");
     });
-    it('CanvasDrawer_MiddleButton_ExpectObjectToBeMiddleAlignedToAnother', () => {
+    it('CanvasDrawer_MiddleButtonSingleObject_ExpectObjectToBeMiddleAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");
@@ -1002,7 +1079,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "ellipse")).getCssValue("cy")).toEqual("400px");
     });
-    it('CanvasDrawer_BottomButton_ExpectObjectToBeBottomAlignedToAnother', () => {
+    it('CanvasDrawer_BottomButtonSingleObject_ExpectObjectToBeBottomAlignedToAnother', () => {
       utilities.normalPause();
 
       canvas.selectButton("Clear");

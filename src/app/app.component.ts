@@ -310,7 +310,7 @@ export class AppComponent implements OnInit {
       console.log(items);
     });
     this.dataStoreService.objectsAdded.subscribe(() => {
-      console.log(this.dataStoreService.elements);
+      //console.log(this.dataStoreService.elements);
       if(this.dataStoreService.elements[this.dataStoreService.elements.length - 1].drType === DrType.TEXT){
         this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL
       }

@@ -134,6 +134,8 @@ export class PenToolComponent implements OnInit {
     evt.preventDefault();
 
     if (this._delay) {
+      console.log("Current Object:");
+      console.log(this.currentObject);
       this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
       this.completeObject(false);
       
