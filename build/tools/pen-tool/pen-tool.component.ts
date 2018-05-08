@@ -134,15 +134,20 @@ export class PenToolComponent implements OnInit {
     evt.preventDefault();
 
     if (this._delay) {
+      //console.log('Double Click Action');
+      if (this._delay) {
+        //console.log('Unsubscribed!');
+        this._delay.unsubscribe();
+        this._delay = null;
+      }
       this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
       this.completeObject(false);
-      
     }
     else {
       this._clickPt = this.getActivePoint(evt.offsetX, evt.offsetY);;
       this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
         if (this._delay) {
-          
+          //console.log('Single Click Action');
           this.handleClick(this._clickPt.x, this._clickPt.y);
         }
         
@@ -170,6 +175,7 @@ export class PenToolComponent implements OnInit {
 
   private handleClick(x: number, y: number): void {
     if (this._delay) {
+      //console.log('Unsubscribed!');
       this._delay.unsubscribe();
       this._delay = null;
     }
@@ -177,12 +183,16 @@ export class PenToolComponent implements OnInit {
     if (this.currentObject) {
       
       if (!this._currentPt) {
+        //console.log('Adding Point!');
+
         this.currentObject.points.push({ x: x, y: y });
       }
       
       this._currentPt = null;
     }
     else {
+      //console.log('Create new obj!');
+
       this.currentObject = createDrPolyline({
         id: 1000000,
         name: this._dataService.getUniqueName("Polyline"),

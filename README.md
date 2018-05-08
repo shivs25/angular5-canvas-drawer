@@ -29,6 +29,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
+Date: `2018-05-08` VERSION: `1.1.2`
+- Fixed issue where text objects would disappear under certain circumstances after editing.
+
 Date: `2018-04-24` VERSION: `1.1.0`
 - Merged dev into master.
 

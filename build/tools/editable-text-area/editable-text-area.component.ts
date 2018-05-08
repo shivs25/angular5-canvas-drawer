@@ -44,7 +44,6 @@ export class EditableTextAreaComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    
     //Hack to get the update of dom outside of the change detection loop.
     setTimeout(() => {
       this.load.emit({
