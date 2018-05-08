@@ -43,6 +43,7 @@ export class TextEditToolComponent implements OnInit {
   _offset: DrPoint = null;
   
   private _toolChangedEvent: Subscription;
+  private _undoFired: Subscription;
   private _needsToFinalize: boolean = true;
 
   constructor(
@@ -94,6 +95,8 @@ export class TextEditToolComponent implements OnInit {
 
   onClick(): void {
     this._needsToFinalize = false;
+    this._toolChangedEvent.unsubscribe();
+    this._undoFired.unsubscribe();
     let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
     if (this.currentObject.fitText) {
       this._dataService.setText(this._dataService.selectedObjects, newText);
@@ -162,6 +165,10 @@ export class TextEditToolComponent implements OnInit {
   }
   
   ngOnInit() {
+    this._undoFired = this._dataService.undid.subscribe(() => {
+        this._toolChangedEvent.unsubscribe();
+        this._undoFired.unsubscribe();
+    });
     this._toolChangedEvent = this._dataService.toolChanged.subscribe(() => {
       if(this._dataService.selectedTool === EditorToolType.TEXT_EDIT_TOOL){
         if(this._needsToFinalize){
@@ -223,8 +230,6 @@ export class TextEditToolComponent implements OnInit {
   }
 
   finalize(): void {
-    //This temporarily fixes the text object...
-    this._needsToFinalize = false;
     if(this._dataService.selectedObjects.find((x:any) => x.id === this.currentObject.id)){
       let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
       if (this.currentObject.fitText) {
@@ -267,6 +272,10 @@ export class TextEditToolComponent implements OnInit {
       }
       this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
     }
+    //Tell the tool to not reset any more
+    this._needsToFinalize = false;
+    this._toolChangedEvent.unsubscribe();
+    this._undoFired.unsubscribe();
   }
 
   private getTop(): string {
