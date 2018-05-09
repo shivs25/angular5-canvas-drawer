@@ -519,7 +519,7 @@ public getSvgText(item: DrObject): TextInfo[] {
       type: REPLACE_OBJECTS,
       itemsToRemove: items,
       itemsToAdd: [itemToAdd],
-      zIndex: highZIndex
+      zIndex: highZIndex + 1
     });
     this.selectObjects([itemToAdd]);
     this._duplicateOffset = 1;

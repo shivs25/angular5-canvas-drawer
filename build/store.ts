@@ -149,8 +149,11 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
                 ...state.elements.slice(action.zIndex)
             ];
             let idsToRemove: number[] = action.itemsToRemove.map((x: DrObject) => x.id);
+            let filteredElements: DrObject[] = newElements.filter((x: DrObject) => idsToRemove.indexOf(x.id) < 0);
+            console.log(idsToRemove);
+            console.log(filteredElements);
             return  Object.assign({}, state, {
-                elements: newElements.filter((x: DrObject) => idsToRemove.indexOf(x.id) < 0)
+                elements: filteredElements
             });
         }
         case SELECT_OBJECTS: {

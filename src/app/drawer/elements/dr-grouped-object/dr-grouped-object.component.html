@@ -4,7 +4,7 @@
       [attr.transform]="data.visualData > 0 ? 'rotate(' + data.visualData + ',' + getRotationCenterX() + ',' + getRotationCenterY() + ')' : ''"
       >
         <ng-container *ngFor="let s of data.objects; let i = index">
-            <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"
+            <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="s.id"
               [hoverClass]="hoverClass"
               (mouseDown)="onChildMouseDown($event)"
               (mouseMove)="onChildMouseMove($event)"
