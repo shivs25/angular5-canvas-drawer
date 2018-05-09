@@ -150,28 +150,44 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
           break;
         case "ArrowUp":
-          this.keyDown = true;
-          this.microMoveObjects(0, this.isShiftDown() ? -10 : -1);
-          evt.stopPropagation();
-          evt.preventDefault();
+          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+            if(this._dataStoreService.selectedObjects.length > 0){
+              this.keyDown = true;
+              this.microMoveObjects(0, this.isShiftDown() ? -10 : -1);
+              evt.stopPropagation();
+              evt.preventDefault();
+            }
+          }
           break;
         case "ArrowDown":
-          this.keyDown = true;
-          this.microMoveObjects(0, this.isShiftDown() ? 10 : 1);
-          evt.stopPropagation();
-          evt.preventDefault();
+          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+              if(this._dataStoreService.selectedObjects.length > 0){
+              this.keyDown = true;
+              this.microMoveObjects(0, this.isShiftDown() ? 10 : 1);
+              evt.stopPropagation();
+              evt.preventDefault();
+            }
+          }
           break;
         case "ArrowLeft":
-          this.keyDown = true;
-          this.microMoveObjects(this.isShiftDown() ? -10 : -1, 0);
-          evt.stopPropagation();
-          evt.preventDefault();
+          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+            if(this._dataStoreService.selectedObjects.length > 0){
+              this.keyDown = true;
+              this.microMoveObjects(this.isShiftDown() ? -10 : -1, 0);
+              evt.stopPropagation();
+              evt.preventDefault();
+            }
+          }
           break;
         case "ArrowRight":
-          this.keyDown = true;
-          this.microMoveObjects(this.isShiftDown() ? 10 : 1, 0);
-          evt.stopPropagation();
-          evt.preventDefault();
+          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+            if(this._dataStoreService.selectedObjects.length > 0){
+              this.keyDown = true;
+              this.microMoveObjects(this.isShiftDown() ? 10 : 1, 0);
+              evt.stopPropagation();
+              evt.preventDefault();
+            }
+          }
           break;
       }
     }

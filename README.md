@@ -29,6 +29,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
+Date: `2018-05-09` VERSION: `1.1.4-beta.1`
+- Fixed key down issues stopping regular keyboard events.
+
 Date: `2018-05-09` VERSION: `1.1.4`
 - Fixed key down issues for arrow keys.
 
