@@ -31,7 +31,7 @@ fdescribe('Maps', function () {
         
     });
   
-    fit('CanvasDrawer_ExpectCanvasLoads', () => {
+    xit('CanvasDrawer_ExpectCanvasLoads', () => {
       utilities.normalPause();
 
       expect(browser.isElementPresent(by.xpath('.//*[.="Undo"]'))).toBeTruthy();
