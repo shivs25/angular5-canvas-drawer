@@ -192,14 +192,19 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "ArrowDown":
         case "ArrowLeft":
         case "ArrowRight":
-          this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
-            x: this.cssBounds.left + HALF_SIZER,
-            y: this.cssBounds.top + HALF_SIZER,
-            width: this.cssBounds.width - SIZER_SIZE,
-            height: this.cssBounds.height - SIZER_SIZE
-          });
-          evt.stopPropagation();
-          this.keyDown = false;
+          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+            if(this._dataStoreService.selectedObjects.length > 0){
+              this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+                x: this.cssBounds.left + HALF_SIZER,
+                y: this.cssBounds.top + HALF_SIZER,
+                width: this.cssBounds.width - SIZER_SIZE,
+                height: this.cssBounds.height - SIZER_SIZE
+              });
+              
+              evt.stopPropagation();
+              this.keyDown = false;
+            }
+          }
           break;
       }
     }
@@ -661,10 +666,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private microMoveObjects(diffX: number, diffY: number) {
-    Object.assign(this.cssBounds, {
-      left: this.cssBounds.left + diffX,
-      top: this.cssBounds.top + diffY
-    });
+    if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
+      if(this._dataStoreService.selectedObjects.length > 0){
+        Object.assign(this.cssBounds, {
+          left: this.cssBounds.left + diffX,
+          top: this.cssBounds.top + diffY
+        });
+      }
+    }
   }
 
   private getDistanceBetweenTwoPoints(point1: DrPoint, point2: DrPoint): number {
