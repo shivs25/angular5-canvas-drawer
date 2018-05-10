@@ -327,6 +327,28 @@ fdescribe('Maps', function () {
       //both are pointing to the same object, but it's good to test both selectors
       expect(element(by.css(containerCss + "clipPath")).isDisplayed()).toBeTruthy();
     });
+    it('CanvasDrawer_AddTextMultipleLines_ExpectTiexFieldObjectOnCanvas', () => {
+      utilities.normalPause();
+
+      canvas.selectButton("Text");
+      utilities.shortPause();
+
+      canvas.drawSquareSize(200);
+      utilities.longPause();
+
+      element(by.css("app-editable-text-area div")).sendKeys("Line 1");
+      element(by.css("app-editable-text-area div")).sendKeys(protractor.Key.ENTER);
+      element(by.css("app-editable-text-area div")).sendKeys("Line 2");
+      element(by.css("app-editable-text-area div")).sendKeys(protractor.Key.ENTER);
+      element(by.css("app-editable-text-area div")).sendKeys("Line 3");
+      element(by.css("app-editable-text-area div")).sendKeys(protractor.Key.ENTER);
+      element(by.css("app-editable-text-area div")).sendKeys("Line 4");
+      element(by.css("app-editable-text-area div")).sendKeys(protractor.Key.ENTER);
+      element(by.css("app-editable-text-area div")).sendKeys("Line 5");
+      utilities.normalPause();
+      
+      expect(element(by.xpath('.//*[.="Line 5"]')).isDisplayed()).toBeTruthy();
+    });
     it('CanvasDrawer_AddRoundedRectangle_ExpectRoundedRectangleObjectOnCanvas', () => {
       utilities.normalPause();
 
