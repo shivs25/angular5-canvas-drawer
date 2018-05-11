@@ -676,7 +676,7 @@ fdescribe('Maps', function () {
 
       expect(element(by.css(containerCss + "svg.fill-parent g")).isPresent()).toBeFalsy();
     });
-
+  
     //Clearing and copying
     it('CanvasDrawer_DuplicateObject_ExpectObjectToAppearTwice', () => {
       utilities.normalPause();
@@ -684,7 +684,7 @@ fdescribe('Maps', function () {
       canvas.selectButton("Rectangle");
       utilities.shortPause();
 
-      canvas.drawSquareSize(200);
+      canvas.drawSquareSize(400);
       utilities.longPause();
 
       canvas.selectButton("Selector");
