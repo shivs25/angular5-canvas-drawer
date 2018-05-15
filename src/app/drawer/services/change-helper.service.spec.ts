@@ -92,4 +92,73 @@ describe('ChangeHelperService', () => {
     expect(changes.basePoint1.x).toEqual(180);
     expect(changes.basePoint2.x).toEqual(220);
   }));
+
+
+  it('should return a new polyline bounding box without error when a width is 0', inject([ChangeHelperService], (service: ChangeHelperService) => {
+    let pts: DrPoint[] = [
+      { x: 100, y: 100 },
+      { x: 200, y: 100 },
+    ];
+
+    let oldBounds: BoundingBox = {
+      x: 100,
+      y: 100,
+      width: 0,
+      height: 100
+     };
+
+     let newBounds: BoundingBox = {
+      x: 100,
+      y: 100,
+      width: 0,
+      height: 100
+     };
+
+    let p: DrPolygon = createDrPolygon({
+      points: pts,
+      id: 1
+    });
+
+    let changes: any = service.getBoundsChanges(p, newBounds, oldBounds);
+
+    expect(changes.points).toBeDefined();
+    expect(changes.points[0].x).toEqual(100);
+    expect(changes.points[0].y).toEqual(100);
+    expect(changes.points[1].x).toEqual(100);
+    expect(changes.points[1].y).toEqual(100);
+  }));
+
+  it('should return a new polyline bounding box without error when a height is 0', inject([ChangeHelperService], (service: ChangeHelperService) => {
+    let pts: DrPoint[] = [
+      { x: 100, y: 100 },
+      { x: 100, y: 200 },
+    ];
+
+    let oldBounds: BoundingBox = {
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 0
+     };
+
+     let newBounds: BoundingBox = {
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 0
+     };
+
+    let p: DrPolygon = createDrPolygon({
+      points: pts,
+      id: 1
+    });
+
+    let changes: any = service.getBoundsChanges(p, newBounds, oldBounds);
+
+    expect(changes.points).toBeDefined();
+    expect(changes.points[0].x).toEqual(100);
+    expect(changes.points[0].y).toEqual(100);
+    expect(changes.points[1].x).toEqual(100);
+    expect(changes.points[1].y).toEqual(100);
+  }));
 });
