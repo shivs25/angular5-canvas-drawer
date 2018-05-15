@@ -678,21 +678,21 @@ fdescribe('Maps', function () {
     });
   
     //Clearing and copying
-    it('CanvasDrawer_DuplicateObject_ExpectObjectToAppearTwice', () => {
+    xit('CanvasDrawer_DuplicateObject_ExpectObjectToAppearTwice', () => {
       utilities.normalPause();
 
       canvas.selectButton("Rectangle");
-      utilities.shortPause();
+      utilities.normalPause();
 
       canvas.drawSquareSize(400);
       utilities.longPause();
 
       canvas.selectButton("Selector");
-      utilities.shortPause();
+      utilities.normalPause();
 
       canvas.selectButton("Duplicate");
-      utilities.shortPause();
-
+      utilities.normalPause();
+      
       element.all(by.css(containerCss + "rect")).then(function (elements) {
         expect(elements.length).toEqual(2);
       });
