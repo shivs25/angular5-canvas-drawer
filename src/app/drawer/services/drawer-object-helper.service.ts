@@ -117,12 +117,19 @@ export class DrawerObjectHelperService {
                 //Bottom Left
                 poly.push({x: p.points[0].x - POINT_BUFFER, y: p.points[p.points.length - 1].y + (POINT_BUFFER * 2)});
               }
-              let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
+              let inpoly;
+              //if(straightLine){
+                inpoly = this.clipper.pointInPolygon({ x: x, y: y }, poly);
+              /* } else {
+                inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
+              } */
+
               if (0 !== inpoly) {
                 returnValue.push(e);
               }
             } else {
               let poly = p.points;
+              
               let inpoly = this.clipper.pointInPolygon({ x: rotatedX, y: rotatedY }, poly);
               if (0 !== inpoly) {
                 returnValue.push(e);

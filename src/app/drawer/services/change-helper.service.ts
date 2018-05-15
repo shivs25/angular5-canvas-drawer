@@ -57,10 +57,10 @@ export class ChangeHelperService {
         for(let pt of (item as DrPolygon).points) {
           p = { x: 0, y: 0 };
 
-          pct = (pt.x - oldBounds.x) / (oldBounds.width);
+          pct = (pt.x - oldBounds.x) / (oldBounds.width === 0 ? 1 : oldBounds.width);
           p.x = newBounds.x + (newBounds.width * pct);
 
-          pct = (pt.y - oldBounds.y) / (oldBounds.height);
+          pct = (pt.y - oldBounds.y) / (oldBounds.height === 0 ? 1 : oldBounds.height);
           p.y = newBounds.y + (newBounds.height * pct);
 
           pts.push(p);
