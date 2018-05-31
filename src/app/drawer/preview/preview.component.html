@@ -4,7 +4,7 @@
   <svg 
         class="absolute-position fill-parent" xmlns="http://www.w3.org/2000/svg">
     <ng-container *ngFor="let s of (editingState | async)?.previewElements; let i = index">
-      <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="i + 1"
+      <ng-container *ngIf="s.visible" dynamic-svg [componentData]="s" [overrideProperties]="overrideProperties" [elementId]="s.id"
         [hoverClass]="hoverClass"
         >
       </ng-container>
