@@ -31,7 +31,7 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
-Date: `2018-08-0-67` VERSION: `1.2.0`
+Date: `2018-08-07` VERSION: `1.2.0`
 - Official Angular6 Release
 - Upgraded node modules for Angular6
 
