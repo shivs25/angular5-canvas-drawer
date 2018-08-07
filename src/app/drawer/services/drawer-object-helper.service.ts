@@ -12,7 +12,7 @@ import { BoundingBox, DEFAULT_BOUNDING_BOX, createBoundingBox } from '../models/
 import { BoundDirectivePropertyAst, BoundElementPropertyAst } from '@angular/compiler';
 import { DrCallout } from '../models/dr-callout';
 import { Observable } from 'rxjs';
-import * as clipperLib from "js-angusj-clipper/dist/web";
+import * as clipperLib from "js-angusj-clipper/web";
 
 const RADIUS: number = 16;
 const POINT_BUFFER: number = 5;
