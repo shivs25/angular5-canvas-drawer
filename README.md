@@ -7,6 +7,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Installation
 
 `npm install angular5-canvas-drawer [--save-dev|--save-prod]`
+- Angular6 Compatible Version is release 1.2.0, this should install automatically but you can specify it if you like.
+- For Angular5 users, you will need to specify release 1.1.8
 
 ## Getting started
 
@@ -29,37 +31,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
-Date: `2018-05-15` VERSION: `1.1.8`
-- Fixed how the preview sets HTML DOM Id attributes.
-
-Date: `2018-05-15` VERSION: `1.1.6`
-- Fixing moving straight lines (horizontal and vertical);
-- Adjusted moving of 45 degree lines
-
-Date: `2018-05-09` VERSION: `1.1.5`
-- Merged in minor fix
-
-Date: `2018-05-09` VERSION: `1.1.4-beta.1`
-- Fixed key down issues stopping regular keyboard events.
-
-Date: `2018-05-09` VERSION: `1.1.4`
-- Fixed key down issues for arrow keys.
-
-Date: `2018-05-09` VERSION: `1.1.3`
-- Fixed issue where text objects would disappear under certain circumstances after grouping.
-
-Date: `2018-05-08` VERSION: `1.1.2`
-- Fixed issue where text objects would disappear under certain circumstances after editing.
-
-Date: `2018-04-24` VERSION: `1.1.0`
-- Merged dev into master.
-
-Date: `2018-02-23` - `2018-04-24` VERSIONS: `1.0.33-beta.2` - `1.0.33-beta.75`
-- SUMMARY:
-    - Implemented SVG object drawer to draw basic shapes, lines and customized polygons.
-    - Implemented a Text and Image tool to upload images and place text objects on a view
-    - Implemented several services and helpers to help add, remove, and manipulate objects.
-    - Added mouse and key down listeners for various keys to help implement various click events.
+Date: `2018-08-0-67` VERSION: `1.2.0`
+- Official Angular6 Release
+- Upgraded node modules for Angular6
 
 ## Development server
 

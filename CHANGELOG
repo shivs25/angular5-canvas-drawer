@@ -1,4 +1,36 @@
 CHANGE LOG
+Date: `2018-08-0-7` VERSION: `1.1.8-beta.2`
+- Angular 6 Update
+- Installed newest official version of js-angusj-clipper
+
+Date: `2018-08-06` VERSION: `1.1.8-beta.1`
+- Angular 6 Upgrade
+- Attempted use of a modified js-angusj-clipper
+
+Date: `2018-05-15` VERSION: `1.1.8`
+- Fixed how the preview sets HTML DOM Id attributes.
+
+Date: `2018-05-15` VERSION: `1.1.6`
+- Fixing moving straight lines (horizontal and vertical);
+- Adjusted moving of 45 degree lines
+
+Date: `2018-05-09` VERSION: `1.1.5`
+- Merged in minor fix
+
+Date: `2018-05-09` VERSION: `1.1.4-beta.1`
+- Fixed key down issues stopping regular keyboard events.
+
+Date: `2018-05-09` VERSION: `1.1.4`
+- Fixed key down issues for arrow keys.
+
+Date: `2018-05-09` VERSION: `1.1.3`
+- Fixed issue where text objects would disappear under certain circumstances after grouping.
+
+Date: `2018-05-08` VERSION: `1.1.2`
+- Fixed issue where text objects would disappear under certain circumstances after editing.
+
+Date: `2018-04-24` VERSION: `1.1.0`
+- Merged dev into master.
 
 Date: `2018-04-24` VERSION: `1.0.33-beta.75`
 - Fixed issue where you couldn't select callouts after adding more objects.
