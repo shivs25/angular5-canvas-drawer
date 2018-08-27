@@ -6,5 +6,6 @@ export interface DrObject {
     visible: boolean;
     clickable: boolean;
     rotation: number;
+    customType: string;
 }
 export declare const DEFAULT_OBJECT: DrObject;

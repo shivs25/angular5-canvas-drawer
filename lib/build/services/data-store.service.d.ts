@@ -4,7 +4,7 @@ import { IDrawerAppState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
 import { EditorToolType } from '../models/enums';
-import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
+import { DrawerObjectHelperService } from './drawer-object-helper.service';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
 import { DrGroupedObject } from '../models/dr-grouped-object';
@@ -54,6 +54,7 @@ export declare class DataStoreService {
     setTextAndBounds(items: DrObject[], text: string, bounds: BoundingBox): void;
     onTextObjectsChanged(items: DrObject[]): void;
     setText(items: DrObject[], text: string): void;
+    overWriteObject(item: DrObject): void;
     renameObjects(items: DrObject[], newName: string): void;
     setStyles(items: DrObject[], newStyle: DrStyle): void;
     getSvgText(item: DrObject): TextInfo[];

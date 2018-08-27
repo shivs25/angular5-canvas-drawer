@@ -8,7 +8,7 @@ export interface DrObject {
     visible: boolean;
     clickable: boolean;
     rotation: number;
-    
+    customType: string;
 }
 
 export const DEFAULT_OBJECT: DrObject = {
@@ -17,5 +17,6 @@ export const DEFAULT_OBJECT: DrObject = {
     name: "Object",
     visible: true,
     clickable: true,
-    rotation: 0
+    rotation: 0,
+    customType: null
 }

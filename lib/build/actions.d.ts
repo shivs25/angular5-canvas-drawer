@@ -11,6 +11,7 @@ export declare const SET_HIDE_SELECTION = "SET_HIDE_SELECTION";
 export declare const ADD_TEMP_OBJECTS = "ADD_TEMP_OBJECTS";
 export declare const REMOVE_TEMP_OBJECTS = "REMOVE_TEMP_OBJECTS";
 export declare const SET_INITIAL_URLS = "SET_INITIAL_URLS";
+export declare const OVERWRITE_OBJECT = "OVERWRITE_OBJECT";
 export declare const BEGIN_EDIT = "BEGIN_EDIT";
 export declare const END_EDIT = "END_EDIT";
 export declare const SET_PREVIEW_ELEMENTS = "SET_PREVIEW_ELEMENTS";

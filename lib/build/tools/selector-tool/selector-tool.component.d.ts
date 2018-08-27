@@ -7,11 +7,13 @@ import { MouseEventData } from '../../models/mouse-event-data';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
+import { CustomComponentResolverService } from '../../services/custom-component-resolver.service';
 export declare class SelectorToolComponent implements OnInit, OnDestroy {
     private _dataStoreService;
     private _objectHelperService;
     private _changeService;
     private _elementRef;
+    private _customComponentResolverService;
     elementState: any;
     SIZER_SIZE: number;
     HALF_SIZER: number;
@@ -49,7 +51,7 @@ export declare class SelectorToolComponent implements OnInit, OnDestroy {
     private _lastEvent;
     private _clickPt;
     private _delay;
-    constructor(_dataStoreService: DataStoreService, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _elementRef: ElementRef);
+    constructor(_dataStoreService: DataStoreService, _objectHelperService: DrawerObjectHelperService, _changeService: ChangeHelperService, _elementRef: ElementRef, _customComponentResolverService: CustomComponentResolverService);
     ngOnInit(): void;
     onKeyDown(evt: any): void;
     onKeyUp(evt: any): void;

@@ -10,6 +10,7 @@ import { EditableDrawerComponent } from './editable-drawer/editable-drawer.compo
 import { EditableDrawerModule } from './editable-drawer/editable-drawer.module';
 import { DrawerComponent } from './drawer/drawer.component';
 import { PreviewComponent } from './preview/preview.component';
+import { DrObjectComponent } from './elements/dr-object/dr-object.component';
 
 export { DrPoint } from './models/dr-point';
 export { DrObject } from './models/dr-object';
@@ -28,6 +29,9 @@ export { DrStyle, createDrStyle } from './models/dr-style';
 export { DrTextStyle, createDrTextStyle } from './models/dr-text-style';
 export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object'
 export { DrCallout, createDrCallout } from './models/dr-callout';
+export { INITIAL_STATE, IDrawerAppState } from './store';
+export { CustomComponentResolverService } from './services/custom-component-resolver.service';
+export { DrObjectComponent } from './elements/dr-object/dr-object.component';
 
 @NgModule({
   imports: [
@@ -50,7 +54,7 @@ export class DrawerLibraryRootModule {
   }
  }
 
-@NgModule({imports: [DrawerModule.forRoot(), CommonModule], exports: [CommonModule, NgReduxModule]})
+@NgModule({imports: [DrawerModule.forRoot(), CommonModule], exports: [CommonModule, NgReduxModule ]})
 export class DrawerLibraryModule {
   static forRoot(): ModuleWithProviders { return {ngModule: DrawerLibraryRootModule}; }
 }

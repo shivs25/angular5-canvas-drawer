@@ -44,6 +44,8 @@
   <button (click)="setPreviewStyle()">Preview Style</button>
   <!--<button (click)="setBoundingBox()">Bounding Box</button>--><!--Removed due to a user issue on github #1 where the bounding box button lead to confusion. It doesn't demonstrate any use to the app and was used for our testing purposes so it has been removed-->
   <button (click)="renameSelectedObject()">Rename Object</button>
+
+  <button (click)="exportToImage()">Export</button>
 </div>
 
 <!-- UNCOMMENT TO SEE HISTORY
@@ -54,7 +56,7 @@
 
 <div style="position:relative; width: 600px; height: 600px; border: 1px solid red">
 
-    <app-editable-drawer [itemViewBox]="viewBoxItem">
+    <app-editable-drawer #drawer [itemViewBox]="viewBoxItem">
     </app-editable-drawer>
 
 </div>
@@ -66,5 +68,6 @@
 
 </div>
 
+<canvas #canvas style="position:relative; border: 1px solid red; width: 600px; height: 600px;" width="600" height="600">
 
-
+</canvas>

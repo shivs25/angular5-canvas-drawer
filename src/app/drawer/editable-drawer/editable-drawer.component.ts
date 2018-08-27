@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
 import { BoundingBox } from '../models/bounding-box';
@@ -9,6 +9,8 @@ import { BoundingBox } from '../models/bounding-box';
   styleUrls: ['./editable-drawer.component.scss']
 })
 export class EditableDrawerComponent implements OnInit {
+
+  @ViewChild('drawer') drawer;
 
   @Input()
   itemViewBox: BoundingBox = null;
@@ -22,7 +24,12 @@ export class EditableDrawerComponent implements OnInit {
   @Output()
   public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   
+
   constructor(private _dataService: DataStoreService) { }
+
+  getSvgAsText(): string {
+    return this.drawer.getSvgAsText();
+  }
 
   ngOnInit() {
     this._dataService.selectionChanged.subscribe((selectedObjects:DrObject[]) => {

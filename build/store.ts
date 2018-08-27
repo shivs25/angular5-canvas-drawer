@@ -1,6 +1,6 @@
 import { DrObject } from './models/dr-object';
 
-import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION, ADD_TEMP_OBJECTS, REMOVE_TEMP_OBJECTS, SET_INITIAL_URLS } from './actions';
+import { SET_ELEMENTS, SELECT_OBJECTS, BEGIN_EDIT, END_EDIT, SET_TOOL, REMOVE_OBJECTS, CHANGE_OBJECTS_PROPERTIES, ADD_OBJECTS, CLEAR_OBJECTS, REPLACE_OBJECTS, INIT_ELEMENTS, SET_PREVIEW_ELEMENTS, CHANGE_PREVIEW_STYLES, SET_HIDE_SELECTION, ADD_TEMP_OBJECTS, REMOVE_TEMP_OBJECTS, SET_INITIAL_URLS, OVERWRITE_OBJECT } from './actions';
 import { DrImage } from './models/dr-image';
 import { DrType } from './models/dr-type.enum';
 import { DrRect } from './models/dr-rect';
@@ -13,6 +13,7 @@ import { DrPolygon } from './models/dr-polygon';
 import { EditorToolType } from './models/enums';
 import { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object';
 import { cloneDeep } from './utilities';
+
 
 export interface IHistory<T> {
     past: T[],
@@ -100,6 +101,11 @@ export const elementsReducer: Reducer<IElementState> = (state: IElementState = I
         case SET_ELEMENTS: {
             return Object.assign({}, state, {
                 elements: action.elements ? action.elements.slice(0) : []
+            });
+        }
+        case OVERWRITE_OBJECT: {
+            return Object.assign({}, state, {
+                elements: findAndReplaceNestedItems(state.elements, [{ id: action.newObject.id, changes: action.newObject }])
             });
         }
         case CHANGE_OBJECTS_PROPERTIES: {
@@ -256,7 +262,8 @@ const ACTIONS_TO_IGNORE = [
     CHANGE_PREVIEW_STYLES, 
     SET_HIDE_SELECTION, 
     REMOVE_TEMP_OBJECTS,
-    SET_INITIAL_URLS
+    SET_INITIAL_URLS,
+    OVERWRITE_OBJECT
 ];
 
 export const undoableElementsReducer: any = undoable(elementsReducer, {
@@ -270,5 +277,3 @@ export const rootReducer: Reducer<IDrawerAppState> = combineReducers({
     elementState: undoableElementsReducer,
     editingState: editingReducer
 });
-
-

@@ -7,6 +7,7 @@ export declare class DrawerComponent implements OnInit {
     private _dataService;
     private _elementRef;
     elementState: any;
+    allowCustomComponents: boolean;
     overrideProperties: any;
     hoverClass: any;
     handleMouseEvents: boolean;

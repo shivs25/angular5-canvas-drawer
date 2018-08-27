@@ -21,12 +21,13 @@ import {
   SET_HIDE_SELECTION,
   ADD_TEMP_OBJECTS,
   REMOVE_TEMP_OBJECTS,
-  SET_INITIAL_URLS
+  SET_INITIAL_URLS,
+  OVERWRITE_OBJECT
 } from '../actions';
 import { ActionCreators } from 'redux-undo';
 import { EditorToolType, DrType } from '../models/enums';
 import { DrRect } from '../models/dr-rect';
-import { DrawerObjectHelperService } from '../services/drawer-object-helper.service';
+import { DrawerObjectHelperService } from './drawer-object-helper.service';
 import { MouseEventData } from '../models/mouse-event-data';
 import { ChangeHelperService } from './change-helper.service';
 import { DrStyle } from '../models/dr-style';
@@ -331,6 +332,13 @@ export class DataStoreService {
       }
     }
     
+  }
+
+  public overWriteObject(item: DrObject):void {
+    this._ngRedux.dispatch({
+      type: OVERWRITE_OBJECT,
+      newObject: item
+    })
   }
 
   public renameObjects(items: DrObject[], newName: string) {

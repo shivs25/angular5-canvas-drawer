@@ -27,6 +27,9 @@ export class DrawerComponent implements OnInit {
   @select() elementState;
 
   @Input()
+  allowCustomComponents: boolean = true;
+
+  @Input()
   overrideProperties: any = null;
 
   @Input()
@@ -65,6 +68,10 @@ export class DrawerComponent implements OnInit {
       x: b.left,
       y: b.top
     };
+  }
+
+  getSvgAsText(): string {
+    return this._elementRef.nativeElement.querySelector("svg").innerHTML; 
   }
 
   isHiddenSelection(id: number) {

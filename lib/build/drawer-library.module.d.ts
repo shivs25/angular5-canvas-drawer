@@ -18,6 +18,9 @@ export { DrStyle, createDrStyle } from './models/dr-style';
 export { DrTextStyle, createDrTextStyle } from './models/dr-text-style';
 export { DrGroupedObject, createDrGroupedObject } from './models/dr-grouped-object';
 export { DrCallout, createDrCallout } from './models/dr-callout';
+export { INITIAL_STATE, IDrawerAppState } from './store';
+export { CustomComponentResolverService } from './services/custom-component-resolver.service';
+export { DrObjectComponent } from './elements/dr-object/dr-object.component';
 export declare class DrawerLibraryRootModule {
     constructor(ngRedux: NgRedux<IDrawerAppState>);
 }
