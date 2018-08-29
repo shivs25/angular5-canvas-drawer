@@ -388,7 +388,7 @@ describe('TextRenderingService', () => {
     });
     
     let u = service.getSvgText(d);
-    expect(u.length).toEqual(8);
+    expect(u.length).toEqual(7);
   });
 });
 

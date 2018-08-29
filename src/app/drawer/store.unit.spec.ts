@@ -7,7 +7,7 @@ import { NgRedux } from "@angular-redux/store";
 import { createStore } from "redux";
 import { ActionCreators } from "redux-undo";
 import { DrStyledObject } from "./models/dr-styled-object";
-import { Action } from "rxjs/scheduler/Action";
+//import { Action } from "rxjs/scheduler/Action";
 
 
 

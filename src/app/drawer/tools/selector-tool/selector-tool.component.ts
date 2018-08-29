@@ -16,6 +16,7 @@ import { DrType, EditorToolType } from '../../models/enums';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
+import { CustomComponentResolverService } from '../../services/custom-component-resolver.service';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
@@ -111,7 +112,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     private _dataStoreService: DataStoreService,
     private _objectHelperService: DrawerObjectHelperService,
     private _changeService: ChangeHelperService,
-    private _elementRef: ElementRef) { }
+    private _elementRef: ElementRef, 
+  private _customComponentResolverService: CustomComponentResolverService) { }
 
   ngOnInit() {
     let b: any = this._elementRef.nativeElement.getBoundingClientRect();
@@ -784,7 +786,19 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
                        this.canAllResize(this.selectedObjects);
-      this.canRotate = 1 === this.selectedObjects.length && DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
+
+      if (1 === this.selectedObjects.length){
+        if (null !== this.selectedObjects[0].customType) {
+          this.canRotate = this._customComponentResolverService.canRotate(this.selectedObjects[0]);
+        }
+        else {
+          this.canRotate = DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
+        }
+        
+      }
+      else {
+        this.canRotate = false;
+      }
       if (this.selectedObjects.length > 1) {
         this.selectionStyle = Object.assign({}, SELECTION_STYLE, { drawPointer: false });
       }

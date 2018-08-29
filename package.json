@@ -1,6 +1,6 @@
 {
   "name": "angular5-canvas-drawer",
-  "version": "1.2.1",
+  "version": "1.2.1-beta.20",
   "license": "MIT",
   "author": "Billy Shivers",
   "contributors": [
@@ -53,11 +53,12 @@
     "@angular/platform-browser-dynamic": "6.1.1",
     "@angular/platform-server": "6.1.1",
     "@angular/router": "6.1.1",
+    "canvg": "^1.5.2",
     "core-js": "^2.4.1",
     "d3plus-text": "^0.9.32",
     "js-angusj-clipper": "^0.20.1",
     "redux": "^3.7.2",
-    "redux-undo": "^0.6.1",
+    "redux-undo": "^1.0.0-beta9-9-7",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.2.2",
     "zone.js": "^0.8.26"

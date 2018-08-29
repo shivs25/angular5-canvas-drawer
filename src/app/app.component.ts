@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { DrEllipse, createDrEllipse } from './drawer/models/dr-ellipse';
 import { DrObject, DEFAULT_OBJECT } from './drawer/models/dr-object';
@@ -12,9 +12,8 @@ import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
-import { createDrStyle } from '../../build/models/dr-style';
+import { createDrStyle } from './drawer/models/dr-style';
 import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
-import { } from ''
 import { DrCallout, createDrCallout } from './drawer/models/dr-callout';
 
 @Component({
@@ -36,6 +35,9 @@ export class AppComponent implements OnInit {
 
   @select() elementState;
 
+
+  @ViewChild('drawer') drawer;
+  @ViewChild('canvas') canvas;
 
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }
@@ -302,6 +304,29 @@ export class AppComponent implements OnInit {
 
   pen(): void {
     this.dataStoreService.selectedTool = EditorToolType.PEN_TOOL;
+  }
+
+  exportToImage(): void {
+    let svg = "<svg viewBox=\"0 0 600 600\" width=\"1200\" height=\"1200\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">" + this.drawer.getSvgAsText() + "</svg>"
+    /*canvg.default(this.canvas.nativeElement, svg, { 
+      ignoreMouse: true, 
+      ignoreAnimation: true, 
+      useCORS: true, 
+      log: true,
+      ignoreDimensions: true,
+      scaleHeight: 600,
+      scaleWidth: 600
+    });*/
+
+    let ctx = this.canvas.nativeElement.getContext('2d');
+    
+    let img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0);
+      //window.open(this.canvas.nativeElement.toDataURL());
+    };
+    img.src = "data:image/svg+xml;utf8," + svg;
+
   }
 
   ngOnInit() {
