@@ -29,11 +29,11 @@ export declare class TextEditToolComponent implements OnInit {
     divify(): string;
     ngOnInit(): void;
     finalize(): void;
-    private getTop();
-    private getBottom();
-    private getLeft();
-    private getRight();
-    private getMarginTop(offsetHeight);
-    private getMarginLeft(offsetWidth);
-    private getHAlign();
+    private getTop;
+    private getBottom;
+    private getLeft;
+    private getRight;
+    private getMarginTop;
+    private getMarginLeft;
+    private getHAlign;
 }

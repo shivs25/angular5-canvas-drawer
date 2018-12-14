@@ -24,7 +24,7 @@ export declare class DrawerObjectHelperService {
     getRotatedPoints(drObj: DrObject): DrPoint[];
     getUnionOfShapes(shape1: DrPoint[], shape2: DrPoint[]): DrPoint[];
     getCalloutPath(v: DrCallout): string;
-    private determinePolylineIsStraight(points);
-    private getCorner(b, p);
-    private getBoundingBoxForObject(drObj);
+    private determinePolylineIsStraight;
+    private getCorner;
+    private getBoundingBoxForObject;
 }

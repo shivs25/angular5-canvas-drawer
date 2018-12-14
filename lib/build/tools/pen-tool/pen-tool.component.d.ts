@@ -23,11 +23,11 @@ export declare class PenToolComponent implements OnInit {
     getResizerX(): number;
     getResizerY(): number;
     finalize(): void;
-    private handleClick(x, y);
-    private getActivePoint(x, y);
-    private pointOnLine(x, y, angle, distance);
-    private getRotationAngle(a, b);
-    private getNextId();
-    private completeObject(isClosed);
-    private reset();
+    private handleClick;
+    private getActivePoint;
+    private pointOnLine;
+    private getRotationAngle;
+    private getNextId;
+    private completeObject;
+    private reset;
 }

@@ -11,7 +11,7 @@ export declare class TextRenderingService {
     getSvgText(d: DrText): TextInfo[];
     getLineHeight(o: DrText): number;
     getAscent(o: DrText): number;
-    private replaceSpecialCases(s);
-    private replaceSpaces(s);
-    private replacePipeChar(s);
+    private replaceSpecialCases;
+    private replaceSpaces;
+    private replacePipeChar;
 }

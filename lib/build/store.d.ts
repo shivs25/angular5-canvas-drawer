@@ -28,4 +28,4 @@ export declare const INITIAL_STATE: IDrawerAppState;
 export declare const editingReducer: Reducer<IEditingState>;
 export declare const elementsReducer: Reducer<IElementState>;
 export declare const undoableElementsReducer: any;
-export declare const rootReducer: Reducer<IDrawerAppState>;
+export declare const rootReducer: Reducer<any>;

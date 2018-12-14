@@ -6,12 +6,12 @@ export declare enum DrType {
     TEXT = 4,
     IMAGE = 5,
     CALLOUT = 6,
-    GROUPED_OBJECT = 100,
+    GROUPED_OBJECT = 100
 }
 export declare enum DrTextAlignment {
     NEAR = 1,
     CENTER = 2,
-    FAR = 3,
+    FAR = 3
 }
 export declare enum EditorToolType {
     NONE = -1,
@@ -28,5 +28,5 @@ export declare enum EditorToolType {
     TRIANGLE_TOOL = 11,
     ROUNDED_RECTANGLE_TOOL = 12,
     TEXT_EDIT_TOOL = 13,
-    CALLOUT_POINTER_TOOL = 14,
+    CALLOUT_POINTER_TOOL = 14
 }

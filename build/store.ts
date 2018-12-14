@@ -273,7 +273,7 @@ export const undoableElementsReducer: any = undoable(elementsReducer, {
 
 
 
-export const rootReducer: Reducer<IDrawerAppState> = combineReducers({
+export const rootReducer: Reducer<any> = combineReducers({
     elementState: undoableElementsReducer,
     editingState: editingReducer
 });

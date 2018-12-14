@@ -23,11 +23,11 @@ export declare class ObjectCreationToolComponent implements OnInit {
     onBackgroundMouseMove(evt: any): void;
     onBackgroundMouseUp(evt: any): void;
     finalize(): void;
-    private getNextId();
-    private createStar(evt);
-    private createArrow(evt);
-    private createCallout(evt, rounded);
-    private createTriangle(evt);
-    private createRect(evt, rounded, name);
-    private createEllipse(evt);
+    private getNextId;
+    private createStar;
+    private createArrow;
+    private createCallout;
+    private createTriangle;
+    private createRect;
+    private createEllipse;
 }

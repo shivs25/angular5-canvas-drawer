@@ -31,6 +31,10 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
+Date: `2018-12-14` VERSION: `1.2.1-beta.777`
+- Attempted upgrade to Angular 7
+
+
 Date: `2018-08-07` VERSION: `1.2.1-beta.1`
 - Trying to figure out how to make things work with another library that is using redux.
 

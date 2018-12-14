@@ -25,7 +25,7 @@ describe('Store Tests', () => {
     });
 
     it('SHould replace the objects when there are 1 item to add and multiple to remove', () => {
-        let state = INITIAL_ELEMENT_STATE;
+        let state:any = INITIAL_ELEMENT_STATE;
 
         state.elements = [
             createDrRect({ id: 1}), 
@@ -45,7 +45,7 @@ describe('Store Tests', () => {
     });
 
     it('SHould replace the objects at zIndex 0 when there are 1 item to add and multiple to remove', () => {
-        let state = INITIAL_ELEMENT_STATE;
+        let state:any = INITIAL_ELEMENT_STATE;
 
         state.elements = [
             createDrRect({ id: 1}), 
@@ -65,7 +65,7 @@ describe('Store Tests', () => {
     });
 
     it('SHould replace the objects  when there are 1 item to remove and multiple to add', () => {
-        let state = INITIAL_ELEMENT_STATE;
+        let state:any = INITIAL_ELEMENT_STATE;
 
         state.elements = [
             createDrRect({ id: 1}), 
@@ -84,7 +84,7 @@ describe('Store Tests', () => {
 
 
     it('Should restore state on undo after move up', () => {
-        let state = INITIAL_STATE;
+        let state:any = INITIAL_STATE;
 
         state.elementState.present.elements = [
             createDrRect({ id: 1}), 
@@ -119,7 +119,7 @@ describe('Store Tests', () => {
     });
 
     it('Should change properties on nested object', () => {
-        let state = INITIAL_STATE;
+        let state:any = INITIAL_STATE;
 
         state.elementState.present.elements = [
             createDrRect({ id: 1}), 
@@ -144,7 +144,7 @@ describe('Store Tests', () => {
     });
 
     it('Should remove on nested object', () => {
-        let state = INITIAL_STATE;
+        let state:any = INITIAL_STATE;
 
         state.elementState.present.elements = [
             createDrRect({ id: 1}), 
@@ -169,7 +169,7 @@ describe('Store Tests', () => {
     });
 
     it('Should remove on nested object and put back on undo', () => {
-        let state = INITIAL_STATE;
+        let state:any = INITIAL_STATE;
 
         state.elementState.present.elements = [
             createDrRect({ id: 1}), 
@@ -196,7 +196,7 @@ describe('Store Tests', () => {
     });
 
     it('SHould set new elements', () => {
-        let state = INITIAL_STATE;
+        let state:any = INITIAL_STATE;
 
         state.elementState.present.elements = [
             createDrRect({ id: 1}), 

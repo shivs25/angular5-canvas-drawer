@@ -20,6 +20,6 @@ export declare class DynamicSvgDirective implements OnInit {
     mouseMove: EventEmitter<MouseEventData>;
     mouseUp: EventEmitter<MouseEventData>;
     componentData: any;
-    private buildComponent(data);
+    private buildComponent;
     constructor(_viewContainerRef: ViewContainerRef, _resolver: ComponentFactoryResolver, _customComponentResolver: CustomComponentResolverService);
 }
