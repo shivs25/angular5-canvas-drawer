@@ -12,9 +12,8 @@ import { DEFAULT_STYLE } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
-import { createDrStyle } from '../../build/models/dr-style';
+import { createDrStyle } from './drawer/models/dr-style';
 import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
-import { } from ''
 import { DrCallout, createDrCallout } from './drawer/models/dr-callout';
 
 @Component({
