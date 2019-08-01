@@ -12,7 +12,7 @@ import { BoundingBox } from '../../models/bounding-box';
 })
 export class DrObjectComponent implements OnInit {
 
-  @ViewChild('elementTemplate')
+  @ViewChild('elementTemplate', { static: true })
   public elementTemplate: TemplateRef<any>;
 
   @Input()

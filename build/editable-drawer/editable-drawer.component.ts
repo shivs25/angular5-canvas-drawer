@@ -10,7 +10,7 @@ import { BoundingBox } from '../models/bounding-box';
 })
 export class EditableDrawerComponent implements OnInit {
 
-  @ViewChild('drawer') drawer;
+  @ViewChild('drawer', { static: true }) drawer;
 
   @Input()
   itemViewBox: BoundingBox = null;

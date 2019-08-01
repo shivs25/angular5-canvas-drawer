@@ -8,7 +8,7 @@ import { BoundingBox } from '../../models/bounding-box';
 })
 export class EditableTextAreaComponent implements OnInit {
 
-  @ViewChild('textArea') _textArea: ElementRef;
+  @ViewChild('textArea', { static: true }) _textArea: ElementRef;
 
   private _text: string = null;
 

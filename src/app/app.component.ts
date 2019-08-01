@@ -36,8 +36,8 @@ export class AppComponent implements OnInit {
   @select() elementState;
 
 
-  @ViewChild('drawer') drawer;
-  @ViewChild('canvas') canvas;
+  @ViewChild('drawer', { static: true }) drawer;
+  @ViewChild('canvas', { static: true }) canvas;
 
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }

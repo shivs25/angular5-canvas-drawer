@@ -14,7 +14,6 @@ import { DrImage } from '../models/dr-image';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DrType } from '../models/dr-type.enum';
 import { MouseEventData } from '../models/mouse-event-data';
-import { StaticInjector } from '@angular/core/src/di/injector';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
 import { CustomComponentResolverService } from '../services/custom-component-resolver.service';

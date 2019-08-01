@@ -18,4 +18,10 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('./lib/build/css'));
 });
 
-gulp.task('build-frontend', ['inline-build-templates', 'sass']);
+//gulp.task('build-frontend', ['inline-build-templates', 'sass']);
+
+gulp.task('build-frontend', gulp.series('inline-build-templates', function() {
+    // default task code here
+}),gulp.series('sass', function() {
+    // default task code here
+}));
