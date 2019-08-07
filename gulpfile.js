@@ -13,7 +13,7 @@ gulp.task('inline-build-templates', () => {
 });
 
 gulp.task('sass', function () {
-  gulp.src('./src/sass/*.scss')
+  return gulp.src('./src/sass/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('./lib/build/css'));
 });
