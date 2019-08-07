@@ -87,5 +87,5 @@ export declare class DataStoreService {
     redo(): void;
     readonly redoLength: number;
     clearHistory(): void;
-    getObjects(ids: number[]): DrObject[];
+    getObjects(ids: number[]): any[];
 }

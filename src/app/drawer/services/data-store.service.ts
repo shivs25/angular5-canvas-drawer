@@ -789,7 +789,7 @@ public getSvgText(item: DrObject): TextInfo[] {
 
 
   //=========Supporting Functions=========
-  public getObjects(ids: number[]): DrObject[] {
+  public getObjects(ids: number[]): any[] {
     return this._objectHelperService.getObjects(ids, this.elements);
   }
 }

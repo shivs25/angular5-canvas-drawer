@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 export class TextEditToolComponent implements OnInit {
 
   @ViewChild('container', { static: true }) _container: ElementRef;
-  @ViewChild('textArea', { static: true }) _textArea: EditableTextAreaComponent;
+  @ViewChild('textArea', { static: false }) _textArea: EditableTextAreaComponent;
 
   currentObject: DrText = null;
   cssBounds: any = null;
