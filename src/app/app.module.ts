@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { DrawerObjectHelperService } from './drawer/services/drawer-object-helper.service';
+import { ElementRef } from '@angular/core';
 
 @NgModule({
   declarations: [
