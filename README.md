@@ -22,7 +22,12 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 To use this library in your newly generated component, add the `app-drawer` to your html as you would any other angular component. Once added, you will need to add inputs* to set your height, width, and viewbox for the main svg**.
 
-*Current available inputs are `widthValue` (number or percentage),`heightValue` (number or percentage), `viewWidthValue` (number), `viewTopValue` (number), `viewHeightValue` (number), `viewLeftValue` (number) 
+*The available app-drawer inputs are as followed:
+`itemViewBox` which is our `BoundingBox` object to set the view of the drawer
+`handleMouseEvents` which is a `boolean`
+
+*The available app-editable-drawer inputs are as followed:
+`itemViewBox` which is our `BoundingBox` to set the view of the drawer
 
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
