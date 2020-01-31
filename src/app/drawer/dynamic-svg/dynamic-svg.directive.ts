@@ -14,9 +14,9 @@ import { DrImage } from '../models/dr-image';
 import { DrImageComponent } from '../elements/dr-image/dr-image.component';
 import { DrType } from '../models/dr-type.enum';
 import { MouseEventData } from '../models/mouse-event-data';
-import { StaticInjector } from '@angular/core/src/di/injector';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
+import { CustomComponentResolverService } from '../services/custom-component-resolver.service';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -32,6 +32,10 @@ export class DynamicSvgDirective implements OnInit {
   public get currentComponent(): any {
     return this._currentComponent ? this._currentComponent.instance : null;
   }
+
+  @Input()
+  allowCustomComponents: boolean = true;
+
 
   @Input() 
   hoverClass: string = 'pointer';
@@ -120,28 +124,32 @@ export class DynamicSvgDirective implements OnInit {
 
 
   private buildComponent(data: DrObject): any {
-    let returnValue: any = null;
-
-    switch(data.drType) {
-      case DrType.TEXT:
-        return  DrTextComponent;
-      case DrType.IMAGE:
-        return  DrImageComponent;
-      case DrType.ELLIPSE:
-        return  DrEllipseComponent;
-      case DrType.POLYGON:
-        return DrPolygonComponent;
-      case DrType.RECTANGLE:
-        return  DrRectComponent;
-      case DrType.CALLOUT:
-        return DrCalloutComponent;
-      case DrType.GROUPED_OBJECT:
-        return DrGroupedObjectComponent;
+    if (!this.allowCustomComponents || null === data.customType || 0 === data.customType.length) {
+      switch(data.drType) {
+        case DrType.TEXT:
+          return  DrTextComponent;
+        case DrType.IMAGE:
+          return  DrImageComponent;
+        case DrType.ELLIPSE:
+          return  DrEllipseComponent;
+        case DrType.POLYGON:
+          return DrPolygonComponent;
+        case DrType.RECTANGLE:
+          return  DrRectComponent;
+        case DrType.CALLOUT:
+          return DrCalloutComponent;
+        case DrType.GROUPED_OBJECT:
+          return DrGroupedObjectComponent;
+      }
+    }
+    else {
+      return this._customComponentResolver.buildComponent(data);
     }
     return null;
   }
 
-  constructor(private _viewContainerRef: ViewContainerRef, private _resolver: ComponentFactoryResolver) {  
+  constructor(private _viewContainerRef: ViewContainerRef, private _resolver: ComponentFactoryResolver, private _customComponentResolver: CustomComponentResolverService) {
+
   }
 
   

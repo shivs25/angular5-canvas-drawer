@@ -18,6 +18,32 @@ Add `DrawerLibraryModule.forRoot()` into your `imports`. If you do not use `forR
 
 To use [associated models and enum](https://github.com/shivs25/angular5-canvas-drawer/tree/dev/src/app/drawer/models) you will need to import the models from `angular5-canvas-drawer` in the component.ts that contains the drawer component on the html.
 
+To get information on the shapes you make, to use the various tools, and generaly interact with the drawer you will need to inject `DataStoreService` into the constructor of your component.
+
+To set a tool, you will need the `EditorToolType` imported on your component. You can then change your tools by doing `this._dataStoreService.selectedTool = EditorToolType.RECTANGLE_TOOL;`
+
+Lastly, you will need to make sure your application has the following classes loaded into it's css files. The application currently inherits from the parent, other styles may need to be added to work in your application:
+    .absolute-position {
+        position: absolute;
+    }
+    .fill-parent {
+        width: 100%;
+        height: 100%;
+    }
+    .absolute-fill-0 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    }
+    .no-interact {
+    pointer-events: none;
+    }
+    .pointer {
+    cursor: default;
+    }
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
@@ -36,12 +62,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
-Date: `2018-08-07` VERSION: `1.2.1`
-- Minor fixes to issues with initial publish.
-
-Date: `2018-08-07` VERSION: `1.2.0`
-- Official Angular6 Release
-- Upgraded node modules for Angular6
+Date `2020-01-31` VERSION `1.3.01
+- Official Upgrade to Angular 8
+- Improved Documentation
 
 ## Development server
 

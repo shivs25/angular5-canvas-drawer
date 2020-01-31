@@ -1,0 +1,33 @@
+import { OnInit } from '@angular/core';
+import { DrPolygon } from '../../models/dr-polygon';
+import { DataStoreService } from '../../services/data-store.service';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/observable/of';
+export declare class PenToolComponent implements OnInit {
+    private _dataService;
+    currentObject: DrPolygon;
+    objectStyle: any;
+    private _currentPt;
+    private _clickPt;
+    private _delay;
+    private _lastEvent;
+    private _modifierKeys;
+    constructor(_dataService: DataStoreService);
+    ngOnInit(): void;
+    onKeyDown(evt: any): void;
+    onKeyUp(evt: any): void;
+    onResizerMouseMove(evt: any): void;
+    onBackgroundMouseMove(evt: any): void;
+    onBackgroundClick(evt: any): void;
+    onResizerClick(evt: any): void;
+    getResizerX(): number;
+    getResizerY(): number;
+    finalize(): void;
+    private handleClick;
+    private getActivePoint;
+    private pointOnLine;
+    private getRotationAngle;
+    private getNextId;
+    private completeObject;
+    private reset;
+}

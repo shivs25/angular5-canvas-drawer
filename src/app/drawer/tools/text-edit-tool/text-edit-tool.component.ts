@@ -19,8 +19,8 @@ import { Subscription } from 'rxjs';
 })
 export class TextEditToolComponent implements OnInit {
 
-  @ViewChild('container') _container: ElementRef;
-  @ViewChild('textArea') _textArea: EditableTextAreaComponent;
+  @ViewChild('container', { static: true }) _container: ElementRef;
+  @ViewChild('textArea', { static: false }) _textArea: EditableTextAreaComponent;
 
   currentObject: DrText = null;
   cssBounds: any = null;

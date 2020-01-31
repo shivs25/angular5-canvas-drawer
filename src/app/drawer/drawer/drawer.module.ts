@@ -16,6 +16,7 @@ import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-group
 import { PreviewComponent } from '../preview/preview.component';
 import { TextRenderingService } from '../services/text-rendering.service';
 import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
+import { CustomComponentResolverService } from '../services/custom-component-resolver.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -34,7 +35,7 @@ import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component'
     PreviewComponent
   ], 
   exports: [DrawerComponent, PreviewComponent, DynamicSvgDirective], 
-  providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService],
+  providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService, CustomComponentResolverService],
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
@@ -47,5 +48,5 @@ import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component'
 })
 
 export class DrawerModule {
-  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService]}; }
+  static forRoot(): ModuleWithProviders { return {ngModule: DrawerModule, providers: [ChangeHelperService, DrawerObjectHelperService, DataStoreService, DynamicSvgDirective, TextRenderingService, CustomComponentResolverService]}; }
 }

@@ -1,9 +1,11 @@
 
 
 <app-drawer [overrideProperties]="invisibleStyle"  [hoverClass]="'clickable'"
+  [allowCustomComponents]="false"
   (mouseDownObject)="onMouseDown($event)"
   (mouseMoveObject)="onMouseMove($event)"
   (mouseUpObject)="onMouseUp($event)"
+
   >
 </app-drawer>
 
@@ -30,7 +32,7 @@
       </ng-container>
     </svg:g>
    
-    <ng-container  *ngFor="let s of selectedObjects" dynamic-svg [componentData]="s" [overrideProperties]="selectionStyle" [elementId]="s.id"
+    <ng-container  *ngFor="let s of selectedObjects" dynamic-svg [allowCustomComponents]="false" [componentData]="s" [overrideProperties]="selectionStyle" [elementId]="s.id"
       (mouseDown)="onSelectionMouseDown($event)"
       (mouseMove)="onSelectionMouseMove($event)"
       (mouseUp)="onSelectionMouseUp($event)"

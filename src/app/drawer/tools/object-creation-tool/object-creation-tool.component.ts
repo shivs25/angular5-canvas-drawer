@@ -112,6 +112,7 @@ export class ObjectCreationToolComponent implements OnInit {
   }
 
   onBackgroundMouseDown(evt): void {
+    evt.preventDefault();
     this._mouseDown = true;
     this._mouseDownLocation = {
       x: evt.offsetX,
@@ -120,6 +121,7 @@ export class ObjectCreationToolComponent implements OnInit {
   }
 
   onBackgroundMouseMove(evt): void {
+    evt.preventDefault();
     this._lastEvent = evt;
     
     if (this._mouseDown) {
@@ -234,6 +236,7 @@ export class ObjectCreationToolComponent implements OnInit {
   }
 
   onBackgroundMouseUp(evt): void {
+    evt.preventDefault();
     if (this._mouseDown) {
       
       if (null !== this.currentObject) {
