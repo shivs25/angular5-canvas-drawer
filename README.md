@@ -23,6 +23,7 @@ To get information on the shapes you make, to use the various tools, and general
 To set a tool, you will need the `EditorToolType` imported on your component. You can then change your tools by doing `this._dataStoreService.selectedTool = EditorToolType.RECTANGLE_TOOL;`
 
 Lastly, you will need to make sure your application has the following classes loaded into it's css files. The application currently inherits from the parent, other styles may need to be added to work in your application:
+
     .absolute-position {
         position: absolute;
     }
@@ -31,17 +32,17 @@ Lastly, you will need to make sure your application has the following classes lo
         height: 100%;
     }
     .absolute-fill-0 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
     }
     .no-interact {
-    pointer-events: none;
+      pointer-events: none;
     }
     .pointer {
-    cursor: default;
+      cursor: default;
     }
 
 ## Code scaffolding
