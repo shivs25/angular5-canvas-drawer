@@ -17,6 +17,7 @@ import { PreviewComponent } from '../preview/preview.component';
 import { TextRenderingService } from '../services/text-rendering.service';
 import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
 import { CustomComponentResolverService } from '../services/custom-component-resolver.service';
+import { DrPointComponent } from '../elements/dr-point/dr-point.component';
 
 @NgModule({
   imports: [CommonModule],
@@ -26,6 +27,7 @@ import { CustomComponentResolverService } from '../services/custom-component-res
     DrRectComponent,
     DrObjectComponent,
     DrEllipseComponent,
+    DrPointComponent,
     DrPolygonComponent,
     DrTextComponent,
     DrImageComponent,
@@ -39,6 +41,7 @@ import { CustomComponentResolverService } from '../services/custom-component-res
   entryComponents: [
     DrRectComponent,
     DrEllipseComponent,
+    DrPointComponent,
     DrPolygonComponent,
     DrTextComponent,
     DrImageComponent,

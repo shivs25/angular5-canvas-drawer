@@ -150,7 +150,6 @@ export class PenToolComponent implements OnInit {
       if (this.penDblClick.toLowerCase().trim() === 'clear') {
         this.reset();
       } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
-        this.currentObject.points.push(this.currentObject.points[0]);
         this.completeObject(true);
       } else {
         this.completeObject(false);

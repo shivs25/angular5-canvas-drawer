@@ -1,0 +1,20 @@
+<ng-template #elementTemplate>
+    <svg:ellipse *ngIf="data && visualData" 
+      [ngClass]="(visualData.clickable ? hoverClass : '') + (!canInteract ? ' no-interact' : '')"
+      (click)="onClick($event, data)"
+      (mousedown)="onMouseDown($event, data)"
+      (mousemove)="onMouseMove($event, data)"
+      (mouseup)="onMouseUp($event, data)"
+      [id]="elementId"
+      [attr.transform]="visualData.rotation > 0 ? 'rotate(' + visualData.rotation + ',' + (visualData.x)+ ',' + (visualData.y) + ')' : ''"
+      [attr.stroke-dasharray]="visualData.dashedLine ? '10 10' : ''"
+      [attr.cx]="data.x"
+      [attr.cy]="data.y" 
+      [attr.rx]="data.rx" 
+      [attr.ry]="data.ry"
+      [attr.fill]="visualData.showFill ? visualData.fill : 'transparent'"
+      [attr.stroke]="visualData.showStroke ? visualData.stroke : 'transparent'"
+      [attr.stroke-width]="visualData.strokeWidth"
+      [attr.opacity]="visualData.opacity">
+    </svg:ellipse>
+</ng-template>

@@ -19,6 +19,7 @@ export { DrEllipse, createDrEllipse } from './models/dr-ellipse';
 export { DrRect, createDrRect } from './models/dr-rect';
 export { DrType } from './models/dr-type.enum';
 export { DrText, createDrText } from './models/dr-text';
+export { DrPointCircle, createDrPointCircle } from './models/dr-point-circle';
 export { DrImage, createDrImage } from './models/dr-image';
 export { DrTextAlignment } from './models/dr-text-alignment.enum';
 export { DrawerObjectHelperService } from './services/drawer-object-helper.service';

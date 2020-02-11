@@ -8,7 +8,7 @@ import { DrPoint } from './drawer/models/dr-point';
 import { DrText, createDrText } from './drawer/models/dr-text';
 import { DrTextAlignment, DrImage, DrType, DrawerObjectHelperService, EditorToolType, createDrImage } from './drawer/drawer-library.module';
 import { DataStoreService } from './drawer/services/data-store.service';
-import { DEFAULT_STYLE } from './drawer/models/dr-style';
+import { DEFAULT_STYLE, DrStyle } from './drawer/models/dr-style';
 import { createDrTextStyle } from './drawer/models/dr-text-style';
 import { select } from '@angular-redux/store';
 import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-grouped-object';
@@ -38,7 +38,14 @@ export class AppComponent implements OnInit {
 
   @ViewChild('drawer', { static: true }) drawer;
   @ViewChild('canvas', { static: true }) canvas;
-
+  pointStyle: DrStyle = createDrStyle({
+    showFill: true,
+    showStroke: true,
+    fill: "#ff0000",
+    stroke: "#000000",
+    strokeWidth: 1,
+    opacity: 1
+  })
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
   }
   

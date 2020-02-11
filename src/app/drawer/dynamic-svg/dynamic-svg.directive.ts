@@ -17,6 +17,7 @@ import { MouseEventData } from '../models/mouse-event-data';
 import { DrGroupedObjectComponent } from '../elements/dr-grouped-object/dr-grouped-object.component';
 import { DrCalloutComponent } from '../elements/dr-callout/dr-callout.component';
 import { CustomComponentResolverService } from '../services/custom-component-resolver.service';
+import { DrPointComponent } from '../elements/dr-point/dr-point.component';
 
 @Directive({
   selector: '[dynamic-svg]'
@@ -140,6 +141,8 @@ export class DynamicSvgDirective implements OnInit {
           return DrCalloutComponent;
         case DrType.GROUPED_OBJECT:
           return DrGroupedObjectComponent;
+        case DrType.POINT:
+          return DrPointComponent
       }
     }
     else {
