@@ -2,8 +2,12 @@ import { OnInit, EventEmitter } from '@angular/core';
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
 import { BoundingBox } from '../models/bounding-box';
+import { DrStyle } from '../models/dr-style';
 export declare class EditableDrawerComponent implements OnInit {
     private _dataService;
+    pointStyle: DrStyle;
+    polygonStyle: DrStyle;
+    lineStyle: DrStyle;
     drawer: any;
     itemViewBox: BoundingBox;
     penDblClick: string;

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angu
 import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
 import { BoundingBox } from '../models/bounding-box';
+import { DrStyle } from '../models/dr-style';
 
 @Component({
   selector: 'app-editable-drawer',
@@ -10,6 +11,13 @@ import { BoundingBox } from '../models/bounding-box';
 })
 export class EditableDrawerComponent implements OnInit {
 
+  @Input()
+  pointStyle: DrStyle = null;
+  @Input()
+  polygonStyle: DrStyle = null;
+  @Input()
+  lineStyle: DrStyle = null;
+  
   @ViewChild('drawer', { static: true }) drawer;
 
   @Input()
