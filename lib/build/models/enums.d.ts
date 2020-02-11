@@ -28,5 +28,6 @@ export declare enum EditorToolType {
     TRIANGLE_TOOL = 11,
     ROUNDED_RECTANGLE_TOOL = 12,
     TEXT_EDIT_TOOL = 13,
-    CALLOUT_POINTER_TOOL = 14
+    CALLOUT_POINTER_TOOL = 14,
+    POINT_TOOL = 15
 }

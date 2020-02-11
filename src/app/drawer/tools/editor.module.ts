@@ -10,12 +10,13 @@ import { PenToolComponent } from './pen-tool/pen-tool.component';
 import { TextEditToolComponent } from './text-edit-tool/text-edit-tool.component';
 import { EditableTextAreaComponent } from './editable-text-area/editable-text-area.component';
 import { CalloutPointToolComponent } from './callout-point-tool/callout-point-tool.component';
+import { PointToolComponent } from './point-tool/point-tool.component';
 
 
 @NgModule({
   imports: [CommonModule, DrawerModule.forRoot()],
 
-  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent, TextEditToolComponent, EditableTextAreaComponent, CalloutPointToolComponent], 
+  declarations: [EditorToolComponent, SelectorToolComponent, ObjectCreationToolComponent, PenToolComponent, TextEditToolComponent, EditableTextAreaComponent, CalloutPointToolComponent, PointToolComponent], 
   exports: [DrawerComponent, EditorToolComponent], 
   providers: [],
   entryComponents: [

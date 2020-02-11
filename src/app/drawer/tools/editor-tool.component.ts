@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { EditorToolType } from '../models/enums';
 import { DataStoreService } from '../services/data-store.service';
+import { DrStyle } from '../models/dr-style';
 
 @Component({
   selector: 'app-editor-tool',
@@ -9,9 +10,19 @@ import { DataStoreService } from '../services/data-store.service';
   styleUrls: ['./editor-tool.component.scss']
 })
 export class EditorToolComponent implements OnInit {
+  @Input()
+  pointStyle: DrStyle = null;
+  @Input()
+  polygonStyle: DrStyle = null;
+  @Input()
+  lineStyle: DrStyle = null;
+  
+  @Input()
+  penDblClick: string = "";
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
   PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;
+  POINT_TOOL: EditorToolType = EditorToolType.POINT_TOOL;
   TEXT_EDIT_TOOL: EditorToolType = EditorToolType.TEXT_EDIT_TOOL;
   CALLOUT_POINTER_TOOL: EditorToolType = EditorToolType.CALLOUT_POINTER_TOOL;
   

@@ -3,8 +3,12 @@ import { DrPolygon } from '../../models/dr-polygon';
 import { DataStoreService } from '../../services/data-store.service';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
+import { DrStyle } from '../../models/dr-style';
 export declare class PenToolComponent implements OnInit {
     private _dataService;
+    penDblClick: string;
+    polygonStyle: DrStyle;
+    lineStyle: DrStyle;
     currentObject: DrPolygon;
     objectStyle: any;
     private _currentPt;

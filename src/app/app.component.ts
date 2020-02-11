@@ -306,6 +306,10 @@ export class AppComponent implements OnInit {
     this.dataStoreService.selectedTool = EditorToolType.PEN_TOOL;
   }
 
+  point(): void {
+    this.dataStoreService.selectedTool = EditorToolType.POINT_TOOL;
+  }
+
   exportToImage(): void {
     let svg = "<svg viewBox=\"0 0 600 600\" width=\"1200\" height=\"1200\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">" + this.drawer.getSvgAsText() + "</svg>"
     /*canvg.default(this.canvas.nativeElement, svg, { 

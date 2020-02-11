@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { DrPolygon, createDrPolygon, createDrPolyline } from '../../models/dr-polygon';
 import { DataStoreService } from '../../services/data-store.service';
 import { Observable } from 'rxjs/Observable';
@@ -6,6 +6,7 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
 import { EditorToolType } from '../../models/enums';
 import { DrPoint } from '../../models/dr-point';
+import { DrStyle } from '../../models/dr-style';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
@@ -19,7 +20,12 @@ const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
   styleUrls: ['./pen-tool.component.scss']
 })
 export class PenToolComponent implements OnInit {
-
+  @Input()
+  penDblClick: string = ''
+  @Input()
+  public polygonStyle: DrStyle = null;
+  @Input()
+  public lineStyle: DrStyle = null;
 
   currentObject: DrPolygon = null;
   objectStyle: any = {
@@ -141,7 +147,14 @@ export class PenToolComponent implements OnInit {
         this._delay = null;
       }
       this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
-      this.completeObject(false);
+      if (this.penDblClick.toLowerCase().trim() === 'clear') {
+        this.reset();
+      } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
+        this.currentObject.points.push(this.currentObject.points[0]);
+        this.completeObject(true);
+      } else {
+        this.completeObject(false);
+      }
     }
     else {
       this._clickPt = this.getActivePoint(evt.offsetX, evt.offsetY);;
@@ -259,6 +272,12 @@ export class PenToolComponent implements OnInit {
       this._dataService.addObjects([
         newObject
       ]);
+      if(this.polygonStyle && isClosed) {
+        this._dataService.setStyles([newObject], this.polygonStyle)
+      }
+      if(this.lineStyle && !isClosed) {
+        this._dataService.setStyles([newObject], this.lineStyle)
+      }
       this._dataService.selectObjects([newObject]);
        
    }

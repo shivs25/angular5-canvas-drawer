@@ -57,11 +57,21 @@ To use this library in your newly generated component, add the `app-drawer` to y
 
 *The available app-editable-drawer inputs are as followed:
 `itemViewBox` which is our `BoundingBox` to set the view of the drawer
+`penDblClick` allows you to set the double click behavior in the pen tool. 
+    - `CLEAR` will remove an unfinished object.
+    - `COMPLETE` will close the shape back to your first point.
+    - Any other input or empty string will be treated to default behavior, rendering a line instead of a polygon.
+`pointStyle`, `polygonStyle`, `lineStyle` inputs will let you set a style objects will show on initial add. Each input is a generic DrStyle. `lineStyle` is for lines, it will not set the stroke on a `polygonStyle`.
 
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
+
+Date `2020-02-11` VERSION `1.3.0-beta.1`
+- Added Initial Style inputs on the app-editable-drawer
+- Added the Point Tool
+- Implemented the penDblClick input
 
 Date `2020-01-31` VERSION `1.3.0`
 - Official Upgrade to Angular 8

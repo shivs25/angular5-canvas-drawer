@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { DrObject } from '../../models/dr-object';
 import { DrPoint } from '../../models/dr-point';
 import { DataStoreService } from '../../services/data-store.service';
@@ -13,6 +13,7 @@ import { DrawerObjectHelperService } from '../../services/drawer-object-helper.s
 import { createDrPolygon, DrPolygon } from '../../models/dr-polygon';
 import { createDrCallout } from '../../models/dr-callout';
 import { DrCallout } from '../../models/dr-callout';
+import { DrStyle } from '../../models/dr-style';
 
 @Component({
   selector: 'app-object-creation-tool',
@@ -20,6 +21,8 @@ import { DrCallout } from '../../models/dr-callout';
   styleUrls: ['./object-creation-tool.component.scss']
 })
 export class ObjectCreationToolComponent implements OnInit {
+  @Input()
+  public polygonStyle: DrStyle = null;
 
   currentObject: DrObject = null;
 
@@ -391,6 +394,9 @@ export class ObjectCreationToolComponent implements OnInit {
         if (null !== objectToAdd) {
           objectToAdd.name = this.currentObject.name;
           this._dataService.addObjects([objectToAdd]);
+          if(this.polygonStyle) {
+            this._dataService.setStyles([objectToAdd], this.polygonStyle);
+          }
           this._dataService.selectObjects([objectToAdd]);
         }
         

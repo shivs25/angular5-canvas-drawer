@@ -3,10 +3,12 @@ import { DrObject } from '../../models/dr-object';
 import { DataStoreService } from '../../services/data-store.service';
 import { ChangeHelperService } from '../../services/change-helper.service';
 import { DrawerObjectHelperService } from '../../services/drawer-object-helper.service';
+import { DrStyle } from '../../models/dr-style';
 export declare class ObjectCreationToolComponent implements OnInit {
     private _dataService;
     private _changeService;
     private _drawerObjectService;
+    polygonStyle: DrStyle;
     currentObject: DrObject;
     private _mouseDown;
     private _mouseDownLocation;

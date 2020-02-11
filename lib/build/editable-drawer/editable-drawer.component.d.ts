@@ -6,6 +6,7 @@ export declare class EditableDrawerComponent implements OnInit {
     private _dataService;
     drawer: any;
     itemViewBox: BoundingBox;
+    penDblClick: string;
     selectionChanged: EventEmitter<DrObject[]>;
     editingChanged: EventEmitter<boolean>;
     objectsAdded: EventEmitter<DrObject[]>;
