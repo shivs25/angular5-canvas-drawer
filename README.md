@@ -68,6 +68,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
+Date `2020-02-12` VERSION `1.3.0-beta.5`
+- Bug Fixes for New Features
+
 Date `2020-02-11` VERSION `1.3.0-beta.1`
 - Added Initial Style inputs on the app-editable-drawer
 - Added the Point Tool
