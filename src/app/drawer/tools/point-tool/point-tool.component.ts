@@ -3,6 +3,8 @@ import { DataStoreService } from '../../services/data-store.service';
 import { Observable } from 'rxjs';
 import { DrEllipse, createDrEllipse } from '../../models/dr-ellipse';
 import { createDrStyle, DrStyle } from '../../models/dr-style';
+import { DrPointCircle } from '../../models/dr-point-circle';
+import { createDrPointCircle } from 'build/drawer-library.module';
 
 
 
@@ -44,7 +46,7 @@ export class PointToolComponent implements OnInit {
       this._delay.unsubscribe();
       this._delay = null;
     }
-    let circle: DrEllipse = createDrEllipse({
+    let circle: DrPointCircle = createDrPointCircle({
       x: x,
       y: y,
       rx: 5,
