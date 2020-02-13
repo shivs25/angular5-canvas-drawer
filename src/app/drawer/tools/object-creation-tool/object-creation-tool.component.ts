@@ -392,6 +392,9 @@ export class ObjectCreationToolComponent implements OnInit {
         }
         
         if (null !== objectToAdd) {
+          if(this.polygonStyle){
+            objectToAdd = { ...objectToAdd, ...this.polygonStyle }
+          }
           objectToAdd.name = this.currentObject.name;
           this._dataService.addObjects([objectToAdd]);
           if(this.polygonStyle) {

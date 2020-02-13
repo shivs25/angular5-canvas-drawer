@@ -28,15 +28,6 @@ export class PenToolComponent implements OnInit {
   public lineStyle: DrStyle = null;
 
   currentObject: DrPolygon = null;
-  objectStyle: any = {
-    showFill: true,
-    fill: "rgba(255, 0, 0, 0.3)",
-    dashedLine: false,
-    showStroke: true,
-    stroke: 'red',
-    strokeWidth: 1
-
-  };
 
   private _currentPt = null;
   private _clickPt = null;
@@ -261,11 +252,22 @@ export class PenToolComponent implements OnInit {
       this.currentObject.points.length > 1) {;
       let newObject: DrPolygon
       if (this.currentObject.points.length > 3 && isClosed) {
-        newObject = createDrPolygon({ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon" });
+        let polyProps;
+        if(this.polygonStyle) {
+          polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon",  ...this.polygonStyle };
+        } else {
+          polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon" };
+        }
+        newObject = createDrPolygon(polyProps);
       }
       else {
-        newObject = createDrPolyline({ id: this.getNextId(), points: this.currentObject.points, name: "Polyline" });
-        
+        let lineProps;
+        if(this.lineStyle) {
+          lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
+        } else {
+          lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
+        }
+        newObject = createDrPolyline(lineProps);
       }
        
       this._dataService.addObjects([

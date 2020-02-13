@@ -45,12 +45,12 @@ export class PointToolComponent implements OnInit {
       this._delay.unsubscribe();
       this._delay = null;
     }
-    let circle: DrPointCircle = createDrPointCircle({
-      x: x,
-      y: y,
-      rx: 5,
-      ry: 5,
-    });
+    let circle: DrPointCircle;
+    if(this.pointStyle) {
+      circle = createDrPointCircle({ x: x, y: y, rx: 5, ry: 5, ...this.pointStyle });
+    } else {
+      circle = createDrPointCircle({ x: x, y: y, rx: 5, ry: 5 });
+    }
     this._dataService.addObjects([circle]);
     if(this.pointStyle){
       this._dataService.setStyles([circle], this.pointStyle)
