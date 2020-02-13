@@ -104,8 +104,9 @@ export class PenToolComponent implements OnInit {
       this._lastEvent = evt;
       if (this._delay) {
         if(this._currentPt.x !== evt.offsetX && this._currentPt.y !== evt.offsetY){
-          this.handleClick(this._clickPt.x, this._clickPt.y);
-
+          if(this._clickPt){
+            this.handleClick(this._clickPt.x, this._clickPt.y);
+          }
         }
       }
       else {

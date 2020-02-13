@@ -20,6 +20,20 @@ Date: `2018-05-09` VERSION: `1.1.5`
 Date: `2018-05-09` VERSION: `1.1.4-beta.1`
 - Fixed key down issues stopping regular keyboard events.
 
+Date `2020-02-13` VERSION `1.4.0`
+- Minor Bug Fixes
+- Added Point Tool
+- Added Inputs for Styles and Pen Double Click behavior.
+
+Date `2020-02-11` VERSION `1.3.0-beta.1`
+- Added Initial Style inputs on the app-editable-drawer
+- Added the Point Tool
+- Implemented the penDblClick input
+
+Date `2020-01-31` VERSION `1.3.0`
+- Official Upgrade to Angular 8
+- Improved Documentation
+
 Date: `2018-05-09` VERSION: `1.1.4`
 - Fixed key down issues for arrow keys.
 

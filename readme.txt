@@ -9,5 +9,3 @@ instructions to publish:
     4a. If it asks for login or claims you are unauthorized do npm login and enter credentials
     4b. If changes are breaking or potentially harmful to current user experience, please publish under the "beta" branch.
         --npm publish --tag beta
-    
-bubs
