@@ -258,10 +258,10 @@ export class PenToolComponent implements OnInit {
   }
 
   private completeObject(isClosed: boolean): void {
-    if((this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x ||
-        Math.abs(this.currentObject.points[this.currentObject.points.length - 1].x - this.currentObject.points[this.currentObject.points.length - 2].x) === 1)
-    && (this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y ||
-        Math.abs(this.currentObject.points[this.currentObject.points.length - 1].y - this.currentObject.points[this.currentObject.points.length - 2].y) == 1)){
+    if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+      this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
+    }
+    if(this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2){
       this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
     }
     if(this.currentObject &&
@@ -274,9 +274,9 @@ export class PenToolComponent implements OnInit {
         if (this.currentObject.points.length > 3 && isClosed) {
           let polyProps;
           if(this.polygonStyle) {
-            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon",  ...this.polygonStyle };
+            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon",  ...this.polygonStyle };
           } else {
-            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon" };
+            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
           }
           newObject = createDrPolygon(polyProps);
         }
