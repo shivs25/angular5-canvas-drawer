@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   viewHeight: string = "560";
   viewWidth: string = "1000";
   viewBoxItem: BoundingBox = null;
- 
+  penDblClick: string = "complete";
 
   @select() elementState;
 
