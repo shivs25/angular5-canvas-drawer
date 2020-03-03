@@ -16,6 +16,8 @@ export class EditorToolComponent implements OnInit {
   polygonStyle: DrStyle = null;
   @Input()
   lineStyle: DrStyle = null;
+  @Input()
+  objectPreviewStyle: DrStyle = null;
   
   @Input()
   penDblClick: string = "";

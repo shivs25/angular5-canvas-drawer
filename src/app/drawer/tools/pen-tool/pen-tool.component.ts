@@ -26,6 +26,8 @@ export class PenToolComponent implements OnInit {
   public polygonStyle: DrStyle = null;
   @Input()
   public lineStyle: DrStyle = null;
+  @Input()
+  objectPreviewStyle: DrStyle = null;
 
   currentObject: DrPolygon = null;
 
@@ -200,12 +202,20 @@ export class PenToolComponent implements OnInit {
     }
     else {
       //console.log('Create new obj!');
-
-      this.currentObject = createDrPolyline({
-        id: 1000000,
-        name: this._dataService.getUniqueName("Polyline"),
-        points: [{ x: x, y:y }]
-      });
+      if(this.objectPreviewStyle) {
+        this.currentObject = createDrPolyline({
+          id: 1000000,
+          name: this._dataService.getUniqueName("Polyline"),
+          points: [{ x: x, y:y }],
+          ...this.objectPreviewStyle
+        });
+      } else {
+        this.currentObject = createDrPolyline({
+          id: 1000000,
+          name: this._dataService.getUniqueName("Polyline"),
+          points: [{ x: x, y:y }]
+        });
+      }
     }
   }
 

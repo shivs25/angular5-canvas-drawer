@@ -23,6 +23,8 @@ import { DrStyle } from '../../models/dr-style';
 export class ObjectCreationToolComponent implements OnInit {
   @Input()
   public polygonStyle: DrStyle = null;
+  @Input()
+  public objectPreviewStyle: DrStyle = null;
 
   currentObject: DrObject = null;
 
@@ -445,27 +447,46 @@ export class ObjectCreationToolComponent implements OnInit {
 
 
     //50,2.4 62.4,37.9 100,38.8 70.1,61.5 80.9,97.6 50,76.1 19.1,97.6 29.9,61.5 0,38.8
-
-    this.currentObject = createDrPolygon({
-      id: 1000000,
-      name: this._dataService.getUniqueName("Star"),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      points: [
-        { x: b.x + b.width * 0.5, y: b.y },   //Top of star
-        { x: b.x + b.width * 0.624, y: b.y + b.height * 0.373 },
-        { x: b.x + b.width, y: b.y + b.height * 0.382 },
-        { x: b.x + b.width * 0.701, y: b.y + b.height * 0.621 },
-        { x: b.x + b.width * 0.809, y: b.y + b.height },
-        { x: b.x + b.width * 0.5, y: b.y + b.height * 0.774 },
-        { x: b.x + b.width * 0.191, y: b.y + b.height },
-        { x: b.x + b.width * 0.299, y: b.y + b.height * 0.621 },
-        { x: b.x, y: b.y + b.height * 0.382 },
-        { x: b.x + b.width * 0.376, y: b.y + b.height * 0.373 },
-      ]
-    });
+    if(this.objectPreviewStyle) {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Star"),
+        points: [
+          { x: b.x + b.width * 0.5, y: b.y },   //Top of star
+          { x: b.x + b.width * 0.624, y: b.y + b.height * 0.373 },
+          { x: b.x + b.width, y: b.y + b.height * 0.382 },
+          { x: b.x + b.width * 0.701, y: b.y + b.height * 0.621 },
+          { x: b.x + b.width * 0.809, y: b.y + b.height },
+          { x: b.x + b.width * 0.5, y: b.y + b.height * 0.774 },
+          { x: b.x + b.width * 0.191, y: b.y + b.height },
+          { x: b.x + b.width * 0.299, y: b.y + b.height * 0.621 },
+          { x: b.x, y: b.y + b.height * 0.382 },
+          { x: b.x + b.width * 0.376, y: b.y + b.height * 0.373 },
+        ],
+        ...this.objectPreviewStyle
+      });
+    } else {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Star"),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        points: [
+          { x: b.x + b.width * 0.5, y: b.y },   //Top of star
+          { x: b.x + b.width * 0.624, y: b.y + b.height * 0.373 },
+          { x: b.x + b.width, y: b.y + b.height * 0.382 },
+          { x: b.x + b.width * 0.701, y: b.y + b.height * 0.621 },
+          { x: b.x + b.width * 0.809, y: b.y + b.height },
+          { x: b.x + b.width * 0.5, y: b.y + b.height * 0.774 },
+          { x: b.x + b.width * 0.191, y: b.y + b.height },
+          { x: b.x + b.width * 0.299, y: b.y + b.height * 0.621 },
+          { x: b.x, y: b.y + b.height * 0.382 },
+          { x: b.x + b.width * 0.376, y: b.y + b.height * 0.373 },
+        ]
+      });
+    }
   }
 
   private createArrow(evt): void {
@@ -480,24 +501,42 @@ export class ObjectCreationToolComponent implements OnInit {
 
 
     //52.6,11.2 100,50 52.6,88.8 52.2,68.8 0,68.8 0,31.2 52.6,31.2
+    if(this.objectPreviewStyle) {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Arrow"),
+        points: [
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.112 },
+          { x: b.x + b.width, y: b.y + b.height * 0.5 },
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.888 },
+          { x: b.x + b.width * 0.522, y: b.y + b.height * 0.688 },
+          { x: b.x, y: b.y + b.height * 0.688 },
+          { x: b.x, y: b.y + b.height * 0.312 },
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.312 }
+        ],
+        ...this.objectPreviewStyle
+      });
 
-    this.currentObject = createDrPolygon({
-      id: 1000000,
-      name: this._dataService.getUniqueName("Arrow"),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      points: [
-        { x: b.x + b.width * 0.526, y: b.y + b.height * 0.112 },
-        { x: b.x + b.width, y: b.y + b.height * 0.5 },
-        { x: b.x + b.width * 0.526, y: b.y + b.height * 0.888 },
-        { x: b.x + b.width * 0.522, y: b.y + b.height * 0.688 },
-        { x: b.x, y: b.y + b.height * 0.688 },
-        { x: b.x, y: b.y + b.height * 0.312 },
-        { x: b.x + b.width * 0.526, y: b.y + b.height * 0.312 }
-      ]
-    });
+    } else {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Arrow"),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        points: [
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.112 },
+          { x: b.x + b.width, y: b.y + b.height * 0.5 },
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.888 },
+          { x: b.x + b.width * 0.522, y: b.y + b.height * 0.688 },
+          { x: b.x, y: b.y + b.height * 0.688 },
+          { x: b.x, y: b.y + b.height * 0.312 },
+          { x: b.x + b.width * 0.526, y: b.y + b.height * 0.312 }
+        ]
+      });
+      
+    }
 
   }
 
@@ -509,23 +548,39 @@ export class ObjectCreationToolComponent implements OnInit {
       width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
       height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
     }
-
-    this.currentObject = createDrCallout({
-      id: 1000000,
-      name: this._dataService.getUniqueName("Callout"),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      x: b.x, 
-      y: b.y,
-      width: b.width,
-      height: b.height * 0.688,
-      basePoint1: { x: b.x + b.width / 2 - (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
-      basePoint2: { x: b.x + b.width / 2 + (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
-      pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height },
-      rounded: rounded
-    });
+    if(this.objectPreviewStyle) {
+        
+      this.currentObject = createDrCallout({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Callout"),
+        ...this.objectPreviewStyle,
+        x: b.x, 
+        y: b.y,
+        width: b.width,
+        height: b.height * 0.688,
+        basePoint1: { x: b.x + b.width / 2 - (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+        basePoint2: { x: b.x + b.width / 2 + (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+        pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height },
+        rounded: rounded
+      });
+    } else {
+      this.currentObject = createDrCallout({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Callout"),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        x: b.x, 
+        y: b.y,
+        width: b.width,
+        height: b.height * 0.688,
+        basePoint1: { x: b.x + b.width / 2 - (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+        basePoint2: { x: b.x + b.width / 2 + (b.width * 0.1), y: b.y + (b.height * 0.688) / 2 },
+        pointerLocation: { x: b.x + b.width / 2, y: b.y + b.height },
+        rounded: rounded
+      });
+    }
 
   }
 
@@ -537,53 +592,94 @@ export class ObjectCreationToolComponent implements OnInit {
       height: Math.abs(this._mouseDownLocation.y - evt.offsetY)
     }
 
+    if(this.objectPreviewStyle) {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Triangle"),
+        ...this.objectPreviewStyle,
+        points: [
+          { x: b.x + b.width * 0.5, y: b.y },   //Top of triangle
+          { x: b.x + b.width, y: b.y + b.height }, 
+          { x: b.x, y: b.y + b.height }
+        ]
+      });
+    } else {
+      this.currentObject = createDrPolygon({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Triangle"),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        points: [
+          { x: b.x + b.width * 0.5, y: b.y },   //Top of triangle
+          { x: b.x + b.width, y: b.y + b.height }, 
+          { x: b.x, y: b.y + b.height }
+        ]
+      });
 
-    this.currentObject = createDrPolygon({
-      id: 1000000,
-      name: this._dataService.getUniqueName("Triangle"),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      points: [
-        { x: b.x + b.width * 0.5, y: b.y },   //Top of triangle
-        { x: b.x + b.width, y: b.y + b.height }, 
-        { x: b.x, y: b.y + b.height }
-      ]
-    });
+    }
   }
 
   private createRect(evt, rounded: boolean, name: string): void {
-    this.currentObject = createDrRect({
-      id: 1000000,
-      name: this._dataService.getUniqueName(name),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
-      y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
-      width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
-      height: Math.abs(this._mouseDownLocation.y - evt.offsetY),
-      rounded: rounded
-    });
+    if(this.objectPreviewStyle) {
+      this.currentObject = createDrRect({
+        id: 1000000,
+        name: this._dataService.getUniqueName(name),
+        ...this.objectPreviewStyle,
+        x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
+        y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
+        width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
+        height: Math.abs(this._mouseDownLocation.y - evt.offsetY),
+        rounded: rounded
+      });
+
+    } else {
+      this.currentObject = createDrRect({
+        id: 1000000,
+        name: this._dataService.getUniqueName(name),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        x: this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX,
+        y: this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY,
+        width: Math.abs(this._mouseDownLocation.x - evt.offsetX),
+        height: Math.abs(this._mouseDownLocation.y - evt.offsetY),
+        rounded: rounded
+      });
+
+    }
   }
 
   private createEllipse(evt): void {
     let w: number = Math.abs(this._mouseDownLocation.x - evt.offsetX);
     let h: number = Math.abs(this._mouseDownLocation.y - evt.offsetY);
+    if(this.objectPreviewStyle) {
+      this.currentObject = createDrEllipse({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Ellipse"),
+        ...this.objectPreviewStyle,
+        x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX) + w / 2),
+        y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY) + h / 2),
+        rx: Math.round(w / 2),
+        ry: Math.round(h / 2)
+      });
 
-    this.currentObject = createDrEllipse({
-      id: 1000000,
-      name: this._dataService.getUniqueName("Ellipse"),
-      showFill: true,
-      showStroke: true,
-      fill: 'rgba(255,0,0,0.3)',
-      stroke: 'red',
-      x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX) + w / 2),
-      y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY) + h / 2),
-      rx: Math.round(w / 2),
-      ry: Math.round(h / 2)
-    });
+    } else {
+      this.currentObject = createDrEllipse({
+        id: 1000000,
+        name: this._dataService.getUniqueName("Ellipse"),
+        showFill: true,
+        showStroke: true,
+        fill: 'rgba(255,0,0,0.3)',
+        stroke: 'red',
+        x: Math.round((this._mouseDownLocation.x < evt.offsetX ? this._mouseDownLocation.x : evt.offsetX) + w / 2),
+        y: Math.round((this._mouseDownLocation.y < evt.offsetY ? this._mouseDownLocation.y : evt.offsetY) + h / 2),
+        rx: Math.round(w / 2),
+        ry: Math.round(h / 2)
+      });
+
+    }
   }
 }

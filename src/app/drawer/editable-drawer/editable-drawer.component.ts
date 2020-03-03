@@ -17,6 +17,8 @@ export class EditableDrawerComponent implements OnInit {
   polygonStyle: DrStyle = null;
   @Input()
   lineStyle: DrStyle = null;
+  @Input()
+  objectPreviewStyle: DrStyle = null;
   
   @ViewChild('drawer', { static: true }) drawer;
 
