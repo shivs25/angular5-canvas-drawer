@@ -65,6 +65,10 @@ To use this library in your newly generated component, add the `app-drawer` to y
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
 
+Date `2020-03-03` VERSION `1.4.3`
+- Minor Bug Fixes to the "complete" double click behavior
+- Added input `objectPreviewStyle: DrStyle` which will allow you to adjust the style preview for creating shapes
+
 Date `2020-02-13` VERSION `1.4.0`
 - Minor Bug Fixes
 - Added Point Tool
