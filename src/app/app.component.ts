@@ -607,4 +607,8 @@ export class AppComponent implements OnInit {
     console.log(evt);
     console.log(this.drawerObjHelper.getBoundingBox([evt]));
   }
+
+  onMouseOver(evt) {
+    //console.log(evt);
+  }
 }

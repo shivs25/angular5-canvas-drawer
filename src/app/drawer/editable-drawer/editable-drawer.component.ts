@@ -24,6 +24,11 @@ export class EditableDrawerComponent implements OnInit {
   itemViewBox: BoundingBox = null;
   @Input()
   penDblClick: string = "";
+  @Input()
+  emitMouseEvents: boolean = false;
+  
+  @Output() 
+  public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
   
   @Output() 
   public selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();

@@ -1,6 +1,7 @@
 <app-drawer #drawer [handleMouseEvents]="false" [viewBox]="itemViewBox">
 
 </app-drawer>
-<app-editor-tool [pointStyle]="pointStyle" [polygonStyle]="polygonStyle" [lineStyle]="lineStyle" [penDblClick]="penDblClick">
+<app-editor-tool [pointStyle]="pointStyle" [emitMouseEvents]="emitMouseEvents" 
+                    [polygonStyle]="polygonStyle" [lineStyle]="lineStyle" [penDblClick]="penDblClick" (mouseAction)="mouseAction.next($event)">
 
 </app-editor-tool>

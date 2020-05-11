@@ -1,5 +1,5 @@
 <app-selector-tool *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
-<app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool"
+<app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool" (mouseAction)="mouseAction.next($event)" [emitMouseEvents]="emitMouseEvents"
                     [polygonStyle]="polygonStyle" [lineStyle]="lineStyle" [penDblClick]="penDblClick"></app-pen-tool>
 <app-object-creation-tool *ngIf="shouldShowCreationTool()"
                     [polygonStyle]="polygonStyle"></app-object-creation-tool>

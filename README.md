@@ -57,13 +57,19 @@ To use this library in your newly generated component, add the `app-drawer` to y
 
 *The available app-editable-drawer inputs are as followed:
 - `itemViewBox` which is our `BoundingBox` to set the view of the drawer
-- `penDblClick` allows you to set the double click behavior in the pen tool. `CLEAR` will remove an unfinished object. `COMPLETE` will close the shape back to your first point. Any other input or empty string will be treated to default behavior, rendering a line instead of a polygon.
+- `penDblClick` allows you to set the double click behavior in the pen tool. `CLEAR/clear` will remove an unfinished object. `COMPLETE/complete` will close the shape back to your first point. `DEFAULT/default`, empty string, or invalid input will be treated to default behavior, rendering a line instead of a polygon on double click. `COMPLETE` will also show you a closed polygon during the drawing phase.
+- `emitMouseEvents` is available to let the pen tool emit the mouse over and click events if you need to know those coordinates while making an object.
 -`pointStyle`, `polygonStyle`, `lineStyle` inputs will let you set a style objects will show on initial add. Each input is a generic DrStyle. `lineStyle` is for lines, it will not set the stroke on a `polygonStyle`. These styles are currently only supported by the pen, point, and object tools.
 
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
+
+Date `2020-05-11` VERSION `1.4.2`
+- Added input for `emitMouseEvents` to allow users to turn on the pen tool emitter for mouse actions
+- Added output for `mouseAction` which fires up `mouseClick` or `mouseMove` with the x/y.
+- `penDblClick=complete` will now show a full polygon during the drawing phase.
 
 Date `2020-02-13` VERSION `1.4.0`
 - Minor Bug Fixes

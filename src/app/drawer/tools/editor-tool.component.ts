@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { EditorToolType } from '../models/enums';
 import { DataStoreService } from '../services/data-store.service';
@@ -16,9 +16,13 @@ export class EditorToolComponent implements OnInit {
   polygonStyle: DrStyle = null;
   @Input()
   lineStyle: DrStyle = null;
+  @Input()
+  emitMouseEvents: boolean = false;
   
   @Input()
   penDblClick: string = "";
+  @Output()
+  public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
   PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;

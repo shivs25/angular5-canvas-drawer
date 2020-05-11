@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { DrPolygon, createDrPolygon, createDrPolyline } from '../../models/dr-polygon';
 import { DataStoreService } from '../../services/data-store.service';
 import { Observable } from 'rxjs/Observable';
@@ -21,11 +21,17 @@ const SNAP_ANGLES: number[] = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 })
 export class PenToolComponent implements OnInit {
   @Input()
-  penDblClick: string = ''
+  penDblClick: string = '';
+  @Input()
+  emitMouseEvents: boolean = false;
   @Input()
   public polygonStyle: DrStyle = null;
   @Input()
   public lineStyle: DrStyle = null;
+
+
+  @Output()
+  public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
 
   currentObject: DrPolygon = null;
 
@@ -93,14 +99,16 @@ export class PenToolComponent implements OnInit {
     }
     else {
       this._currentPt = this.getActivePoint(this.getResizerX() + HALF_SIZER, this.getResizerY() + HALF_SIZER);
-      this.currentObject.points.push(this._currentPt);
+      if(this.penDblClick.toLowerCase().trim() === 'complete') {
+        this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
+      } else {
+        this.currentObject.points.push(this._currentPt);
+      }
     }
   }
 
   onBackgroundMouseMove(evt): void {
-    
     if(this.currentObject) {
-      
       this._lastEvent = evt;
       if (this._delay) {
         if(this._currentPt) {
@@ -114,7 +122,6 @@ export class PenToolComponent implements OnInit {
       else {
         if (this._currentPt) {
           let pt: DrPoint = this.getActivePoint(evt.offsetX, evt.offsetY);
-
           Object.assign(this._currentPt, {
             x: pt.x,
             y: pt.y
@@ -122,10 +129,17 @@ export class PenToolComponent implements OnInit {
         }
         else {
           this._currentPt = this.getActivePoint(evt.offsetX, evt.offsetY);
-          this.currentObject.points.push(this._currentPt);
+
+          if(this.penDblClick.toLowerCase().trim() === 'complete') {
+            this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
+          } else {
+            this.currentObject.points.push(this._currentPt);
+          }
         }
       }
-      
+      if(this.emitMouseEvents) {
+        this.mouseAction.next({ type: "mouseMove", pt: this._currentPt });
+      }
     }
   }
 
@@ -140,7 +154,8 @@ export class PenToolComponent implements OnInit {
         this._delay.unsubscribe();
         this._delay = null;
       }
-      this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
+      //this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
+      this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
       if (this.penDblClick.toLowerCase().trim() === 'clear') {
         this.reset();
       } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
@@ -191,7 +206,11 @@ export class PenToolComponent implements OnInit {
       if (!this._currentPt) {
         //console.log('Adding Point!');
 
-        this.currentObject.points.push({ x: x, y: y });
+        if(this.penDblClick.toLowerCase().trim() === 'complete') {
+          this.currentObject.points.splice(this.currentObject.points.length - 1, 0, { x: x, y: y });
+        } else {
+          this.currentObject.points.push({ x: x, y: y });
+        }
       }
       
       this._currentPt = null;
@@ -202,8 +221,11 @@ export class PenToolComponent implements OnInit {
       this.currentObject = createDrPolyline({
         id: 1000000,
         name: this._dataService.getUniqueName("Polyline"),
-        points: [{ x: x, y:y }]
+        points: [{ x: x, y:y },{ x: x, y:y }]
       });
+    }
+    if(this.emitMouseEvents) {
+      this.mouseAction.next({ type: "mouseClick", pt: { x: x, y: y } });
     }
   }
 
