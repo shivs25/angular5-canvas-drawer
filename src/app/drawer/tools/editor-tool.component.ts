@@ -18,6 +18,8 @@ export class EditorToolComponent implements OnInit {
   lineStyle: DrStyle = null;
   @Input()
   emitMouseEvents: boolean = false;
+  @Input()
+  objectPreviewStyle: DrStyle = null;
   
   @Input()
   penDblClick: string = "";

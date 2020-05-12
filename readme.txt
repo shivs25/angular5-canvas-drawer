@@ -5,7 +5,7 @@ instructions to publish:
     1b. If this is a beta release, do not touch the main version numbers (EI: "x.x.x") instead appropriately update the beta number (IE "x.x.x-beta.x")
 2. npm run inline-build-templates
 3. npm run ngc-build
-4. npm publish 
+4. npm publish --registry=https://registry.npmjs.org
     4a. If it asks for login or claims you are unauthorized do npm login and enter credentials
     4b. If changes are breaking or potentially harmful to current user experience, please publish under the "beta" branch.
-        --npm publish --tag beta
+        --npm publish --tag beta --registry=https://registry.npmjs.org

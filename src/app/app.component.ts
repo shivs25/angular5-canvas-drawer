@@ -31,7 +31,15 @@ export class AppComponent implements OnInit {
   viewHeight: string = "560";
   viewWidth: string = "1000";
   viewBoxItem: BoundingBox = null;
- 
+  penDblClick: string = "complete";
+  objectPreviewStyle: DrStyle = {
+    showFill: true,
+    showStroke: true,
+    fill: "#00ff00",
+    stroke: "#ff0000",
+    strokeWidth: 2,
+    opacity: 0.5
+  }
 
   @select() elementState;
 

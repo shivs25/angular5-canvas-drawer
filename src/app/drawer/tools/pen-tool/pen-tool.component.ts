@@ -28,6 +28,8 @@ export class PenToolComponent implements OnInit {
   public polygonStyle: DrStyle = null;
   @Input()
   public lineStyle: DrStyle = null;
+  @Input()
+  objectPreviewStyle: DrStyle = null;
 
 
   @Output()
@@ -154,14 +156,19 @@ export class PenToolComponent implements OnInit {
         this._delay.unsubscribe();
         this._delay = null;
       }
-      //this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
-      this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
-      if (this.penDblClick.toLowerCase().trim() === 'clear') {
-        this.reset();
-      } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
-        this.completeObject(true);
-      } else {
-        this.completeObject(false);
+      if(this.currentObject) {
+        if(this.penDblClick.toLowerCase().trim() === 'complete') {
+          this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
+        } else {
+          this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
+        }
+        if (this.penDblClick.toLowerCase().trim() === 'clear') {
+          this.reset();
+        } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
+          this.completeObject(true);
+        } else {
+          this.completeObject(false);
+        }
       }
     }
     else {
@@ -217,12 +224,26 @@ export class PenToolComponent implements OnInit {
     }
     else {
       //console.log('Create new obj!');
-
-      this.currentObject = createDrPolyline({
-        id: 1000000,
-        name: this._dataService.getUniqueName("Polyline"),
-        points: [{ x: x, y:y },{ x: x, y:y }]
-      });
+      let pts = [];
+      if(this.penDblClick.toLowerCase().trim() === 'complete') {
+        pts = [{ x: x, y:y },{ x: x, y:y }];
+      } else {
+        pts = [{ x: x, y:y }];
+      }
+      if(this.objectPreviewStyle) {
+        this.currentObject = createDrPolyline({
+          id: 1000000,
+          name: this._dataService.getUniqueName("Polyline"),
+          points: pts,
+          ...this.objectPreviewStyle
+        });
+      } else {
+        this.currentObject = createDrPolyline({
+          id: 1000000,
+          name: this._dataService.getUniqueName("Polyline"),
+          points: pts
+        });
+      }
     }
     if(this.emitMouseEvents) {
       this.mouseAction.next({ type: "mouseClick", pt: { x: x, y: y } });
@@ -268,46 +289,52 @@ export class PenToolComponent implements OnInit {
   }
 
   private completeObject(isClosed: boolean): void {
-    if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x
-    && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+    if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+      this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
+    }
+    if(this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2){
       this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
     }
     if(this.currentObject &&
       null !== this.currentObject &&
       this.currentObject.points.length > 1) {;
       let newObject: DrPolygon
-      if (this.currentObject.points.length > 3 && isClosed) {
-        let polyProps;
-        if(this.polygonStyle) {
-          polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon",  ...this.polygonStyle };
-        } else {
-          polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length - 1), name: "Polygon" };
+      if(this.currentObject.points.length < 3 && this.penDblClick.toLowerCase().trim() === "complete" && isClosed) {
+        this.reset();
+      }else{
+        if (this.currentObject.points.length > 3 && isClosed) {
+          let polyProps;
+          if(this.polygonStyle) {
+            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon",  ...this.polygonStyle };
+          } else {
+            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
+          }
+          newObject = createDrPolygon(polyProps);
         }
-        newObject = createDrPolygon(polyProps);
-      }
-      else {
-        let lineProps;
-        if(this.lineStyle) {
-          lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
-        } else {
-          lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
+        else {
+          let lineProps;
+          if(this.lineStyle) {
+            lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
+          } else {
+            lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
+          }
+          newObject = createDrPolyline(lineProps);
         }
-        newObject = createDrPolyline(lineProps);
-      }
-       
-      this._dataService.addObjects([
-        newObject
-      ]);
-      if(this.polygonStyle && isClosed) {
-        this._dataService.setStyles([newObject], this.polygonStyle)
-      }
-      if(this.lineStyle && !isClosed) {
-        this._dataService.setStyles([newObject], this.lineStyle)
-      }
-      this._dataService.selectObjects([newObject]);
-       
-   }
-   this.reset();
+         
+        this._dataService.addObjects([
+          newObject
+        ]);
+        if(this.polygonStyle && isClosed) {
+          this._dataService.setStyles([newObject], this.polygonStyle)
+        }
+        if(this.lineStyle && !isClosed) {
+          this._dataService.setStyles([newObject], this.lineStyle)
+        }
+        this._dataService.selectObjects([newObject]);
+         
+     }
+     this.reset();
+    } 
   }
 
   private reset(): void {
