@@ -30,7 +30,8 @@ export class PenToolComponent implements OnInit {
   public lineStyle: DrStyle = null;
   @Input()
   objectPreviewStyle: DrStyle = null;
-
+  @Input()
+  allowLines: boolean = true;
 
   @Output()
   public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
@@ -140,7 +141,12 @@ export class PenToolComponent implements OnInit {
         }
       }
       if(this.emitMouseEvents) {
-        this.mouseAction.next({ type: "mouseMove", pt: this._currentPt });
+        if(this._currentPt === null) {
+          let emitPt = this.getActivePoint(evt.offsetX, evt.offsetY);
+          this.mouseAction.next({ type: "mouseMove", pt: emitPt });
+        } else {
+          this.mouseAction.next({ type: "mouseMove", pt: this._currentPt });
+        }
       }
     }
   }
@@ -288,52 +294,95 @@ export class PenToolComponent implements OnInit {
           Math.max(...this._dataService.elements.map(o => o.id)) + 1;
   }
 
+  private isStraightLineObject(): boolean {
+    let returnValue = true;
+    let currentPoints = [...this.currentObject.points];
+    //we don't care about closed objects in this function, make sure last point and first point don't match
+    if(currentPoints[0].x === currentPoints[currentPoints.length - 1].x && currentPoints[0].y === currentPoints[currentPoints.length - 1].y) {
+      currentPoints.splice(currentPoints.length - 1, 1);
+    }
+    //splice out dupes
+    for(let i = (currentPoints.length - 1); i >= 1; i--) {
+      if(currentPoints[i].x === currentPoints[i - 1].x && currentPoints[i].y === currentPoints[i - 1].y) {
+        currentPoints.splice(i, 1);
+      }
+    }
+    //then check out to see if slope changes at any point
+    let currentSlope = null;
+    for(let i = 0; i < (currentPoints.length - 1); i++) {
+      let slope = ((currentPoints[i + 1].y - currentPoints[i].y) / (currentPoints[i + 1].x - currentPoints[i].x));
+      if(currentSlope === null) {
+        currentSlope = slope;
+      } else {
+        if(currentSlope != slope) {
+          returnValue = false;
+          break;
+        }
+      }
+    }
+    return returnValue;
+  }
+
   private completeObject(isClosed: boolean): void {
-    if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
-      this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
-    }
-    if(this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2){
-      this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
-    }
-    if(this.currentObject &&
-      null !== this.currentObject &&
-      this.currentObject.points.length > 1) {;
-      let newObject: DrPolygon
-      if(this.currentObject.points.length < 3 && this.penDblClick.toLowerCase().trim() === "complete" && isClosed) {
+    if(!this.allowLines) {
+      let isStraightLine: boolean = this.isStraightLineObject();
+      if(isStraightLine) {
         this.reset();
-      }else{
-        if (this.currentObject.points.length > 3 && isClosed) {
-          let polyProps;
-          if(this.polygonStyle) {
-            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon",  ...this.polygonStyle };
-          } else {
-            polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
+      } else if (!isStraightLine && !isClosed) {
+        this.reset();
+      }
+    }
+    if(this.currentObject !== null) {
+
+      if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+        this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
+      }
+      if(this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2){
+        this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
+      }
+      if(this.currentObject &&
+        null !== this.currentObject &&
+        this.currentObject.points.length > 1) {;
+        let newObject: DrPolygon
+        if((this.currentObject.points.length < 3 || (this.currentObject.points.length === 3 
+            && this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x 
+            && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y)) 
+            && this.penDblClick.toLowerCase().trim() === "complete" && isClosed) {
+          this.reset();
+        }else{
+          if (this.currentObject.points.length > 3 && isClosed) {
+            let polyProps;
+            if(this.polygonStyle) {
+              polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon",  ...this.polygonStyle };
+            } else {
+              polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
+            }
+            newObject = createDrPolygon(polyProps);
           }
-          newObject = createDrPolygon(polyProps);
-        }
-        else {
-          let lineProps;
-          if(this.lineStyle) {
-            lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
-          } else {
-            lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
+          else {
+            let lineProps;
+            if(this.lineStyle) {
+              lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
+            } else {
+              lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
+            }
+            newObject = createDrPolyline(lineProps);
           }
-          newObject = createDrPolyline(lineProps);
-        }
-         
-        this._dataService.addObjects([
-          newObject
-        ]);
-        if(this.polygonStyle && isClosed) {
-          this._dataService.setStyles([newObject], this.polygonStyle)
-        }
-        if(this.lineStyle && !isClosed) {
-          this._dataService.setStyles([newObject], this.lineStyle)
-        }
-        this._dataService.selectObjects([newObject]);
-         
-     }
-     this.reset();
+           
+          this._dataService.addObjects([
+            newObject
+          ]);
+          if(this.polygonStyle && isClosed) {
+            this._dataService.setStyles([newObject], this.polygonStyle)
+          }
+          if(this.lineStyle && !isClosed) {
+            this._dataService.setStyles([newObject], this.lineStyle)
+          }
+          this._dataService.selectObjects([newObject]);
+           
+       }
+       this.reset();
+      }
     } 
   }
 

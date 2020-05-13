@@ -20,7 +20,8 @@ export class EditorToolComponent implements OnInit {
   emitMouseEvents: boolean = false;
   @Input()
   objectPreviewStyle: DrStyle = null;
-  
+  @Input()
+  allowLines: boolean = true;
   @Input()
   penDblClick: string = "";
   @Output()

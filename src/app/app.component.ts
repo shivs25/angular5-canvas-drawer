@@ -39,7 +39,8 @@ export class AppComponent implements OnInit {
     stroke: "#ff0000",
     strokeWidth: 2,
     opacity: 0.5
-  }
+  };
+  allowLines: boolean = false;
 
   @select() elementState;
 

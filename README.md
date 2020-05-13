@@ -59,12 +59,23 @@ To use this library in your newly generated component, add the `app-drawer` to y
 - `itemViewBox` which is our `BoundingBox` to set the view of the drawer
 - `penDblClick` allows you to set the double click behavior in the pen tool. `CLEAR/clear` will remove an unfinished object. `COMPLETE/complete` will close the shape back to your first point. `DEFAULT/default`, empty string, or invalid input will be treated to default behavior, rendering a line instead of a polygon on double click. `COMPLETE` will also show you a closed polygon during the drawing phase.
 - `emitMouseEvents` is available to let the pen tool emit the mouse over and click events if you need to know those coordinates while making an object.
--`pointStyle`, `polygonStyle`, `lineStyle` inputs will let you set a style objects will show on initial add. Each input is a generic DrStyle. `lineStyle` is for lines, it will not set the stroke on a `polygonStyle`. These styles are currently only supported by the pen, point, and object tools.
+- `pointStyle`, `polygonStyle`, `lineStyle` inputs will let you set a style objects will show on initial add. Each input is a generic DrStyle. `lineStyle` is for lines, it will not set the stroke on a `polygonStyle`. These styles are currently only supported by the pen, point, and object tools.
+- `allowLines` is used to modify the pen tool to draw lines, the default is true. If set to false, before an object is added, the drawer will verify that the shape is not a straight line. If it is a straight line, the shape will be cleared, if it is not a straight line, it will be added to the map or cleared based on if the object should be closed or not.
 
 **Currently the main component that handles the parent svg has a default value for `preserveAspectRatio` set to `xMinYMin meet`. Currently this keeps svg scaling working correctly between High Resolution (IE retina) and standard displays.
 
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
+
+Date `2020-05-13` VERSION `1.4.8`
+- Added `allowLines` input for the drawer to modify pen tool behavior.
+
+Date `2020-05-11` VERSION `1.4.7`
+- still trying to fix mouse move occasionally sending null for the point
+
+Date `2020-05-11` VERSION `1.4.6`
+- imporvements to `complete` behavior to clear line objects better
+- fixed mouse move occasionally sending null for the point
 
 Date `2020-05-11` VERSION `1.4.5`
 - Added input for `emitMouseEvents` to allow users to turn on the pen tool emitter for mouse actions
