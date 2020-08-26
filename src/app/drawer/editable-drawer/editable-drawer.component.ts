@@ -21,6 +21,10 @@ export class EditableDrawerComponent implements OnInit {
   objectPreviewStyle: DrStyle = null;
   @Input()
   allowLines: boolean = true;
+  @Input()
+  canModifyShapes: boolean = true;
+  @Input()
+  multiClickEnabled: boolean = false;
   
   @ViewChild('drawer', { static: true }) drawer;
 

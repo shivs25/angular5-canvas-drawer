@@ -1,4 +1,5 @@
-<app-selector-tool *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
+<app-selector-tool [canModifyShapes]="canModifyShapes"  [multiClickEnabled]="multiClickEnabled"
+*ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
 <app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool" (mouseAction)="mouseAction.next($event)" [emitMouseEvents]="emitMouseEvents"
                     [polygonStyle]="polygonStyle" [lineStyle]="lineStyle" [penDblClick]="penDblClick" [objectPreviewStyle]="objectPreviewStyle"
                     [allowLines]="allowLines"></app-pen-tool>

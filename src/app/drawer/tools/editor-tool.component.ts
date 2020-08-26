@@ -24,6 +24,10 @@ export class EditorToolComponent implements OnInit {
   allowLines: boolean = true;
   @Input()
   penDblClick: string = "";
+  @Input()
+  canModifyShapes: boolean = true;
+  @Input()
+  multiClickEnabled: boolean = false;
   @Output()
   public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
 

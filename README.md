@@ -56,6 +56,8 @@ To use this library in your newly generated component, add the `app-drawer` to y
 `handleMouseEvents` which is a `boolean`
 
 *The available app-editable-drawer inputs are as followed:
+- `canModifyShapes` will tell the Selector Tool if the user can drag or resize finished shapes. It defaults to true.
+- `multiClickEnabled` will tell the Selector Tool if it should auto select multiple items by clicking without using the shift key. It defaults to false.
 - `itemViewBox` which is our `BoundingBox` to set the view of the drawer
 - `penDblClick` allows you to set the double click behavior in the pen tool. `CLEAR/clear` will remove an unfinished object. `COMPLETE/complete` will close the shape back to your first point. `DEFAULT/default`, empty string, or invalid input will be treated to default behavior, rendering a line instead of a polygon on double click. `COMPLETE` will also show you a closed polygon during the drawing phase.
 - `emitMouseEvents` is available to let the pen tool emit the mouse over and click events if you need to know those coordinates while making an object.
@@ -66,6 +68,9 @@ To use this library in your newly generated component, add the `app-drawer` to y
 
 ## Latest Update
 - This list contains summaries of releases and current updates, for a full detailed list of changes please view our [CHANGELOG documentation](https://github.com/shivs25/angular5-canvas-drawer/blob/master/CHANGELOG). 
+
+Date `2020-08-26` VERSION `1.5.0`
+- Add `canModifyShapes` and `multiClickEnabled` for the Selector Tool to provide more flexible behavior.
 
 Date `2020-05-13` VERSION `1.4.8`
 - Added `allowLines` input for the drawer to modify pen tool behavior.

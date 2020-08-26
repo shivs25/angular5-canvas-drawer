@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener, Input } from '@angular/core';
 
 import { DataStoreService } from '../../services/data-store.service';
 import { DrObject } from '../../models/dr-object';
@@ -51,6 +51,11 @@ const INVISIBLE_STYLE: any = {
 export class SelectorToolComponent implements OnInit, OnDestroy {
 
   @select() elementState;
+
+  @Input()
+  canModifyShapes: boolean = true;
+  @Input()
+  multiClickEnabled: boolean = false;
 
   SIZER_SIZE: number = SIZER_SIZE;
   HALF_SIZER: number = HALF_SIZER;
@@ -229,7 +234,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   isShiftDown(): boolean {
-    return this._modifierKeys.shift;
+    return this._modifierKeys.shift || this.multiClickEnabled;
   }
 
   onBackgroundMouseDown(evt): void {
@@ -310,14 +315,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseDown(data: MouseEventData): void {
-    
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
   }
 
   onSelectionMouseMove(data: MouseEventData): void {
-
+    
   }
 
   onSelectionMouseUp(data: MouseEventData): void {
@@ -344,7 +348,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       
         if (selected) {
           let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
-          if (this._modifierKeys.shift) {
+          if (this._modifierKeys.shift || this.multiClickEnabled) {
             //Remove from selection
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects.slice(0, index),
@@ -353,7 +357,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
         }
         else {
-          if (this._modifierKeys.shift) {
+          if (this._modifierKeys.shift || this.multiClickEnabled) {
             //Add to selection.
             this._dataStoreService.selectObjects([
               ...this._dataStoreService.selectedObjects,
@@ -391,20 +395,20 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   onMouseMove(data: MouseEventData): void {
     this._lastEvent = data; 
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
-      if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
+      if (this.canModifyShapes && this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
         Object.assign(this.cssBounds, {
           left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
           top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
         });
       }
-      else {
+      else if(this.canModifyShapes) {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
           this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
         }
         else {
-          this.rotateObject(data.location, this._modifierKeys.shift);
+          this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
         }
       }
       
@@ -413,7 +417,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   onMouseUp(data: MouseEventData): void {
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
-      if (this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
+      if (this.canModifyShapes && this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
 
         if (Math.abs(data.location.x - this._mouseDownLocation.x) < 2 &&
@@ -452,7 +456,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         }
         
       }
-      else {
+      else if(this.canModifyShapes) {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
           this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
@@ -510,7 +514,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           
         }
         else {
-          this.rotateObject(data.location, this._modifierKeys.shift);
+          this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
           if (this._dataStoreService.selectedObjects.length > 0) {
             this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
           }
