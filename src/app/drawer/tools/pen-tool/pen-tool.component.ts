@@ -34,7 +34,7 @@ export class PenToolComponent implements OnInit {
   allowLines: boolean = true;
 
   @Output()
-  public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
+  public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
 
   currentObject: DrPolygon = null;
 
@@ -49,7 +49,7 @@ export class PenToolComponent implements OnInit {
     alt: false,
     control: false
   };
-  
+
   constructor(private _dataService: DataStoreService) { }
 
   ngOnInit() {
@@ -58,7 +58,7 @@ export class PenToolComponent implements OnInit {
   @HostListener('window:keydown', ['$event'])
   onKeyDown(evt): void {
     if ((EditorToolType.PEN_TOOL === this._dataService.selectedTool)) {
-      switch(evt.key) {
+      switch (evt.key) {
         case "Shift":
         case "Control":
         case "Alt":
@@ -68,13 +68,13 @@ export class PenToolComponent implements OnInit {
           break;
       }
     }
-    
+
   }
 
   @HostListener('window:keyup', ['$event'])
   onKeyUp(evt): void {
     if ((EditorToolType.PEN_TOOL === this._dataService.selectedTool)) {
-      switch(evt.key) {
+      switch (evt.key) {
         case "Shift":
         case "Control":
         case "Alt":
@@ -102,7 +102,7 @@ export class PenToolComponent implements OnInit {
     }
     else {
       this._currentPt = this.getActivePoint(this.getResizerX() + HALF_SIZER, this.getResizerY() + HALF_SIZER);
-      if(this.penDblClick.toLowerCase().trim() === 'complete') {
+      if (this.penDblClick.toLowerCase().trim() === 'complete') {
         this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
       } else {
         this.currentObject.points.push(this._currentPt);
@@ -111,12 +111,12 @@ export class PenToolComponent implements OnInit {
   }
 
   onBackgroundMouseMove(evt): void {
-    if(this.currentObject) {
+    if (this.currentObject) {
       this._lastEvent = evt;
       if (this._delay) {
-        if(this._currentPt) {
-          if(this._currentPt.x !== evt.offsetX && this._currentPt.y !== evt.offsetY){
-            if(this._clickPt){
+        if (this._currentPt) {
+          if (this._currentPt.x !== evt.offsetX && this._currentPt.y !== evt.offsetY) {
+            if (this._clickPt) {
               this.handleClick(this._clickPt.x, this._clickPt.y);
             }
           }
@@ -133,15 +133,15 @@ export class PenToolComponent implements OnInit {
         else {
           this._currentPt = this.getActivePoint(evt.offsetX, evt.offsetY);
 
-          if(this.penDblClick.toLowerCase().trim() === 'complete') {
+          if (this.penDblClick.toLowerCase().trim() === 'complete') {
             this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
           } else {
             this.currentObject.points.push(this._currentPt);
           }
         }
       }
-      if(this.emitMouseEvents) {
-        if(this._currentPt === null) {
+      if (this.emitMouseEvents) {
+        if (this._currentPt === null) {
           let emitPt = this.getActivePoint(evt.offsetX, evt.offsetY);
           this.mouseAction.next({ type: "mouseMove", pt: emitPt });
         } else {
@@ -162,15 +162,15 @@ export class PenToolComponent implements OnInit {
         this._delay.unsubscribe();
         this._delay = null;
       }
-      if(this.currentObject) {
-        if(this.penDblClick.toLowerCase().trim() === 'complete') {
+      if (this.currentObject) {
+        if (this.penDblClick.toLowerCase().trim() === 'complete') {
           this.currentObject.points.splice(this.currentObject.points.length - 1, 0, this._currentPt);
         } else {
           this.currentObject.points.push(this.getActivePoint(evt.offsetX, evt.offsetY));
         }
         if (this.penDblClick.toLowerCase().trim() === 'clear') {
           this.reset();
-        } else if(this.penDblClick.toLowerCase().trim() === 'complete') {
+        } else if (this.penDblClick.toLowerCase().trim() === 'complete') {
           this.completeObject(true);
         } else {
           this.completeObject(false);
@@ -184,10 +184,10 @@ export class PenToolComponent implements OnInit {
           //console.log('Single Click Action');
           this.handleClick(this._clickPt.x, this._clickPt.y);
         }
-        
+
       });
     }
-    
+
   }
 
   onResizerClick(evt): void {
@@ -213,30 +213,30 @@ export class PenToolComponent implements OnInit {
       this._delay.unsubscribe();
       this._delay = null;
     }
-    
+
     if (this.currentObject) {
-      
+
       if (!this._currentPt) {
         //console.log('Adding Point!');
 
-        if(this.penDblClick.toLowerCase().trim() === 'complete') {
+        if (this.penDblClick.toLowerCase().trim() === 'complete') {
           this.currentObject.points.splice(this.currentObject.points.length - 1, 0, { x: x, y: y });
         } else {
           this.currentObject.points.push({ x: x, y: y });
         }
       }
-      
+
       this._currentPt = null;
     }
     else {
       //console.log('Create new obj!');
       let pts = [];
-      if(this.penDblClick.toLowerCase().trim() === 'complete') {
-        pts = [{ x: x, y:y },{ x: x, y:y }];
+      if (this.penDblClick.toLowerCase().trim() === 'complete') {
+        pts = [{ x: x, y: y }, { x: x, y: y }];
       } else {
-        pts = [{ x: x, y:y }];
+        pts = [{ x: x, y: y }];
       }
-      if(this.objectPreviewStyle) {
+      if (this.objectPreviewStyle) {
         this.currentObject = createDrPolyline({
           id: 1000000,
           name: this._dataService.getUniqueName("Polyline"),
@@ -251,7 +251,7 @@ export class PenToolComponent implements OnInit {
         });
       }
     }
-    if(this.emitMouseEvents) {
+    if (this.emitMouseEvents) {
       this.mouseAction.next({ type: "mouseClick", pt: { x: x, y: y } });
     }
   }
@@ -263,14 +263,14 @@ export class PenToolComponent implements OnInit {
       let lastPoint: DrPoint = this.currentObject.points[this.currentObject.points.length - 2];
 
       let angle: number = (360 + this.getRotationAngle(lastPoint, returnValue)) % 360;
-      
+
       let snapped: number[] = SNAP_ANGLES.slice(0);
       let snappedAngle: number = snapped.sort((a, b) => {
         return Math.abs(angle - a) - Math.abs(angle - b);
       })[0];
 
-      let dist: number = Math.sqrt(Math.pow(Math.abs(returnValue.x - lastPoint.x), 2) + 
-                         Math.pow(Math.abs(returnValue.y - lastPoint.y), 2));
+      let dist: number = Math.sqrt(Math.pow(Math.abs(returnValue.x - lastPoint.x), 2) +
+        Math.pow(Math.abs(returnValue.y - lastPoint.y), 2));
 
       returnValue = this.pointOnLine(lastPoint.x, lastPoint.y, snappedAngle, dist);
     }
@@ -291,30 +291,30 @@ export class PenToolComponent implements OnInit {
 
   private getNextId(): number {
     return 0 === this._dataService.elements.length ? 1 :
-          Math.max(...this._dataService.elements.map(o => o.id)) + 1;
+      Math.max(...this._dataService.elements.map(o => o.id)) + 1;
   }
 
   private isStraightLineObject(): boolean {
     let returnValue = true;
     let currentPoints = [...this.currentObject.points];
     //we don't care about closed objects in this function, make sure last point and first point don't match
-    if(currentPoints[0].x === currentPoints[currentPoints.length - 1].x && currentPoints[0].y === currentPoints[currentPoints.length - 1].y) {
+    if (currentPoints[0].x === currentPoints[currentPoints.length - 1].x && currentPoints[0].y === currentPoints[currentPoints.length - 1].y) {
       currentPoints.splice(currentPoints.length - 1, 1);
     }
     //splice out dupes
-    for(let i = (currentPoints.length - 1); i >= 1; i--) {
-      if(currentPoints[i].x === currentPoints[i - 1].x && currentPoints[i].y === currentPoints[i - 1].y) {
+    for (let i = (currentPoints.length - 1); i >= 1; i--) {
+      if (currentPoints[i].x === currentPoints[i - 1].x && currentPoints[i].y === currentPoints[i - 1].y) {
         currentPoints.splice(i, 1);
       }
     }
     //then check out to see if slope changes at any point
     let currentSlope = null;
-    for(let i = 0; i < (currentPoints.length - 1); i++) {
+    for (let i = 0; i < (currentPoints.length - 1); i++) {
       let slope = ((currentPoints[i + 1].y - currentPoints[i].y) / (currentPoints[i + 1].x - currentPoints[i].x));
-      if(currentSlope === null) {
+      if (currentSlope === null) {
         currentSlope = slope;
       } else {
-        if(currentSlope != slope) {
+        if (currentSlope != slope) {
           returnValue = false;
           break;
         }
@@ -324,66 +324,68 @@ export class PenToolComponent implements OnInit {
   }
 
   private completeObject(isClosed: boolean): void {
-    if(!this.allowLines) {
+    if (!this.allowLines) {
       let isStraightLine: boolean = this.isStraightLineObject();
-      if(isStraightLine) {
+      if (isStraightLine) {
         this.reset();
       } else if (!isStraightLine && !isClosed) {
         this.reset();
       }
     }
-    if(this.currentObject !== null) {
+    if (this.currentObject !== null) {
 
-      if(this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x && this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y){
+      if (this.currentObject.points[this.currentObject.points.length - 1].x === this.currentObject.points[this.currentObject.points.length - 2].x &&
+        this.currentObject.points[this.currentObject.points.length - 1].y === this.currentObject.points[this.currentObject.points.length - 2].y) {
         this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
       }
-      if(this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2){
+      if (this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y && this.currentObject.points.length > 2 && !isClosed) {
         this.currentObject.points.splice(this.currentObject.points.length - 1, 1);
       }
-      if(this.currentObject &&
+      if (this.currentObject &&
         null !== this.currentObject &&
-        this.currentObject.points.length > 1) {;
+        this.currentObject.points.length > 1) {
+          ;
         let newObject: DrPolygon
-        if((this.currentObject.points.length < 3 || (this.currentObject.points.length === 3 
-            && this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x 
-            && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y)) 
-            && this.penDblClick.toLowerCase().trim() === "complete" && isClosed) {
+        if ((this.currentObject.points.length < 3 || (this.currentObject.points.length === 3
+          && this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x
+          && this.currentObject.points[0].y === this.currentObject.points[this.currentObject.points.length - 1].y))
+          && this.penDblClick.toLowerCase().trim() === "complete" && isClosed) {
           this.reset();
-        }else{
+        } else {
           if (this.currentObject.points.length > 3 && isClosed) {
             let polyProps;
-            if(this.polygonStyle) {
-              polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon",  ...this.polygonStyle };
+            if (this.polygonStyle) {
+              polyProps = { id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon", ...this.polygonStyle };
             } else {
-              polyProps ={ id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
+              polyProps = { id: this.getNextId(), points: this.currentObject.points.slice(0, this.currentObject.points.length), name: "Polygon" };
             }
             newObject = createDrPolygon(polyProps);
           }
           else {
             let lineProps;
-            if(this.lineStyle) {
-              lineProps ={ id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
+            if (this.lineStyle) {
+              lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline", ...this.lineStyle };
             } else {
               lineProps = { id: this.getNextId(), points: this.currentObject.points, name: "Polyline" };
             }
             newObject = createDrPolyline(lineProps);
           }
-           
+
           this._dataService.addObjects([
             newObject
           ]);
-          if(this.polygonStyle && isClosed) {
+          if (this.polygonStyle && isClosed) {
             this._dataService.setStyles([newObject], this.polygonStyle)
           }
-          if(this.lineStyle && !isClosed) {
+          if (this.lineStyle && !isClosed) {
             this._dataService.setStyles([newObject], this.lineStyle)
           }
           this._dataService.selectObjects([newObject]);
-           
-       }
-       this.reset();
+
+        }
+        this.reset();
       }
-    } 
+    }
   }
 
   private reset(): void {
@@ -393,7 +395,7 @@ export class PenToolComponent implements OnInit {
     if (this._delay) {
       this._delay.unsubscribe();
       this._delay = null;
-      
+
     }
   }
 }
