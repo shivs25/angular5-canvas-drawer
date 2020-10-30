@@ -296,7 +296,7 @@ export class PenToolComponent implements OnInit {
 
   private isStraightLineObject(): boolean {
     let returnValue = true;
-    let currentPoints = [...this.currentObject.points];
+    let currentPoints = [...this.currentObject.points.filter(x => x !== null)];
     //we don't care about closed objects in this function, make sure last point and first point don't match
     if (currentPoints[0].x === currentPoints[currentPoints.length - 1].x && currentPoints[0].y === currentPoints[currentPoints.length - 1].y) {
       currentPoints.splice(currentPoints.length - 1, 1);
@@ -344,7 +344,7 @@ export class PenToolComponent implements OnInit {
       if (this.currentObject &&
         null !== this.currentObject &&
         this.currentObject.points.length > 1) {
-          ;
+        ;
         let newObject: DrPolygon
         if ((this.currentObject.points.length < 3 || (this.currentObject.points.length === 3
           && this.currentObject.points[0].x === this.currentObject.points[this.currentObject.points.length - 1].x

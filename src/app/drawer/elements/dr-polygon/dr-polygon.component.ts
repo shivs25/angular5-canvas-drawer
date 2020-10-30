@@ -16,12 +16,14 @@ export class DrPolygonComponent extends DrObjectComponent {
     let r: DrPolygon = this.data as DrPolygon;
     let p: DrPoint;
 
-    for(p of r.points) {
-      returnValue += p.x + " " + p.y + " ";
+    for (p of r.points) {
+      if (p) {
+        returnValue += p.x + " " + p.y + " ";
+      }
     }
 
     return returnValue.trim();
   }
 
-  
+
 }
