@@ -6,5 +6,6 @@ export interface MouseEventData {
     data: DrObject;
     shiftKey: boolean,
     ctrlKey: boolean,
-    altKey: boolean
+    altKey: boolean,
+    isBackgroundClick?: boolean
 }

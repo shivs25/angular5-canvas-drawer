@@ -23,7 +23,7 @@ import { DrCallout, createDrCallout } from './drawer/models/dr-callout';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  elements:DrObject[] = null;
+  elements: DrObject[] = null;
   width: string = "100%";
   height: string = "100%";
   viewTop: string = "0";
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
   constructor(private drawerObjHelper: DrawerObjectHelperService, private dataStoreService: DataStoreService) {
 
   }
-  
+
   selector(): void {
     this.dataStoreService.selectedTool = EditorToolType.SELECTOR_TOOL;
   }
@@ -67,14 +67,14 @@ export class AppComponent implements OnInit {
     if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.TEXT) {
       this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL;
     }
-    
+
   }
 
   editCallout(): void {
     if (this.dataStoreService.selectedObjects.length > 0 && this.dataStoreService.selectedObjects[0].drType === DrType.CALLOUT) {
       this.dataStoreService.selectedTool = EditorToolType.CALLOUT_POINTER_TOOL;
     }
-    
+
   }
 
   ellipse(): void {
@@ -117,8 +117,8 @@ export class AppComponent implements OnInit {
   arrow(): void {
     this.dataStoreService.selectedTool = EditorToolType.ARROW_TOOL;
   }
-  
-  
+
+
   showPreview(): void {
     this.dataStoreService.setPreviewElements(this.dataStoreService.selectedObjects);
 
@@ -213,7 +213,7 @@ export class AppComponent implements OnInit {
   }
 
   setBoundingBox(): void {
-    if(this.viewBoxItem === null) {
+    if (this.viewBoxItem === null) {
       this.viewBoxItem = createBoundingBox();
       this.viewBoxItem.x = 0;
       this.viewBoxItem.y = 0;
@@ -225,7 +225,7 @@ export class AppComponent implements OnInit {
   }
 
   renameSelectedObject(): void {
-    if(this.dataStoreService.selectedObjects.length > 0){
+    if (this.dataStoreService.selectedObjects.length > 0) {
       this.dataStoreService.renameObjects(this.dataStoreService.selectedObjects, "I'm a New Object!");
     }
   }
@@ -276,12 +276,12 @@ export class AppComponent implements OnInit {
 
   alignCenter(): void {
     this.dataStoreService.alignObjectsCenter(this.dataStoreService.selectedObjects);
-    
+
   }
 
   alignRight(): void {
     this.dataStoreService.alignObjectsRight(this.dataStoreService.selectedObjects);
-    
+
   }
 
   alignTop(): void {
@@ -291,16 +291,16 @@ export class AppComponent implements OnInit {
 
   alignMiddle(): void {
     this.dataStoreService.alignObjectsMiddle(this.dataStoreService.selectedObjects);
-    
+
   }
 
   alignBottom(): void {
     this.dataStoreService.alignObjectsBottom(this.dataStoreService.selectedObjects);
-    
+
   }
 
   imageUrl(): void {
-    
+
     this.dataStoreService.setUrls(this.dataStoreService.selectedObjects, "https://static.pexels.com/photos/175718/pexels-photo-175718.jpeg");
   }
 
@@ -340,7 +340,7 @@ export class AppComponent implements OnInit {
     });*/
 
     let ctx = this.canvas.nativeElement.getContext('2d');
-    
+
     let img = new Image();
     img.onload = () => {
       ctx.drawImage(img, 0, 0);
@@ -357,7 +357,7 @@ export class AppComponent implements OnInit {
       console.log(items);
     });
     this.dataStoreService.objectsAdded.subscribe(() => {
-      if(this.dataStoreService.elements[this.dataStoreService.elements.length - 1].drType === DrType.TEXT){
+      if (this.dataStoreService.elements[this.dataStoreService.elements.length - 1].drType === DrType.TEXT) {
         this.dataStoreService.selectedTool = EditorToolType.TEXT_EDIT_TOOL
       }
     });
@@ -384,12 +384,12 @@ export class AppComponent implements OnInit {
     });
 
     let text: DrText = createDrText({
-      x: 100, 
+      x: 100,
       y: 100,
       width: 200,
       height: 100,
       vAlignment: DrTextAlignment.FAR,
-      hAlignment:  DrTextAlignment.FAR, 
+      hAlignment: DrTextAlignment.FAR,
       text: "Text",
       id: 6,
       size: 16,
@@ -401,7 +401,7 @@ export class AppComponent implements OnInit {
       stroke: 'black'
     });
     elements.push(text);
-    
+
     /*for(let i = 64; i >= 12; i--) {
       text = createDrText({
         id: 10 * i,
@@ -477,7 +477,7 @@ export class AppComponent implements OnInit {
       showFill: true,
       fill: 'rgba(0,0,255,0.5)',
       clickable: true,
-      rotation:0
+      rotation: 0
     });
     elements.push(t3);
 
@@ -537,7 +537,7 @@ export class AppComponent implements OnInit {
 
     this.dataStoreService.elements = this.elements;
 
-    
+
 
     /*let r = this._renderer.createElement('rect', 'svg',);
     this._renderer.setAttribute(r, 'x', '0');
@@ -595,29 +595,32 @@ export class AppComponent implements OnInit {
      }, 12000);*/
 
 
-     /*setTimeout(() => {
-      this.dataStoreService.undo();
-     }, 4000);*/
-/*
-     setTimeout(() => {
-      this.dataStoreService.undo();
-     }, 6000);
-     setTimeout(() => {
-      this.dataStoreService.redo();
+    /*setTimeout(() => {
+     this.dataStoreService.undo();
+    }, 4000);*/
+    /*
+         setTimeout(() => {
+          this.dataStoreService.undo();
+         }, 6000);
+         setTimeout(() => {
+          this.dataStoreService.redo();
+    
+          let t: DrText = this.dataStoreService.elements[0] as DrText;
+          t.width = 300;
+         }, 8000);*/
 
-      let t: DrText = this.dataStoreService.elements[0] as DrText;
-      t.width = 300;
-     }, 8000);*/
 
-     
   }
 
-  testService(evt: DrObject){
+  testService(evt: DrObject) {
     console.log(evt);
     console.log(this.drawerObjHelper.getBoundingBox([evt]));
   }
 
   onMouseOver(evt) {
     //console.log(evt);
+  }
+  onBackgroundMouseUp(event) {
+    console.log(event);
   }
 }

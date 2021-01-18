@@ -3,6 +3,7 @@ import { DrObject } from '../models/dr-object';
 import { DataStoreService } from '../services/data-store.service';
 import { BoundingBox } from '../models/bounding-box';
 import { DrStyle } from '../models/dr-style';
+import { MouseEventData } from '../models/mouse-event-data';
 
 @Component({
   selector: 'app-editable-drawer',
@@ -25,7 +26,7 @@ export class EditableDrawerComponent implements OnInit {
   canModifyShapes: boolean = true;
   @Input()
   multiClickEnabled: boolean = false;
-  
+
   @ViewChild('drawer', { static: true }) drawer;
 
   @Input()
@@ -34,11 +35,13 @@ export class EditableDrawerComponent implements OnInit {
   penDblClick: string = "";
   @Input()
   emitMouseEvents: boolean = false;
-  
-  @Output() 
-  public mouseAction: EventEmitter<{type: string, pt: any}> = new EventEmitter<{type: string, pt: any}>();
-  
-  @Output() 
+  @Input()
+  emitBackgroundClick: boolean = false;
+
+  @Output()
+  public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
+
+  @Output()
   public selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
 
   @Output()
@@ -46,7 +49,10 @@ export class EditableDrawerComponent implements OnInit {
 
   @Output()
   public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-  
+
+  @Output()
+  backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+
 
   constructor(private _dataService: DataStoreService) { }
 
@@ -55,13 +61,13 @@ export class EditableDrawerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._dataService.selectionChanged.subscribe((selectedObjects:DrObject[]) => {
+    this._dataService.selectionChanged.subscribe((selectedObjects: DrObject[]) => {
       this.selectionChanged.emit(selectedObjects);
     });
     this._dataService.editingChanged.subscribe((isEditing: boolean) => {
       this.editingChanged.emit(isEditing);
     })
-    this._dataService.objectsAdded.subscribe((addedObjects:DrObject[]) => {
+    this._dataService.objectsAdded.subscribe((addedObjects: DrObject[]) => {
       this.objectsAdded.emit(addedObjects);
     });
   }

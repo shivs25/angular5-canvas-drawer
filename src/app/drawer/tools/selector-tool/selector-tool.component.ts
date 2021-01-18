@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener, Input, Output, EventEmitter } from '@angular/core';
 
 import { DataStoreService } from '../../services/data-store.service';
 import { DrObject } from '../../models/dr-object';
@@ -56,12 +56,17 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   canModifyShapes: boolean = true;
   @Input()
   multiClickEnabled: boolean = false;
+  @Input()
+  emitBackgroundClick: boolean = false;
+
+  @Output()
+  backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   SIZER_SIZE: number = SIZER_SIZE;
   HALF_SIZER: number = HALF_SIZER;
 
   //Dummy array to use in the ngFor
-  sizers: number[] = [0,1,2,3,4,5,6,7];
+  sizers: number[] = [0, 1, 2, 3, 4, 5, 6, 7];
 
   boundingBoxObjectUniqueId: number = 1000000;
 
@@ -80,10 +85,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   mouseDown: boolean = false;
 
   keyDown: boolean = false;
-  
+
   selectionStyle: any;
   invisibleStyle: any = INVISIBLE_STYLE;
-  
+
 
 
 
@@ -117,8 +122,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     private _dataStoreService: DataStoreService,
     private _objectHelperService: DrawerObjectHelperService,
     private _changeService: ChangeHelperService,
-    private _elementRef: ElementRef, 
-  private _customComponentResolverService: CustomComponentResolverService) { }
+    private _elementRef: ElementRef,
+    private _customComponentResolverService: CustomComponentResolverService) { }
 
   ngOnInit() {
     let b: any = this._elementRef.nativeElement.getBoundingClientRect();
@@ -129,14 +134,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     };
 
     this._subRedid = this._dataStoreService.redid.subscribe(() => {
-      this.setupBounds();  
+      this.setupBounds();
     });
 
     this._subUndid = this._dataStoreService.undid.subscribe(() => {
       this.setupBounds();
     });
 
-    this._subSelectionChanged = this._dataStoreService.selectionChanged.subscribe((selectedObjects:DrObject[]) => {
+    this._subSelectionChanged = this._dataStoreService.selectionChanged.subscribe((selectedObjects: DrObject[]) => {
       this.setupBounds();
     });
     this._subSelectedBoundsChanged = this._dataStoreService.selectedBoundsChanged.subscribe((selectedBounds: BoundingBox) => {
@@ -148,7 +153,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   onKeyDown(evt): void {
     if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
-      switch(evt.key) {
+      switch (evt.key) {
         case "Shift":
         case "Control":
         case "Alt":
@@ -157,8 +162,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
           break;
         case "ArrowUp":
-          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-            if(this._dataStoreService.selectedObjects.length > 0){
+          if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+            if (this._dataStoreService.selectedObjects.length > 0) {
               this.keyDown = true;
               this.microMoveObjects(0, this.isShiftDown() ? -10 : -1);
               evt.stopPropagation();
@@ -167,8 +172,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
           break;
         case "ArrowDown":
-          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-              if(this._dataStoreService.selectedObjects.length > 0){
+          if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+            if (this._dataStoreService.selectedObjects.length > 0) {
               this.keyDown = true;
               this.microMoveObjects(0, this.isShiftDown() ? 10 : 1);
               evt.stopPropagation();
@@ -177,8 +182,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
           break;
         case "ArrowLeft":
-          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-            if(this._dataStoreService.selectedObjects.length > 0){
+          if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+            if (this._dataStoreService.selectedObjects.length > 0) {
               this.keyDown = true;
               this.microMoveObjects(this.isShiftDown() ? -10 : -1, 0);
               evt.stopPropagation();
@@ -187,8 +192,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           }
           break;
         case "ArrowRight":
-          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-            if(this._dataStoreService.selectedObjects.length > 0){
+          if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+            if (this._dataStoreService.selectedObjects.length > 0) {
               this.keyDown = true;
               this.microMoveObjects(this.isShiftDown() ? 10 : 1, 0);
               evt.stopPropagation();
@@ -198,13 +203,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    
+
   }
 
   @HostListener('window:keyup', ['$event'])
   onKeyUp(evt): void {
     if ((EditorToolType.SELECTOR_TOOL === this._dataStoreService.selectedTool)) {
-      switch(evt.key) {
+      switch (evt.key) {
         case "Shift":
         case "Control":
         case "Alt":
@@ -215,15 +220,15 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         case "ArrowDown":
         case "ArrowLeft":
         case "ArrowRight":
-          if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-            if(this._dataStoreService.selectedObjects.length > 0){
+          if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+            if (this._dataStoreService.selectedObjects.length > 0) {
               this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
                 x: this.cssBounds.left + HALF_SIZER,
                 y: this.cssBounds.top + HALF_SIZER,
                 width: this.cssBounds.width - SIZER_SIZE,
                 height: this.cssBounds.height - SIZER_SIZE
               });
-              
+
               evt.stopPropagation();
               this.keyDown = false;
             }
@@ -242,20 +247,22 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     evt.stopPropagation();
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
-        { x: this.cssBounds.left + evt.offsetX,
-          y: this.cssBounds.top + evt.offsetY }, this._originalBounds.x + this._originalBounds.width / 2, 
-                                                 this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
-      
-      this.onMouseDown({ 
-        location: pt, 
+        {
+          x: this.cssBounds.left + evt.offsetX,
+          y: this.cssBounds.top + evt.offsetY
+        }, this._originalBounds.x + this._originalBounds.width / 2,
+        this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
+
+      this.onMouseDown({
+        location: pt,
         data: null,
         shiftKey: evt.shiftKey,
         ctrlKey: evt.ctrlKey,
         altKey: evt.altKey
       });
-      
+
     }
-    
+
   }
 
   onBackgroundMouseMove(evt): void {
@@ -263,11 +270,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     evt.stopPropagation();
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
-        { x: this.cssBounds.left + evt.offsetX,
-          y: this.cssBounds.top + evt.offsetY }, this._originalBounds.x + this._originalBounds.width / 2, 
-                                                 this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
-  
-      this.onMouseMove({ 
+        {
+          x: this.cssBounds.left + evt.offsetX,
+          y: this.cssBounds.top + evt.offsetY
+        }, this._originalBounds.x + this._originalBounds.width / 2,
+        this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
+
+      this.onMouseMove({
         location: pt,
         data: null,
         shiftKey: evt.shiftKey,
@@ -275,7 +284,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         altKey: evt.altKey
       });
     }
-    
+
   }
 
   onBackgroundMouseUp(evt): void {
@@ -284,11 +293,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
     if (this.cssBounds && this._originalBounds) {
       let pt: DrPoint = this.getRotatedPoint(
-        { x: this.cssBounds.left + evt.offsetX,
-          y: this.cssBounds.top + evt.offsetY }, this._originalBounds.x + this._originalBounds.width / 2, 
-                                                 this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
-  
-      this.onMouseUp({ 
+        {
+          x: this.cssBounds.left + evt.offsetX,
+          y: this.cssBounds.top + evt.offsetY
+        }, this._originalBounds.x + this._originalBounds.width / 2,
+        this._originalBounds.y + this._originalBounds.height / 2, this.rotation);
+
+      this.onMouseUp({
         location: pt,
         data: null,
         shiftKey: evt.shiftKey,
@@ -296,11 +307,11 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         altKey: evt.altKey
       });
     }
-    
+
   }
 
   onBoundsMouseDown(data: MouseEventData): void {
-    
+
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -321,7 +332,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseMove(data: MouseEventData): void {
-    
+
   }
 
   onSelectionMouseUp(data: MouseEventData): void {
@@ -334,18 +345,18 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     }
     else if (data.data) {
       //Not the selected bounds object
-      let intersectedObjects:DrObject[] = this._objectHelperService.getObjectsAtPoint(this._dataStoreService.elements.filter((t) => t.clickable), data.location.x, data.location.y);
+      let intersectedObjects: DrObject[] = this._objectHelperService.getObjectsAtPoint(this._dataStoreService.elements.filter((t) => t.clickable), data.location.x, data.location.y);
       let topSelectedObject: DrObject = null;
       if (intersectedObjects.length > 0) {
         intersectedObjects = intersectedObjects.sort((a, b) => {
-          return this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === b.id)) 
-                  -
-                  this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === a.id));
+          return this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === b.id))
+            -
+            this._dataStoreService.elements.indexOf(this._dataStoreService.elements.find((e) => e.id === a.id));
         });
         topSelectedObject = intersectedObjects[0];
 
         let selected: DrObject = this._dataStoreService.selectedObjects.find((t: any) => t.id === topSelectedObject.id);
-      
+
         if (selected) {
           let index: number = this._dataStoreService.selectedObjects.indexOf(selected);
           if (this._modifierKeys.shift || this.multiClickEnabled) {
@@ -368,32 +379,32 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             //Select new
             this._dataStoreService.selectObjects([topSelectedObject]);
           }
-        } 
+        }
       }
       else {
         this._dataStoreService.selectObjects([]);
       }
-      
+
     }
-    
+
     this.setupBounds();
     if (this._dataStoreService.selectedObjects.length > 0) {
       this._dataStoreService.beginEdit();
-      
+
       let b: BoundingBox = this._objectHelperService.getBoundingBox(this.selectedObjects);
 
-      this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2};
+      this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
       this._mouseDownLocation = data.location;
 
       this.mouseDown = true;
       this.mouseDownSizer = this.mouseDownRotator = -1;
       this.cursor = "grabbing";
     }
-    
+
   }
 
   onMouseMove(data: MouseEventData): void {
-    this._lastEvent = data; 
+    this._lastEvent = data;
     if (this.mouseDown && this._dataStoreService.selectedObjects.length > 0) {
       if (this.canModifyShapes && this.mouseDownSizer < 0 && this.mouseDownRotator < 0) {
         //Moving objects
@@ -402,7 +413,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
         });
       }
-      else if(this.canModifyShapes) {
+      else if (this.canModifyShapes) {
         if (this.mouseDownSizer >= 0) {
           //Resizing objects
           this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
@@ -411,7 +422,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
         }
       }
-      
+
     }
   }
 
@@ -421,8 +432,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         //Moving objects
 
         if (Math.abs(data.location.x - this._mouseDownLocation.x) < 2 &&
-            Math.abs(data.location.y - this._mouseDownLocation.y) < 2) {
-            
+          Math.abs(data.location.y - this._mouseDownLocation.y) < 2) {
+
           //Click
           if (this._delay) {
             //Double click
@@ -446,7 +457,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             left: this.boundingBoxObject.x - HALF_SIZER + (data.location.x - this._mouseDownLocation.x),
             top: this.boundingBoxObject.y - HALF_SIZER + (data.location.y - this._mouseDownLocation.y)
           });
-  
+
           this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
             x: this.cssBounds.left + HALF_SIZER,
             y: this.cssBounds.top + HALF_SIZER,
@@ -454,38 +465,38 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             height: this.cssBounds.height - SIZER_SIZE
           });
         }
-        
+
       }
-      else if(this.canModifyShapes) {
+      else if (this.canModifyShapes) {
         if (this.mouseDownSizer >= 0) {
           //Resizing Objects
           this.resizeObjects(data.location, this.shouldPreserveAspectRatio());
 
           if (this.rotation > 0) {
-            let rotationPoint: DrPoint = { 
+            let rotationPoint: DrPoint = {
               x: this.cssBounds.left + HALF_SIZER + this._originX,
               y: this.cssBounds.top + HALF_SIZER + this._originY
             };
-    
+
             let ul: DrPoint = this.getRotatedPoint(
-              { x: this.cssBounds.left + HALF_SIZER, y: this.cssBounds.top + HALF_SIZER }, 
+              { x: this.cssBounds.left + HALF_SIZER, y: this.cssBounds.top + HALF_SIZER },
               rotationPoint.x,
               rotationPoint.y,
               this.rotation);
             let lr: DrPoint = this.getRotatedPoint(
-              { 
-                x: this.cssBounds.left + this.cssBounds.width - HALF_SIZER, 
-                y: this.cssBounds.top + this.cssBounds.height - HALF_SIZER, 
-              }, 
+              {
+                x: this.cssBounds.left + this.cssBounds.width - HALF_SIZER,
+                y: this.cssBounds.top + this.cssBounds.height - HALF_SIZER,
+              },
               rotationPoint.x,
               rotationPoint.y,
               this.rotation);
 
-              //reset rotation point
-              rotationPoint = { x: (ul.x + lr.x) / 2, y: (ul.y + lr.y) / 2 };
+            //reset rotation point
+            rotationPoint = { x: (ul.x + lr.x) / 2, y: (ul.y + lr.y) / 2 };
 
             ul = this.getRotatedPoint(
-              ul, 
+              ul,
               rotationPoint.x,
               rotationPoint.y,
               -this.rotation);
@@ -496,12 +507,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
               -this.rotation);
 
 
-              this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
-                x: ul.x,
-                y: ul.y,
-                width: lr.x - ul.x,
-                height: lr.y - ul.y
-              });
+            this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
+              x: ul.x,
+              y: ul.y,
+              width: lr.x - ul.x,
+              height: lr.y - ul.y
+            });
           }
           else {
             this._dataStoreService.moveObjects(this._dataStoreService.selectedObjects, {
@@ -511,16 +522,19 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
               height: this.cssBounds.height - SIZER_SIZE
             });
           }
-          
+
         }
         else {
           this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
           if (this._dataStoreService.selectedObjects.length > 0) {
             this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
+          } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+            this.backgroundMouseUp.emit(data);
           }
-
         }
-        
+
+      } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+        this.backgroundMouseUp.emit(data);
       }
       this.setupBounds();
 
@@ -529,8 +543,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.mouseDownSizer = -1;
       this.mouseDownRotator = -1;
       this._dataStoreService.endEdit();
+    } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+      this.backgroundMouseUp.emit(data);
     }
-    
+
   }
 
   onResizerMouseDown(evt: any, index: number): void {
@@ -549,7 +565,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       altKey: evt.altKey
     };
 
-    
+
     this._mouseDownLocation = pt;
 
     this.mouseDown = true;
@@ -561,7 +577,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this._originX = this._originalBounds.width / 2;
     this._originY = this._originalBounds.height / 2;
     this._cornerDistance = this.getDistanceBetweenTwoPoints(
-      { 
+      {
         x: this._dataStoreService.selectedBounds.x,
         y: this._dataStoreService.selectedBounds.y,
       },
@@ -594,7 +610,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     this._mouseDownLocation = this.getRelativePointFromEvent(evt);
 
     let b: BoundingBox = this._objectHelperService.getBoundingBox(this.selectedObjects);
-    this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2};
+    this._mouseDownCentroid = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
     this.mouseDown = true;
     this.mouseDownRotator = index;
   }
@@ -612,7 +628,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
 
   getResizerX(index: number): number {
-    switch(index) {
+    switch (index) {
       case 0:
       case 1:
       case 2:
@@ -621,14 +637,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 7:
         return this.boundingBoxObject.x + this.boundingBoxObject.width / 2 - HALF_SIZER
       case 4:
-      case 5: 
+      case 5:
       case 6:
-        return  this.boundingBoxObject.x + this.boundingBoxObject.width - HALF_SIZER;
+        return this.boundingBoxObject.x + this.boundingBoxObject.width - HALF_SIZER;
     }
   }
 
   getResizerY(index: number): number {
-    switch(index) {
+    switch (index) {
       case 0:
       case 6:
       case 7:
@@ -639,12 +655,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 2:
       case 3:
       case 4:
-        return  this.boundingBoxObject.y + this.boundingBoxObject.height - HALF_SIZER;
+        return this.boundingBoxObject.y + this.boundingBoxObject.height - HALF_SIZER;
     }
   }
 
   getResizerCursor(index: number): string {
-    switch(index) {
+    switch (index) {
       case 0:
       case 4:
         return 'resizer-diagonal-2';
@@ -688,8 +704,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   private microMoveObjects(diffX: number, diffY: number) {
-    if(this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined'){
-      if(this._dataStoreService.selectedObjects.length > 0){
+    if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
+      if (this._dataStoreService.selectedObjects.length > 0) {
         Object.assign(this.cssBounds, {
           left: this.cssBounds.left + diffX,
           top: this.cssBounds.top + diffY
@@ -702,7 +718,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let a: number = point1.x - point2.x;
     let b: number = point1.y - point2.y;
 
-    return Math.sqrt( a*a + b*b );
+    return Math.sqrt(a * a + b * b);
   }
 
   private getRelativeChildPointFromEvent(evt): DrPoint {
@@ -723,7 +739,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   private canAllResize(objects: DrObject[]): boolean {
     let returnValue: boolean = true;
 
-    for(let o of objects) {
+    for (let o of objects) {
       if (!this._objectHelperService.canResize(o, true)) {
         returnValue = false;
         break;
@@ -757,13 +773,13 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         top: b.y - HALF_SIZER,
         width: b.width + SIZER_SIZE,
         height: b.height + SIZER_SIZE,
-        transform: 'rotate(' + this.rotation  + 'deg)'
+        transform: 'rotate(' + this.rotation + 'deg)'
       };
 
-      let left: number =  b.x + b.width + ROTATE_SPACING - HALF_SIZER;
+      let left: number = b.x + b.width + ROTATE_SPACING - HALF_SIZER;
       let top: number = b.y + b.height / 2 - HALF_SIZER;
 
-      
+
 
       this.rotateRightBounds = {
         left: left,
@@ -771,9 +787,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         width: SIZER_SIZE,
         height: SIZER_SIZE,
         transform: 'rotate(' + this.rotation + 'deg)',
-        "transform-origin": ((this.cssBounds.left + this.cssBounds.width / 2) - 
-                             (left + SIZER_SIZE / 2))  + "px " + 
-                             (SIZER_SIZE / 2) + "px"
+        "transform-origin": ((this.cssBounds.left + this.cssBounds.width / 2) -
+          (left + SIZER_SIZE / 2)) + "px " +
+          (SIZER_SIZE / 2) + "px"
       };
 
       top = b.y + b.height + ROTATE_SPACING - HALF_SIZER;
@@ -784,21 +800,21 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         width: SIZER_SIZE,
         height: SIZER_SIZE,
         transform: 'rotate(' + this.rotation + 'deg)',
-        "transform-origin": (SIZER_SIZE / 2) + "px " + ((this.cssBounds.top + this.cssBounds.height / 2) - 
-                                                        (top + SIZER_SIZE / 2)) + "px"
+        "transform-origin": (SIZER_SIZE / 2) + "px " + ((this.cssBounds.top + this.cssBounds.height / 2) -
+          (top + SIZER_SIZE / 2)) + "px"
       };
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
-                       this.canAllResize(this.selectedObjects);
+        this.canAllResize(this.selectedObjects);
 
-      if (1 === this.selectedObjects.length){
+      if (1 === this.selectedObjects.length) {
         if (null !== this.selectedObjects[0].customType) {
           this.canRotate = this._customComponentResolverService.canRotate(this.selectedObjects[0]);
         }
         else {
           this.canRotate = DrType.GROUPED_OBJECT !== this.selectedObjects[0].drType && DrType.CALLOUT !== this.selectedObjects[0].drType;
         }
-        
+
       }
       else {
         this.canRotate = false;
@@ -809,7 +825,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       else {
         this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0, drawPointer: false });
       }
-      
+
     }
     else {
       this.selectedObjects = [];
@@ -819,7 +835,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.canResize = this.canRotate = false;
       this.rotation = 0;
     }
-    
+
   }
 
   private rotateObject(location: DrPoint, shiftKey: boolean): void {
@@ -855,14 +871,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let vChanges = null;
 
     if (this.rotation > 0) {
-      location = this.getRotatedPoint(location, this._originalBounds.x + this._originalBounds.width / 2, 
-                                                this._originalBounds.y + this._originalBounds.height / 2, -this.rotation);
+      location = this.getRotatedPoint(location, this._originalBounds.x + this._originalBounds.width / 2,
+        this._originalBounds.y + this._originalBounds.height / 2, -this.rotation);
     }
 
 
-    switch(this.mouseDownSizer){
+    switch (this.mouseDownSizer) {
       case 0: {
-      let quadrant: number = 0;
+        let quadrant: number = 0;
         if (location.x > b.x + b.width) {
           if (location.y > b.y) {
             quadrant = 4;
@@ -875,7 +891,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           if (location.y > b.y + b.height) {
             quadrant = 3;
           }
-          else {  
+          else {
             quadrant = 2;
           }
         }
@@ -884,7 +900,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         vChanges = this.resizeV(b, location, false, preserveAspectRatio, { x: b.x + b.width, y: b.y + b.height }, quadrant === 3 ? -1 : 1);
         break;
       }
-      case 1: 
+      case 1:
         hChanges = this.resizeH(b, location, false, preserveAspectRatio, null, 1);
         break;
       case 2: {
@@ -901,7 +917,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           if (location.y > b.y) {
             quadrant = 3;
           }
-          else {  
+          else {
             quadrant = 2;
           }
         }
@@ -914,7 +930,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         vChanges = this.resizeV(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 4: {
-          
+
         let quadrant: number = 0;
         if (location.x > b.x) {
           if (location.y > b.y) {
@@ -928,7 +944,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           if (location.y > b.y) {
             quadrant = 3;
           }
-          else {  
+          else {
             quadrant = 2;
           }
         }
@@ -937,7 +953,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         vChanges = this.resizeV(b, location, true, preserveAspectRatio, { x: b.x, y: b.y }, quadrant === 1 ? -1 : 1);
         break;
       }
-      case 5: 
+      case 5:
         hChanges = this.resizeH(b, location, true, preserveAspectRatio, null, 1);
         break;
       case 6: {
@@ -954,7 +970,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           if (location.y > b.y + b.height) {
             quadrant = 3;
           }
-          else {  
+          else {
             quadrant = 2;
           }
         }
@@ -979,7 +995,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     Object.assign(this.cssBounds,
       null !== hChanges && null !== hChanges.cssBounds ? hChanges.cssBounds : {},
       null !== vChanges && null !== vChanges.cssBounds ? vChanges.cssBounds : {},
-      { 
+      {
         "transform-origin": (this._originX + HALF_SIZER) + "px " + (this._originY + HALF_SIZER) + "px"
       }
     );
@@ -1000,8 +1016,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let width: number = 0;
     let elementWidth: number = 0
     let threshold: number = opposite ? b.x : b.x + b.width;
-  
-    
+
+
 
     if (newLocation.x < threshold) {
       if (shiftKey && null !== stationaryPt) {
@@ -1012,8 +1028,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           x: threshold - this._originalBounds.width * scale * quadrantMultiplier
         });
       }
- 
-      
+
+
       if (shiftKey && -1 === quadrantMultiplier) {
         left = threshold - HALF_SIZER;
         width = newLocation.x + HALF_SIZER - left;
@@ -1024,7 +1040,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         width = threshold + HALF_SIZER - left;
         elementWidth = threshold - newLocation.x;
       }
-      
+
     }
     else {
       if (shiftKey && null !== stationaryPt) {
@@ -1034,7 +1050,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         newLocation = Object.assign({}, newLocation, {
           x: threshold + this._originalBounds.width * scale * quadrantMultiplier
         });
-        
+
       }
 
 
@@ -1049,9 +1065,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         elementWidth = newLocation.x - threshold;
       }
 
-      
+
     }
-    
+
     if (width > 0 && elementWidth > 0) {
       returnValue = {
         cssBounds: {
@@ -1074,10 +1090,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     let height: number = 0;
     let elementHeight: number = 0;
     let threshold: number = opposite ? b.y : b.y + b.height;
-    
-    
+
+
     if (newLocation.y < threshold) {
-      
+
       if (shiftKey && null !== stationaryPt) {
         let mouseDistance = this.getDistanceBetweenTwoPoints(newLocation, stationaryPt);
         let scale = mouseDistance / this._cornerDistance;
@@ -1098,7 +1114,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         elementHeight = threshold - newLocation.y;
       }
 
-      
+
     }
     else {
       if (shiftKey && null !== stationaryPt) {
@@ -1108,7 +1124,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         newLocation = Object.assign({}, newLocation, {
           y: threshold + this._originalBounds.height * scale * quadrantMultiplier
         });
-        
+
       }
 
       if (shiftKey && quadrantMultiplier === -1) {
@@ -1121,9 +1137,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         height = newLocation.y + HALF_SIZER - top;
         elementHeight = newLocation.y - threshold;
       }
-      
+
     }
-    
+
     if (height > 0 && elementHeight > 0) {
       returnValue = {
         cssBounds: {
@@ -1151,12 +1167,12 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
   private applyResizeChanges(): void {
     let clone: DrObject;
-    for(let s of this.selectedObjects) {
+    for (let s of this.selectedObjects) {
       clone = this._mouseDownClones.find((t: any) => t.id === s.id);
 
       Object.assign(s, this._changeService.getBoundsChanges(
         clone,
-        this._objectHelperService.getBoundingBox([this.boundingBoxObject]), 
+        this._objectHelperService.getBoundingBox([this.boundingBoxObject]),
         this._dataStoreService.selectedBounds
       ));
     }
@@ -1170,7 +1186,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     if (this._subUndid) {
       this._subUndid.unsubscribe();
     }
-    if (this._subSelectionChanged){
+    if (this._subSelectionChanged) {
       this._subSelectionChanged.unsubscribe();
     }
     if (this._subSelectedBoundsChanged) {

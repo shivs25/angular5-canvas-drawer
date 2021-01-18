@@ -43,23 +43,23 @@ export class DrawerComponent implements OnInit {
 
   @Output()
   clickedObject: EventEmitter<DrObject> = new EventEmitter<DrObject>();
-  
+
   @Output()
   mouseDownObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   @Output()
   mouseMoveObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
-  
+
   @Output()
   mouseUpObject: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
-  
+
   private _location: DrPoint = null;
+  private _mouseDownEvtLocations = null;
 
   constructor(
     private _dataService: DataStoreService,
     private _elementRef: ElementRef
-  )
-     { }
+  ) { }
 
   ngOnInit() {
     let b: any = this._elementRef.nativeElement.getBoundingClientRect();
@@ -71,7 +71,7 @@ export class DrawerComponent implements OnInit {
   }
 
   getSvgAsText(): string {
-    return this._elementRef.nativeElement.querySelector("svg").innerHTML; 
+    return this._elementRef.nativeElement.querySelector("svg").innerHTML;
   }
 
   isHiddenSelection(id: number) {
@@ -83,10 +83,13 @@ export class DrawerComponent implements OnInit {
   }
 
   onBackgroundMouseDown(evt): void {
-    this.handleMouseEvents && this.mouseDownObject.emit({ 
-      location: { 
-        x: evt.offsetX, y: evt.offsetY 
-      }, 
+    this._mouseDownEvtLocations = {
+      x: evt.offsetX, y: evt.offsetY
+    };
+    this.handleMouseEvents && this.mouseDownObject.emit({
+      location: {
+        x: evt.offsetX, y: evt.offsetY
+      },
       data: null,
       shiftKey: evt.shiftKey,
       ctrlKey: evt.ctrlKey,
@@ -95,10 +98,10 @@ export class DrawerComponent implements OnInit {
   }
 
   onBackgroundMouseMove(evt): void {
-    this.handleMouseEvents && this.mouseMoveObject.emit({ 
-      location: { 
-        x: evt.offsetX, y: evt.offsetY 
-      }, 
+    this.handleMouseEvents && this.mouseMoveObject.emit({
+      location: {
+        x: evt.offsetX, y: evt.offsetY
+      },
       data: null,
       shiftKey: evt.shiftKey,
       ctrlKey: evt.ctrlKey,
@@ -107,42 +110,50 @@ export class DrawerComponent implements OnInit {
   }
 
   onBackgroundMouseUp(evt): void {
-    this.handleMouseEvents && this.mouseUpObject.emit({ 
-      location: { 
-        x: evt.offsetX, y: evt.offsetY 
-      }, 
-      data: null,
-      shiftKey: evt.shiftKey,
-      ctrlKey: evt.ctrlKey,
-      altKey: evt.altKey
-    });
+    let isBackgroundClick: boolean = false;
+    if (this._mouseDownEvtLocations && evt) {
+      isBackgroundClick = (Math.abs(evt.offsetX - this._mouseDownEvtLocations.x) < 2 && Math.abs(evt.offsetY - this._mouseDownEvtLocations.y) < 2);
+    }
+    if (this.handleMouseEvents) {
+      this.mouseUpObject.emit({
+        location: {
+          x: evt.offsetX, y: evt.offsetY
+        },
+        data: null,
+        shiftKey: evt.shiftKey,
+        ctrlKey: evt.ctrlKey,
+        altKey: evt.altKey,
+        isBackgroundClick: isBackgroundClick
+      });
+    }
   }
 
   onClick(data: DrObject): void {
-    
-    if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
+
+    if (this.handleMouseEvents && data !== null && typeof data !== 'undefined') {
       this.clickedObject.emit(data);
     }
   }
 
-  onMouseDown(data:MouseEventData): void {
-    if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
+  onMouseDown(data: MouseEventData): void {
+    if (this.handleMouseEvents && data !== null && typeof data !== 'undefined') {
       data.location.x = data.location.x - this._location.x;
       data.location.y = data.location.y - this._location.y;
       this.mouseDownObject.emit(data);
+      this._mouseDownEvtLocations = data.location;
     }
   }
 
-  onMouseMove(data:MouseEventData): void {
-    if(this.handleMouseEvents && data !== null && typeof data !== 'undefined'){
+  onMouseMove(data: MouseEventData): void {
+    if (this.handleMouseEvents && data !== null && typeof data !== 'undefined') {
       data.location.x = data.location.x - this._location.x;
       data.location.y = data.location.y - this._location.y;
       this.mouseMoveObject.emit(data);
     }
   }
 
-  onMouseUp(data:MouseEventData): void {
-    if(data !== null && typeof data !== 'undefined'){
+  onMouseUp(data: MouseEventData): void {
+    if (data !== null && typeof data !== 'undefined') {
       data.location.x = data.location.x - this._location.x;
       data.location.y = data.location.y - this._location.y;
       this.mouseUpObject.emit(data);
@@ -150,7 +161,7 @@ export class DrawerComponent implements OnInit {
   }
 
   getViewBox(): string {
-    if(null === this.viewBox || 'undefined' === typeof this.viewBox){
+    if (null === this.viewBox || 'undefined' === typeof this.viewBox) {
       return null;
     } else {
       return this.viewBox.x + " " + this.viewBox.y + " " + this.viewBox.width + " " + this.viewBox.height;
