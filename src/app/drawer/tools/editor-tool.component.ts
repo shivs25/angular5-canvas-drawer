@@ -4,6 +4,7 @@ import { EditorToolType } from '../models/enums';
 import { DataStoreService } from '../services/data-store.service';
 import { DrStyle } from '../models/dr-style';
 import { MouseEventData } from '../models/mouse-event-data';
+import { SelectionModifierStylers } from '../models/selection-modifier-stylers';
 
 @Component({
   selector: 'app-editor-tool',
@@ -31,6 +32,14 @@ export class EditorToolComponent implements OnInit {
   multiClickEnabled: boolean = false;
   @Input()
   emitBackgroundClick: boolean = false;
+  @Input()
+  rotaterStyle: SelectionModifierStylers = { fill: "red", stroke: "red", strokeWidth: 0 };
+  @Input()
+  resizerStyle: SelectionModifierStylers = { fill: "green", stroke: "green", strokeWidth: 0 };
+  @Input()
+  traceSelectionStyle: any = null;
+  @Input()
+  bbSelectionStyle: any = null;
   @Output()
   public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
 

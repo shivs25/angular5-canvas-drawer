@@ -15,6 +15,7 @@ import { DrGroupedObject, createDrGroupedObject } from './drawer/models/dr-group
 import { createDrStyle } from './drawer/models/dr-style';
 import { BoundingBox, createBoundingBox } from './drawer/models/bounding-box';
 import { DrCallout, createDrCallout } from './drawer/models/dr-callout';
+import { SelectionModifierStylers } from './drawer/models/selection-modifier-stylers';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +42,39 @@ export class AppComponent implements OnInit {
     opacity: 0.5
   };
   allowLines: boolean = false;
+  rotaterStyle: SelectionModifierStylers = {
+    fill: "white",
+    stroke: "black",
+    strokeWidth: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 62
+  }
+  resizerStyle: SelectionModifierStylers = {
+    fill: "white",
+    stroke: "black",
+    strokeWidth: 2
+  }
+  traceSelectionStyle: any = {
+    showFill: false,
+    fill: "rgba(0, 0, 0, 0.2)",
+    dashedLine: false,
+    showStroke: false,
+    stroke: 'black',
+    strokeWidth: 1,
+    showText: false,
+    showImage: false
+  };
+  bbSelectionStyle: any = {
+    showFill: false,
+    fill: "rgba(0, 0, 0, 0.2)",
+    dashedLine: true,
+    showStroke: true,
+    stroke: 'black',
+    strokeWidth: 2,
+    showText: false,
+    showImage: false
+  };
 
   @select() elementState;
 
@@ -352,6 +386,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     let elements = [];
+    this.dataStoreService.editingChanged.subscribe((items) => {
+      console.log(items);
+      console.log(this.dataStoreService.elements);
+    })
     this.dataStoreService.textObjectChanged.subscribe((items) => {
       console.log("Text Changed!")
       console.log(items);

@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
 import { CustomComponentResolverService } from '../../services/custom-component-resolver.service';
+import { SelectionModifierStylers } from '../../models/selection-modifier-stylers';
 
 const SIZER_SIZE: number = 8;
 const HALF_SIZER: number = 4;
@@ -58,7 +59,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   multiClickEnabled: boolean = false;
   @Input()
   emitBackgroundClick: boolean = false;
-
+  @Input()
+  rotaterStyle: SelectionModifierStylers = { fill: "red", stroke: "red", strokeWidth: 0 };
+  @Input()
+  resizerStyle: SelectionModifierStylers = { fill: "green", stroke: "green", strokeWidth: 0 };
+  @Input()
+  traceSelectionStyle: any = null;
+  @Input()
+  bbSelectionStyle: any = null;
   @Output()
   backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
@@ -340,7 +348,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onMouseDown(data: MouseEventData): void {
-    if (null === data.data || !data.data.clickable) {
+    if ((null === data.data || !data.data.clickable) && !data.shiftKey) {
       this._dataStoreService.selectObjects([]);
     }
     else if (data.data) {
@@ -632,14 +640,24 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 0:
       case 1:
       case 2:
-        return this.boundingBoxObject.x - HALF_SIZER;
+        return this.boundingBoxObject.x -
+          (this.resizerStyle.strokeWidth > 1 ? (Math.abs((this.resizerStyle.strokeWidth / 2) -
+            (this.resizerStyle.width ? (this.resizerStyle.width / 2) : HALF_SIZER)
+          )) :
+            (this.resizerStyle.width ? (this.resizerStyle.width / 2) : HALF_SIZER)
+          );
       case 3:
       case 7:
-        return this.boundingBoxObject.x + this.boundingBoxObject.width / 2 - HALF_SIZER
+        return this.boundingBoxObject.x + this.boundingBoxObject.width / 2 - (this.resizerStyle.width ? (this.resizerStyle.width / 2) : HALF_SIZER)
       case 4:
       case 5:
       case 6:
-        return this.boundingBoxObject.x + this.boundingBoxObject.width - HALF_SIZER;
+        return this.boundingBoxObject.x + this.boundingBoxObject.width -
+          (this.resizerStyle.strokeWidth > 1 ? (this.resizerStyle.strokeWidth - (this.resizerStyle.strokeWidth / 2) +
+            (this.resizerStyle.width ? (this.resizerStyle.width / 2) : HALF_SIZER)
+          ) :
+            (this.resizerStyle.width ? (this.resizerStyle.width / 2) : HALF_SIZER)
+          );
     }
   }
 
@@ -648,14 +666,24 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       case 0:
       case 6:
       case 7:
-        return this.boundingBoxObject.y - HALF_SIZER;
+        return this.boundingBoxObject.y -
+          (this.resizerStyle.strokeWidth > 1 ? (Math.abs((this.resizerStyle.strokeWidth / 2) -
+            (this.resizerStyle.height ? (this.resizerStyle.height / 2) : HALF_SIZER)
+          )) :
+            (this.resizerStyle.height ? (this.resizerStyle.height / 2) : HALF_SIZER)
+          );
       case 1:
       case 5:
-        return this.boundingBoxObject.y + this.boundingBoxObject.height / 2 - HALF_SIZER;
+        return this.boundingBoxObject.y + this.boundingBoxObject.height / 2 - (this.resizerStyle.height ? (this.resizerStyle.height / 2) : HALF_SIZER);
       case 2:
       case 3:
       case 4:
-        return this.boundingBoxObject.y + this.boundingBoxObject.height - HALF_SIZER;
+        return this.boundingBoxObject.y + this.boundingBoxObject.height -
+          (this.resizerStyle.strokeWidth > 1 ? ((this.resizerStyle.strokeWidth / 2) +
+            (this.resizerStyle.height ? (this.resizerStyle.height / 2) : HALF_SIZER)
+          ) :
+            (this.resizerStyle.height ? (this.resizerStyle.height / 2) : HALF_SIZER)
+          );
     }
   }
 
@@ -703,6 +731,38 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
     //Not Implemented
   }
 
+  getRotaterStylerHeight(): number {
+    return this.rotaterStyle.height ? this.rotaterStyle.height : SIZER_SIZE;
+  }
+
+  getRotaterStylerWidth(): number {
+    return this.rotaterStyle.width ? this.rotaterStyle.width : SIZER_SIZE;
+  }
+
+  getRotaterStylerSvgHeight(): number {
+    return this.rotaterStyle.height ? (this.rotaterStyle.height + this.rotaterStyle.strokeWidth) : SIZER_SIZE;
+  }
+
+  getRotaterStylerSvgWidth(): number {
+    return this.rotaterStyle.width ? (this.rotaterStyle.width + this.rotaterStyle.strokeWidth) : SIZER_SIZE;
+  }
+
+  getResizerStylerWidth(): number {
+    return this.resizerStyle.width ? this.resizerStyle.width : SIZER_SIZE;
+  }
+  getResizerStylerHeight(): number {
+    return this.resizerStyle.height ? this.resizerStyle.height : SIZER_SIZE;
+  }
+
+  getRotaterStylerBorderRadius(): number {
+    return this.rotaterStyle.borderRadius ? this.rotaterStyle.borderRadius : HALF_SIZER;
+  }
+  getRotaterX(): number {
+    return this.rotaterStyle.strokeWidth ? (this.rotaterStyle.strokeWidth / 2) : 0;
+  }
+  getRotaterY(): number {
+    return this.rotaterStyle.strokeWidth ? (this.rotaterStyle.strokeWidth / 2) : 0;
+  }
   private microMoveObjects(diffX: number, diffY: number) {
     if (this._dataStoreService.selectedObjects !== null && typeof this._dataStoreService.selectedObjects !== 'undefined') {
       if (this._dataStoreService.selectedObjects.length > 0) {
@@ -762,10 +822,11 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         y: b.y,
         width: b.width,
         height: b.height,
-        showFill: false,
-        showStroke: true,
-        stroke: 'red',
-        dashedLine: false
+        strokeWidth: (this.bbSelectionStyle ? this.bbSelectionStyle.strokeWidth : 1),
+        showFill: (this.bbSelectionStyle ? this.bbSelectionStyle.showFill : false),
+        showStroke: (this.bbSelectionStyle ? this.bbSelectionStyle.showStroke : true),
+        stroke: (this.bbSelectionStyle ? this.bbSelectionStyle.stroke : 'red'),
+        dashedLine: (this.bbSelectionStyle ? this.bbSelectionStyle.dashedLine : false)
       });
       this.selectionTransform = "translate(" + (b.x * -1 + HALF_SIZER) + " " + (b.y * -1 + HALF_SIZER) + ")";
       this.cssBounds = {
@@ -779,29 +840,27 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       let left: number = b.x + b.width + ROTATE_SPACING - HALF_SIZER;
       let top: number = b.y + b.height / 2 - HALF_SIZER;
 
-
-
       this.rotateRightBounds = {
-        left: left,
-        top: top,
-        width: SIZER_SIZE,
-        height: SIZER_SIZE,
+        left: (left - this.rotaterStyle.strokeWidth),
+        top: (top - this.rotaterStyle.strokeWidth),
+        width: (this.rotaterStyle.width ? (this.rotaterStyle.width + this.rotaterStyle.strokeWidth) : SIZER_SIZE),
+        height: (this.rotaterStyle.height ? (this.rotaterStyle.height + this.rotaterStyle.strokeWidth) : SIZER_SIZE),
         transform: 'rotate(' + this.rotation + 'deg)',
-        "transform-origin": ((this.cssBounds.left + this.cssBounds.width / 2) -
-          (left + SIZER_SIZE / 2)) + "px " +
-          (SIZER_SIZE / 2) + "px"
+        "transform-origin": (((this.cssBounds.left + this.cssBounds.width / 2) -
+          ((left - this.rotaterStyle.strokeWidth) + (this.rotaterStyle.width ? (this.rotaterStyle.width + this.rotaterStyle.strokeWidth) : SIZER_SIZE) / 2)) + (this.rotaterStyle ? this.rotaterStyle.strokeWidth : 0)) + "px " +
+          (((this.rotaterStyle.height ? (this.rotaterStyle.height + this.rotaterStyle.strokeWidth) : SIZER_SIZE) / 2) + (this.rotaterStyle ? this.rotaterStyle.strokeWidth : 0)) + "px"
       };
 
       top = b.y + b.height + ROTATE_SPACING - HALF_SIZER;
 
       this.rotateBottomBounds = {
-        left: b.x + b.width / 2 - HALF_SIZER,
-        top: top,
-        width: SIZER_SIZE,
-        height: SIZER_SIZE,
+        left: ((b.x + b.width / 2 - HALF_SIZER) - this.rotaterStyle.strokeWidth),
+        top: (top - this.rotaterStyle.strokeWidth),
+        width: (this.rotaterStyle.width ? (this.rotaterStyle.width + this.rotaterStyle.strokeWidth) : SIZER_SIZE),
+        height: (this.rotaterStyle.height ? (this.rotaterStyle.height + this.rotaterStyle.strokeWidth) : SIZER_SIZE),
         transform: 'rotate(' + this.rotation + 'deg)',
         "transform-origin": (SIZER_SIZE / 2) + "px " + ((this.cssBounds.top + this.cssBounds.height / 2) -
-          (top + SIZER_SIZE / 2)) + "px"
+          ((top - this.rotaterStyle.strokeWidth) + SIZER_SIZE / 2)) + "px"
       };
 
       this.canResize = 1 === this.selectedObjects.length ? this._objectHelperService.canResize(this.selectedObjects[0], false) :
@@ -820,10 +879,10 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
         this.canRotate = false;
       }
       if (this.selectedObjects.length > 1) {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { drawPointer: false });
+        this.selectionStyle = Object.assign({}, (this.traceSelectionStyle ? this.traceSelectionStyle : SELECTION_STYLE), { drawPointer: false });
       }
       else {
-        this.selectionStyle = Object.assign({}, SELECTION_STYLE, { rotation: 0, drawPointer: false });
+        this.selectionStyle = Object.assign({}, (this.traceSelectionStyle ? this.traceSelectionStyle : SELECTION_STYLE), { rotation: 0, drawPointer: false });
       }
 
     }

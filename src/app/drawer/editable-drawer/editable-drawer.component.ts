@@ -4,6 +4,7 @@ import { DataStoreService } from '../services/data-store.service';
 import { BoundingBox } from '../models/bounding-box';
 import { DrStyle } from '../models/dr-style';
 import { MouseEventData } from '../models/mouse-event-data';
+import { SelectionModifierStylers } from '../models/selection-modifier-stylers';
 
 @Component({
   selector: 'app-editable-drawer',
@@ -26,6 +27,14 @@ export class EditableDrawerComponent implements OnInit {
   canModifyShapes: boolean = true;
   @Input()
   multiClickEnabled: boolean = false;
+  @Input()
+  rotaterStyle: SelectionModifierStylers = { fill: "red", stroke: "red", strokeWidth: 0 };
+  @Input()
+  resizerStyle: SelectionModifierStylers = { fill: "green", stroke: "green", strokeWidth: 0 };
+  @Input()
+  traceSelectionStyle: any = null;
+  @Input()
+  bbSelectionStyle: any = null;
 
   @ViewChild('drawer', { static: true }) drawer;
 

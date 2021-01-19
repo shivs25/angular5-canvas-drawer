@@ -58,8 +58,9 @@
 <div style="position:relative; width: 600px; height: 600px; border: 1px solid red">
 
     <app-editable-drawer #drawer emitMouseEvents="false" [itemViewBox]="viewBoxItem" [pointStyle]="pointStyle" [polygonStyle]="pointStyle" [objectPreviewStyle]="objectPreviewStyle"
-    (mouseAction)="onMouseOver($event)" [penDblClick]="penDblClick" [allowLines]="allowLines" [canModifyShapes]="true" [multiClickEnabled]="true"
-    [emitBackgroundClick]="true" (backgroundMouseUp)="onBackgroundMouseUp($event)">
+    (mouseAction)="onMouseOver($event)" [penDblClick]="penDblClick" [allowLines]="allowLines" [canModifyShapes]="true" [multiClickEnabled]="false"
+    [emitBackgroundClick]="true" (backgroundMouseUp)="onBackgroundMouseUp($event)" [rotaterStyle]="rotaterStyle" [traceSelectionStyle]="traceSelectionStyle"
+    [resizerStyle]="resizerStyle" [bbSelectionStyle]="bbSelectionStyle">
     </app-editable-drawer>
 
 </div>

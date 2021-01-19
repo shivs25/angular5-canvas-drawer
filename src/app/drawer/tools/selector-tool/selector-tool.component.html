@@ -49,8 +49,11 @@
         (mousemove)="onResizerMouseMove($event, i)"
         (mouseup)="onResizerMouseUp($event, i)"
         [ngClass]="getResizerCursor(i)"
-        [attr.width]="SIZER_SIZE" 
-        [attr.height]= "SIZER_SIZE" fill="green" 
+        [attr.width]="getResizerStylerWidth()" 
+        [attr.height]= "getResizerStylerHeight()" 
+        [attr.fill]="resizerStyle.fill"
+        [attr.stroke]="resizerStyle.stroke"
+        [attr.stroke-width]="resizerStyle.strokeWidth"
         [attr.x]="getResizerX(i)" 
         [attr.y]="getResizerY(i)"></rect>
     </ng-container>
@@ -58,31 +61,49 @@
 </svg>
 
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
-  [ngStyle]="pixelizeBounds(rotateRightBounds)" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
+  [ngStyle]="pixelizeBounds(rotateRightBounds)" [ngClass]="{ 'no-interact': mouseDown }"
+        [attr.width]="getRotaterStylerSvgWidth()" 
+        [attr.height]= "getRotaterStylerSvgHeight()" 
+        [attr.fill]="rotaterStyle.fill"
+        [attr.stroke]="rotaterStyle.stroke"
+        [attr.stroke-width]="rotaterStyle.strokeWidth">
    <rect id='rotate-right'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 0)" 
         (mousemove)="onRotateMouseMove($event, 0)"
         (mouseup)="onRotateMouseUp($event, 0)"
-        [attr.width]="SIZER_SIZE" 
-        [attr.height]= "SIZER_SIZE" 
-        [attr.rx]= "HALF_SIZER" 
-        [attr.rx]= "HALF_SIZER" 
-        fill="red">
+        [attr.width]="getRotaterStylerWidth()" 
+        [attr.height]= "getRotaterStylerHeight()" 
+        [attr.x]="getRotaterX()" 
+        [attr.y]="getRotaterY()"
+        [attr.rx]= "getRotaterStylerBorderRadius()" 
+        [attr.ry]= "getRotaterStylerBorderRadius()" 
+        [attr.fill]="rotaterStyle.fill"
+        [attr.stroke]="rotaterStyle.stroke"
+        [attr.stroke-width]="rotaterStyle.strokeWidth">
     </rect>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" *ngIf="canRotate && mouseDownSizer < 0 && ((!mouseDown && !keyDown) || mouseDownRotator >= 0)"
-  [ngStyle]="pixelizeBounds(rotateBottomBounds)" fill="green"[ngClass]="{ 'no-interact': mouseDown }">
+  [ngStyle]="pixelizeBounds(rotateBottomBounds)" [ngClass]="{ 'no-interact': mouseDown }"
+        [attr.width]="getRotaterStylerSvgWidth()" 
+        [attr.height]= "getRotaterStylerSvgHeight()" 
+        [attr.fill]="rotaterStyle.fill"
+        [attr.stroke]="rotaterStyle.stroke"
+        [attr.stroke-width]="rotaterStyle.strokeWidth">
   <rect id='rotate-bottom'
         class='crosshair'
         (mousedown)="onRotateMouseDown($event, 1)" 
         (mousemove)="onRotateMouseMove($event, 1)"
         (mouseup)="onRotateMouseUp($event, 1)"
-        [attr.width]="SIZER_SIZE" 
-        [attr.height]= "SIZER_SIZE" 
-        [attr.rx]= "HALF_SIZER" 
-        [attr.rx]= "HALF_SIZER"
-        fill="red">
+        [attr.width]="getRotaterStylerWidth()" 
+        [attr.height]= "getRotaterStylerHeight()" 
+        [attr.x]="getRotaterX()" 
+        [attr.y]="getRotaterY()"
+        [attr.rx]= "getRotaterStylerBorderRadius()" 
+        [attr.ry]= "getRotaterStylerBorderRadius()" 
+        [attr.fill]="rotaterStyle.fill"
+        [attr.stroke]="rotaterStyle.stroke"
+        [attr.stroke-width]="rotaterStyle.strokeWidth">
     </rect>
 </svg>
 

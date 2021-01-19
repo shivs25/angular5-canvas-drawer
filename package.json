@@ -1,6 +1,6 @@
 {
   "name": "angular5-canvas-drawer",
-  "version": "1.5.2-beta.1",
+  "version": "1.6.0",
   "license": "MIT",
   "author": "Billy Shivers",
   "contributors": [
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 4202",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
