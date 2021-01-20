@@ -456,6 +456,9 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
                 this._delay.unsubscribe();
                 this._delay = null;
                 this._dataStoreService.clickObjects(this._dataStoreService.selectedObjects);
+                if (this.emitBackgroundClick && data.isBackgroundClick) {
+                  this.backgroundMouseUp.emit(data);
+                }
               }
             });
           }
