@@ -32,6 +32,8 @@ export class PenToolComponent implements OnInit {
   objectPreviewStyle: DrStyle = null;
   @Input()
   allowLines: boolean = true;
+  @Input()
+  autoSelectObjects: boolean = true;
 
   @Output()
   public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
@@ -53,6 +55,7 @@ export class PenToolComponent implements OnInit {
   constructor(private _dataService: DataStoreService) { }
 
   ngOnInit() {
+
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -156,9 +159,7 @@ export class PenToolComponent implements OnInit {
     evt.preventDefault();
 
     if (this._delay) {
-      //console.log('Double Click Action');
       if (this._delay) {
-        //console.log('Unsubscribed!');
         this._delay.unsubscribe();
         this._delay = null;
       }
@@ -181,7 +182,6 @@ export class PenToolComponent implements OnInit {
       this._clickPt = this.getActivePoint(evt.offsetX, evt.offsetY);;
       this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
         if (this._delay) {
-          //console.log('Single Click Action');
           this.handleClick(this._clickPt.x, this._clickPt.y);
         }
 
@@ -209,7 +209,6 @@ export class PenToolComponent implements OnInit {
 
   private handleClick(x: number, y: number): void {
     if (this._delay) {
-      //console.log('Unsubscribed!');
       this._delay.unsubscribe();
       this._delay = null;
     }
@@ -217,8 +216,6 @@ export class PenToolComponent implements OnInit {
     if (this.currentObject) {
 
       if (!this._currentPt) {
-        //console.log('Adding Point!');
-
         if (this.penDblClick.toLowerCase().trim() === 'complete') {
           this.currentObject.points.splice(this.currentObject.points.length - 1, 0, { x: x, y: y });
         } else {
@@ -229,7 +226,6 @@ export class PenToolComponent implements OnInit {
       this._currentPt = null;
     }
     else {
-      //console.log('Create new obj!');
       let pts = [];
       if (this.penDblClick.toLowerCase().trim() === 'complete') {
         pts = [{ x: x, y: y }, { x: x, y: y }];
@@ -380,7 +376,9 @@ export class PenToolComponent implements OnInit {
           if (this.lineStyle && !isClosed) {
             this._dataService.setStyles([newObject], this.lineStyle)
           }
-          this._dataService.selectObjects([newObject]);
+          if (this.autoSelectObjects) {
+            this._dataService.selectObjects([newObject]);
+          }
 
         }
         this.reset();

@@ -40,6 +40,8 @@ export class EditorToolComponent implements OnInit {
   traceSelectionStyle: any = null;
   @Input()
   bbSelectionStyle: any = null;
+  @Input()
+  autoSelectObjects: boolean = true;
   @Output()
   public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
 

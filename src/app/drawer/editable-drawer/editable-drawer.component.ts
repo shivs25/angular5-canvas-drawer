@@ -35,6 +35,8 @@ export class EditableDrawerComponent implements OnInit {
   traceSelectionStyle: any = null;
   @Input()
   bbSelectionStyle: any = null;
+  @Input()
+  autoSelectObjects: boolean = true;
 
   @ViewChild('drawer', { static: true }) drawer;
 

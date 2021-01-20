@@ -4,10 +4,10 @@
 *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
 <app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool" (mouseAction)="mouseAction.next($event)" [emitMouseEvents]="emitMouseEvents"
                     [polygonStyle]="polygonStyle" [lineStyle]="lineStyle" [penDblClick]="penDblClick" [objectPreviewStyle]="objectPreviewStyle"
-                    [allowLines]="allowLines"></app-pen-tool>
-<app-object-creation-tool *ngIf="shouldShowCreationTool()"
+                    [allowLines]="allowLines" [autoSelectObjects]="autoSelectObjects"></app-pen-tool>
+<app-object-creation-tool *ngIf="shouldShowCreationTool()" [autoSelectObjects]="autoSelectObjects"
                     [polygonStyle]="polygonStyle" [objectPreviewStyle]="objectPreviewStyle"></app-object-creation-tool>
-<app-text-edit-tool *ngIf="TEXT_EDIT_TOOL === (elementState | async)?.present.selectedTool"></app-text-edit-tool>
+<app-text-edit-tool *ngIf="TEXT_EDIT_TOOL === (elementState | async)?.present.selectedTool" [autoSelectObjects]="autoSelectObjects"></app-text-edit-tool>
 <app-callout-point-tool *ngIf="CALLOUT_POINTER_TOOL === (elementState | async)?.present.selectedTool"></app-callout-point-tool>
-<app-point-tool *ngIf="POINT_TOOL === (elementState | async)?.present.selectedTool"
+<app-point-tool *ngIf="POINT_TOOL === (elementState | async)?.present.selectedTool" [autoSelectObjects]="autoSelectObjects"
                     [pointStyle]="pointStyle"></app-point-tool>

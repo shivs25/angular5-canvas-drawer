@@ -16,6 +16,8 @@ const DOUBLE_CLICK_TIME: number = 100;
 export class PointToolComponent implements OnInit {
   @Input()
   public pointStyle: DrStyle = null;
+  @Input()
+  autoSelectObjects: boolean = true;
 
   private _delay: any;
   constructor(private _dataService: DataStoreService) { }
@@ -46,15 +48,17 @@ export class PointToolComponent implements OnInit {
       this._delay = null;
     }
     let circle: DrPointCircle;
-    if(this.pointStyle) {
+    if (this.pointStyle) {
       circle = createDrPointCircle({ x: x, y: y, rx: 5, ry: 5, ...this.pointStyle });
     } else {
       circle = createDrPointCircle({ x: x, y: y, rx: 5, ry: 5 });
     }
     this._dataService.addObjects([circle]);
-    if(this.pointStyle){
+    if (this.pointStyle) {
       this._dataService.setStyles([circle], this.pointStyle)
     }
-    this._dataService.selectObjects([circle]);
+    if (this.autoSelectObjects) {
+      this._dataService.selectObjects([circle]);
+    }
   }
 }

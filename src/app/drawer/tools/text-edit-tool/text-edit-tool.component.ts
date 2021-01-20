@@ -11,6 +11,7 @@ import { BoundingBox } from '../../models/bounding-box';
 import { DrPoint } from '../../models/dr-point';
 import { TEXT_PADDING, SPACE_PLACEHOLDER, TextRenderingService, LINE_HEIGHT_RATIO } from '../../services/text-rendering.service';
 import { Subscription } from 'rxjs';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-text-edit-tool',
@@ -18,6 +19,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./text-edit-tool.component.scss']
 })
 export class TextEditToolComponent implements OnInit {
+  @Input()
+  autoSelectObjects: boolean = true;
 
   @ViewChild('container', { static: true }) _container: ElementRef;
   @ViewChild('textArea', { static: false }) _textArea: EditableTextAreaComponent;
@@ -38,16 +41,16 @@ export class TextEditToolComponent implements OnInit {
     strokeWidth: 1,
     rotation: 0,
     showText: false
-  };  
+  };
 
   _offset: DrPoint = null;
-  
+
   private _toolChangedEvent: Subscription;
   private _undoFired: Subscription;
   private _needsToFinalize: boolean = true;
 
   constructor(
-    private _dataService: DataStoreService, 
+    private _dataService: DataStoreService,
     private _textRenderingService: TextRenderingService,
     private _elementRef: ElementRef) { }
 
@@ -57,12 +60,12 @@ export class TextEditToolComponent implements OnInit {
     if (DrTextAlignment.CENTER === this.currentObject.vAlignment) {
       Object.assign(changes, this.textAreaStyle, {
         "margin-top": this.getMarginTop(evt.height)
-       });
+      });
     }
     if (DrTextAlignment.CENTER === this.currentObject.hAlignment && !this.currentObject.fitText) {
       Object.assign(changes, this.textAreaStyle, {
         "margin-left": this.getMarginLeft(evt.width)
-       });
+      });
     }
 
     if (Object.keys(changes).length > 0) {
@@ -76,13 +79,13 @@ export class TextEditToolComponent implements OnInit {
     if (DrTextAlignment.CENTER === this.currentObject.vAlignment) {
       Object.assign(changes, this.textAreaStyle, {
         "margin-top": this.getMarginTop(evt.height),
-        });
-    } 
+      });
+    }
     if (DrTextAlignment.CENTER === this.currentObject.hAlignment && !this.currentObject.fitText) {
       Object.assign(changes, this.textAreaStyle, {
         "margin-left": this.getMarginLeft(evt.width),
-        });
-    } 
+      });
+    }
 
     if (Object.keys(changes).length > 0) {
       Object.assign(this.textAreaStyle, changes);
@@ -90,7 +93,7 @@ export class TextEditToolComponent implements OnInit {
 
     Object.assign(this.textAreaStyle, {
       "opacity": 1
-      });
+    });
   }
 
   onClick(): void {
@@ -109,11 +112,11 @@ export class TextEditToolComponent implements OnInit {
         width: this.currentObject.width,
         height: this.currentObject.height
       }
-  
+
       let textAreaHeight: number = this._textArea.newHeight;
       let textAreaWidth: number = this._textArea.newWidth;
 
-      switch(this.currentObject.vAlignment) {
+      switch (this.currentObject.vAlignment) {
         case DrTextAlignment.CENTER:
           bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
           break;
@@ -123,7 +126,7 @@ export class TextEditToolComponent implements OnInit {
       }
       bounds.height = textAreaHeight;
 
-      switch(this.currentObject.hAlignment) {
+      switch (this.currentObject.hAlignment) {
         case DrTextAlignment.CENTER:
           bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
           break;
@@ -138,6 +141,9 @@ export class TextEditToolComponent implements OnInit {
     }
     this._dataService.selectedTool = EditorToolType.SELECTOR_TOOL;
     this._dataService.onTextObjectsChanged(this._dataService.selectedObjects);
+    if (!this.autoSelectObjects) {
+      this._dataService.selectObjects([]);
+    }
   }
 
 
@@ -160,18 +166,18 @@ export class TextEditToolComponent implements OnInit {
     return returnValue;
   }
 
-  divify():string {
+  divify(): string {
     return this._textRenderingService.getDivText(this.currentObject);
   }
-  
+
   ngOnInit() {
     this._undoFired = this._dataService.undid.subscribe(() => {
-        this._toolChangedEvent.unsubscribe();
-        this._undoFired.unsubscribe();
+      this._toolChangedEvent.unsubscribe();
+      this._undoFired.unsubscribe();
     });
     this._toolChangedEvent = this._dataService.toolChanged.subscribe(() => {
-      if(this._dataService.selectedTool === EditorToolType.TEXT_EDIT_TOOL){
-        if(this._needsToFinalize){
+      if (this._dataService.selectedTool === EditorToolType.TEXT_EDIT_TOOL) {
+        if (this._needsToFinalize) {
           this.finalize();
         }
       }
@@ -214,23 +220,23 @@ export class TextEditToolComponent implements OnInit {
       bottom: this.getBottom()
     };
 
-    
+
     setTimeout(() => {
       let ta = this._elementRef.nativeElement.querySelector(".text-area");
       ta.focus();
-      
-      var selection = window.getSelection();        
+
+      var selection = window.getSelection();
       var range = document.createRange();
       range.selectNodeContents(ta);
       selection.removeAllRanges();
       selection.addRange(range);
-      
+
     }, 1);
-    
+
   }
 
   finalize(): void {
-    if(this._dataService.selectedObjects.find((x:any) => x.id === this.currentObject.id)){
+    if (this._dataService.selectedObjects.find((x: any) => x.id === this.currentObject.id)) {
       let newText: string = this._textRenderingService.undoHtmlText(this._textArea.newText);
       if (this.currentObject.fitText) {
         this._dataService.setText(this._dataService.selectedObjects, newText);
@@ -243,11 +249,11 @@ export class TextEditToolComponent implements OnInit {
           width: this.currentObject.width,
           height: this.currentObject.height
         }
-    
+
         let textAreaHeight: number = this._textArea.newHeight;
         let textAreaWidth: number = this._textArea.newWidth;
 
-        switch(this.currentObject.vAlignment) {
+        switch (this.currentObject.vAlignment) {
           case DrTextAlignment.CENTER:
             bounds.y = bounds.y + bounds.height / 2 - textAreaHeight / 2;
             break;
@@ -257,7 +263,7 @@ export class TextEditToolComponent implements OnInit {
         }
         bounds.height = textAreaHeight;
 
-        switch(this.currentObject.hAlignment) {
+        switch (this.currentObject.hAlignment) {
           case DrTextAlignment.CENTER:
             bounds.x = bounds.x + bounds.width / 2 - textAreaWidth / 2;
             break;
@@ -279,7 +285,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getTop(): string {
-    switch(this.currentObject.vAlignment) {
+    switch (this.currentObject.vAlignment) {
       case DrTextAlignment.NEAR:
         return -(this._textRenderingService.getAscent(this.currentObject) / 2) + "px";
       case DrTextAlignment.CENTER:
@@ -290,7 +296,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getBottom(): string {
-    switch(this.currentObject.vAlignment) {
+    switch (this.currentObject.vAlignment) {
       case DrTextAlignment.NEAR:
         return "";
       case DrTextAlignment.CENTER:
@@ -301,7 +307,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getLeft(): string {
-    switch(this.currentObject.hAlignment) {
+    switch (this.currentObject.hAlignment) {
       case DrTextAlignment.NEAR:
         return "-1px";
       case DrTextAlignment.CENTER:
@@ -312,7 +318,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getRight(): string {
-    switch(this.currentObject.hAlignment) {
+    switch (this.currentObject.hAlignment) {
       case DrTextAlignment.NEAR:
         return this.currentObject.fitText ? "-1px" : "";
       case DrTextAlignment.CENTER:
@@ -323,7 +329,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getMarginTop(offsetHeight): string {
-    switch(this.currentObject.vAlignment) {
+    switch (this.currentObject.vAlignment) {
       case DrTextAlignment.NEAR:
         return "0";
       case DrTextAlignment.CENTER:
@@ -334,8 +340,8 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getMarginLeft(offsetWidth): string {
-    
-    switch(this.currentObject.hAlignment) {
+
+    switch (this.currentObject.hAlignment) {
       case DrTextAlignment.NEAR:
         return "0";
       case DrTextAlignment.CENTER:
@@ -346,7 +352,7 @@ export class TextEditToolComponent implements OnInit {
   }
 
   private getHAlign(): string {
-    switch(this.currentObject.hAlignment) {
+    switch (this.currentObject.hAlignment) {
       case DrTextAlignment.NEAR:
         return "left";
       case DrTextAlignment.CENTER:
@@ -356,5 +362,5 @@ export class TextEditToolComponent implements OnInit {
     }
   }
 
-  
+
 }

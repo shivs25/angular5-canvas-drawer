@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
     showText: false,
     showImage: false
   };
+  autoSelectObjects = false;
 
   @select() elementState;
 

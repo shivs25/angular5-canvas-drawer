@@ -5,13 +5,13 @@ import { IDrawerAppState, IElementState } from '../store';
 import { DrObject } from '../models/dr-object';
 import { BoundingBox } from '../models/bounding-box';
 import {
-  CHANGE_OBJECTS_PROPERTIES, 
-  SET_ELEMENTS, 
-  SELECT_OBJECTS, 
-  END_EDIT, 
+  CHANGE_OBJECTS_PROPERTIES,
+  SET_ELEMENTS,
+  SELECT_OBJECTS,
+  END_EDIT,
   BEGIN_EDIT,
-  ADD_OBJECTS, 
-  SET_TOOL, 
+  ADD_OBJECTS,
+  SET_TOOL,
   REMOVE_OBJECTS,
   CLEAR_OBJECTS,
   REPLACE_OBJECTS,
@@ -49,8 +49,8 @@ export class DataStoreService {
   redid: EventEmitter<void> = new EventEmitter<void>();
 
   selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-  objectsDoubleClicked:EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-  objectsClicked:EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  objectsDoubleClicked: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
+  objectsClicked: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   selectedBoundsChanged: EventEmitter<BoundingBox> = new EventEmitter<BoundingBox>();
   editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
@@ -60,7 +60,7 @@ export class DataStoreService {
   private _duplicateOffset: number = 1;
 
   constructor(
-    private _ngRedux: NgRedux<IDrawerAppState>, 
+    private _ngRedux: NgRedux<IDrawerAppState>,
     private _objectHelperService: DrawerObjectHelperService,
     private _changeService: ChangeHelperService,
     private _textRenderService: TextRenderingService
@@ -76,25 +76,25 @@ export class DataStoreService {
     this._ngRedux.dispatch({ type: SELECT_OBJECTS, items: [], selectedBounds: null });
   }
 
-  public get selectedObjects(): DrObject[] { 
+  public get selectedObjects(): DrObject[] {
     return this._ngRedux.getState().elementState.present.selectedObjects;
   }
 
   public get selectedBounds(): BoundingBox {
-    return  this._ngRedux.getState().elementState.present.selectedBounds;
+    return this._ngRedux.getState().elementState.present.selectedBounds;
   }
 
   public get selectedTool(): EditorToolType {
-    return  this._ngRedux.getState().elementState.present.selectedTool;
+    return this._ngRedux.getState().elementState.present.selectedTool;
   }
 
   public set selectedTool(tool: EditorToolType) {
     this.toolChanged.emit();
-    switch(tool) {
-      case EditorToolType.TEXT_EDIT_TOOL: 
+    switch (tool) {
+      case EditorToolType.TEXT_EDIT_TOOL:
         this.setHideSelection(true);
         break;
-      default: 
+      default:
         this.setHideSelection(false);
         break;
     }
@@ -119,12 +119,12 @@ export class DataStoreService {
     let exists: boolean = true;
 
     let i: number = 1;
-    while(exists) {
+    while (exists) {
       returnValue = prefix + ((showNumOne || 1 !== i) ? " " + i.toString() : "");
       exists = this.elements.filter((m: DrObject) => m.name === returnValue).length > 0;
       i++;
     }
-    
+
     return returnValue;
   }
 
@@ -139,56 +139,56 @@ export class DataStoreService {
   }
 
   //=========Actions=========
-  public setHideSelection(hide: boolean):void {
+  public setHideSelection(hide: boolean): void {
     this._ngRedux.dispatch({
       type: SET_HIDE_SELECTION,
       hideSelection: hide
     });
   }
 
-  public alignObjectsLeft(items: DrObject[]):void {
+  public alignObjectsLeft(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 0);
     }
   }
 
-  public alignObjectsRight(items: DrObject[]):void {
+  public alignObjectsRight(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 2);
     }
   }
 
-  public alignObjectsCenter(items: DrObject[]):void {
+  public alignObjectsCenter(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 1);
     }
   }
 
-  public alignObjectsTop(items: DrObject[]):void {
+  public alignObjectsTop(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 3);
     }
   }
 
-  public alignObjectsMiddle(items: DrObject[]):void {
+  public alignObjectsMiddle(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 4);
     }
   }
 
-  public alignObjectsBottom(items: DrObject[]):void {
+  public alignObjectsBottom(items: DrObject[]): void {
     if (items.length > 1) {
       this.alignObjects(items, 5);
     }
   }
 
-  public setCalloutPointer(item: DrObject, basePoint1: DrPoint, basePoint2: DrPoint, pointerLocation: DrPoint):void {
+  public setCalloutPointer(item: DrObject, basePoint1: DrPoint, basePoint2: DrPoint, pointerLocation: DrPoint): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
-      changes:[
-        { 
-          id: item.id, 
-          changes: { basePoint1: basePoint1, basePoint2: basePoint2, pointerLocation: pointerLocation, pointerLocked: true } 
+      changes: [
+        {
+          id: item.id,
+          changes: { basePoint1: basePoint1, basePoint2: basePoint2, pointerLocation: pointerLocation, pointerLocked: true }
         }
       ]
     });
@@ -207,11 +207,11 @@ export class DataStoreService {
     )) {
 
       let changes: any[] = [];
-      for(let i of items) {
+      for (let i of items) {
         changes.push({ id: i.id, changes: this._changeService.getBoundsChanges(i, newBounds, this.selectedBounds) });
       }
-      this._ngRedux.dispatch({ 
-        type: CHANGE_OBJECTS_PROPERTIES, 
+      this._ngRedux.dispatch({
+        type: CHANGE_OBJECTS_PROPERTIES,
         changes: changes
       });
       this.resetSelection();
@@ -220,19 +220,20 @@ export class DataStoreService {
   }
 
   public setVisibility(items: DrObject[], visibility: boolean): void {
-    let ids: number[] = items.map((x:DrObject) => x.id);
+    let ids: number[] = items.map((x: DrObject) => x.id);
     let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
-    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
+    let b: BoundingBox = newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
 
     let changes: any[] = [];
-    for(let o of items) {
-      changes.push({ id: o.id, changes: { visible: visibility }});
+    for (let o of items) {
+      changes.push({ id: o.id, changes: { visible: visibility } });
     }
 
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
       changes: changes
     });
+
     this.selectObjects(newSelectedObjects);
     this._duplicateOffset = 1;
   }
@@ -240,8 +241,8 @@ export class DataStoreService {
   public setUrls(items: DrObject[], url: string) {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
-      changes: items.map((x: DrObject) => { 
-        return { id: x.id, changes: { url: url, initial: false } }; 
+      changes: items.map((x: DrObject) => {
+        return { id: x.id, changes: { url: url, initial: false } };
       })
     });
     this.resetSelection();
@@ -256,8 +257,8 @@ export class DataStoreService {
   public setInitialUrls(items: DrImage[], url: string) {
     this._ngRedux.dispatch({
       type: SET_INITIAL_URLS,
-      changes: items.map((x: DrObject) => { 
-        return { id: x.id, changes: { url: url } }; 
+      changes: items.map((x: DrObject) => {
+        return { id: x.id, changes: { url: url } };
       })
     });
     this.resetSelection();
@@ -277,16 +278,17 @@ export class DataStoreService {
 
 
     let changes: any[] = [];
-    for(let i of items) {
+    for (let i of items) {
       changes.push(
-        { id: i.id, 
+        {
+          id: i.id,
           changes: Object.assign(this._changeService.getBoundsChanges(i, bounds, this.selectedBounds), {
             text: text,
             fitText: true,
             initial: false
           })
         });
-      }
+    }
 
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
@@ -309,15 +311,15 @@ export class DataStoreService {
   public setText(items: DrObject[], text: string) {
     if (!(1 === items.length && text === ((items[0] as DrText).text))) {
       let changes: any[] = [];
-      for(let i of items) {
+      for (let i of items) {
         changes.push(
-        { 
-          id: i.id, 
-          changes: {
-            text: text,
-            initial: false
-          }
-        });
+          {
+            id: i.id,
+            changes: {
+              text: text,
+              initial: false
+            }
+          });
       }
       this._ngRedux.dispatch({
         type: CHANGE_OBJECTS_PROPERTIES,
@@ -331,10 +333,10 @@ export class DataStoreService {
         state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
       }
     }
-    
+
   }
 
-  public overWriteObject(item: DrObject):void {
+  public overWriteObject(item: DrObject): void {
     this._ngRedux.dispatch({
       type: OVERWRITE_OBJECT,
       newObject: item
@@ -343,7 +345,7 @@ export class DataStoreService {
 
   public renameObjects(items: DrObject[], newName: string) {
     let changes: any[] = [];
-    for(let i of items){
+    for (let i of items) {
       changes.push({
         id: i.id,
         changes: {
@@ -361,18 +363,18 @@ export class DataStoreService {
   public setStyles(items: DrObject[], newStyle: DrStyle): void {
     this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
-      changes: items.map((x: DrObject) => { 
-        return { id: x.id, changes: Object.assign({}, newStyle) }; 
+      changes: items.map((x: DrObject) => {
+        return { id: x.id, changes: Object.assign({}, newStyle) };
       })
     });
     this.resetSelection();
     this._duplicateOffset = 1;
   }
 
-public getSvgText(item: DrObject): TextInfo[] {
+  public getSvgText(item: DrObject): TextInfo[] {
 
-  return item.drType === DrType.TEXT ? this._textRenderService.getSvgText(item as DrText) : null;
-}
+    return item.drType === DrType.TEXT ? this._textRenderService.getSvgText(item as DrText) : null;
+  }
 
   public getCalloutPath(item: DrObject): string {
 
@@ -382,15 +384,15 @@ public getSvgText(item: DrObject): TextInfo[] {
   public moveObjectsDown(items: DrObject[]): void {
 
     let indices: any[] = [];
-    
-    for(let o of items) {
+
+    for (let o of items) {
       indices.push({
         id: o.id,
         index: this.getObjectIndex(o),
         item: o
       });
     }
-    
+
     let min: number = Math.min(...indices.map((b: any) => b.index)) - 1;
     if (min < 0) { min = 0 };
     let idsToExclude = indices.map((x: any) => x.id);
@@ -406,21 +408,21 @@ public getSvgText(item: DrObject): TextInfo[] {
         elements: elements
       });
     }
-    
+
     this._duplicateOffset = 1;
   }
 
   public moveObjectsUp(items: DrObject[]): void {
     let indices: any[] = [];
-    
-    for(let o of items) {
+
+    for (let o of items) {
       indices.push({
         id: o.id,
         index: this.getObjectIndex(o),
         item: o
       });
     }
-    
+
     let max: number = Math.max(...indices.map((b: any) => b.index)) + 1;
     if (max > this.elements.length - 1) {
       max = this.elements.length - 1;
@@ -439,8 +441,8 @@ public getSvgText(item: DrObject): TextInfo[] {
         elements: elements
       });
     }
-    
-    
+
+
     this._duplicateOffset = 1;
   }
 
@@ -463,58 +465,60 @@ public getSvgText(item: DrObject): TextInfo[] {
   }
 
   public removeObjects(items: DrObject[]): void {
-    let ids: number[] = items.map((x:DrObject) => x.id);
+    let ids: number[] = items.map((x: DrObject) => x.id);
     let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
-    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
+    let b: BoundingBox = newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
     this._ngRedux.dispatch({
       type: REMOVE_OBJECTS,
       ids: items.map((x: any) => x.id)
     });
+
     this.selectObjects(newSelectedObjects);
     this._duplicateOffset = 1;
   }
 
   public removeTempObjects(items: DrObject[]): void {
-    let ids: number[] = items.map((x:DrObject) => x.id);
+    let ids: number[] = items.map((x: DrObject) => x.id);
     let newSelectedObjects: DrObject[] = this.selectedObjects.filter((x: DrObject) => ids.indexOf(x.id) < 0);
-    let b: BoundingBox =  newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
+    let b: BoundingBox = newSelectedObjects.length > 0 ? this._objectHelperService.getBoundingBox(newSelectedObjects) : null;
     this._ngRedux.dispatch({
       type: REMOVE_TEMP_OBJECTS,
       ids: items.map((x: any) => x.id)
     });
+
     this.selectObjects(newSelectedObjects);
     this._duplicateOffset = 1;
 
-    
+
     let state = this._ngRedux.getState();
     if (state.elementState.past.length > 0) {
       //REmove the creation of this object from history.
       state.elementState.past = state.elementState.past.slice(0, state.elementState.past.length - 1);
     }
-    
+
   }
 
   public groupObjects(items: DrObject[]): void {
-    
+
 
 
     let groupedObject: DrObject;
     let highZIndex: number = 0;
     let indexOf: number;
-    for(let i of items) {
-        groupedObject = this.elements.find((t: any) => i.id === t.id);
-        if (groupedObject) {
-            indexOf = this.elements.indexOf(groupedObject);
-            if (indexOf > highZIndex) {
-              highZIndex = indexOf;
-            }
+    for (let i of items) {
+      groupedObject = this.elements.find((t: any) => i.id === t.id);
+      if (groupedObject) {
+        indexOf = this.elements.indexOf(groupedObject);
+        if (indexOf > highZIndex) {
+          highZIndex = indexOf;
         }
+      }
     }
-    
+
     items = items.sort((a, b) => {
       return this.elements.indexOf(this.elements.find((t) => t.id === a.id))
-             - 
-             this.elements.indexOf(this.elements.find((t) => t.id === b.id));
+        -
+        this.elements.indexOf(this.elements.find((t) => t.id === b.id));
     });
 
     let itemToAdd: DrGroupedObject = createDrGroupedObject({
@@ -529,6 +533,7 @@ public getSvgText(item: DrObject): TextInfo[] {
       itemsToAdd: [itemToAdd],
       zIndex: highZIndex + 1
     });
+
     this.selectObjects([itemToAdd]);
     this._duplicateOffset = 1;
   }
@@ -541,11 +546,12 @@ public getSvgText(item: DrObject): TextInfo[] {
       itemsToAdd: item.objects,
       zIndex: this.elements.indexOf(item)
     });
+
     this.selectObjects(item.objects);
     this._duplicateOffset = 1;
   }
 
- 
+
   public duplicateObjects(items: DrObject[]): void {
     let newItems: DrObject[] = [];
     let b: BoundingBox;
@@ -556,7 +562,7 @@ public getSvgText(item: DrObject): TextInfo[] {
 
     let i: DrObject;
 
-    for(i of items) {
+    for (i of items) {
       b = this._objectHelperService.getBoundingBox([i]);
 
       newB = Object.assign({}, b, {
@@ -584,24 +590,24 @@ public getSvgText(item: DrObject): TextInfo[] {
     this._ngRedux.dispatch({ type: CHANGE_PREVIEW_STYLES, changes: style });
   }
 
- 
+
 
   private getObjectIndex(item: DrObject): number {
-    let i: DrObject = this.elements.find((t:any) => t.id === item.id);
+    let i: DrObject = this.elements.find((t: any) => t.id === item.id);
     let index = this.elements.indexOf(i);
     return index;
   }
 
   private getNextId(): number {
     return 0 === this.elements.length ? 1 :
-          Math.max(...this.elements.map(o => o.id)) + 1;
+      Math.max(...this.elements.map(o => o.id)) + 1;
   }
 
   private areElementArraysTheSameOrder(arr1: DrObject[], arr2: DrObject[]) {
     let returnValue: boolean = true;
 
     if (arr1.length === arr2.length) {
-      for(let i = 0; i < arr1.length; i++) {
+      for (let i = 0; i < arr1.length; i++) {
         if (arr1[i].id !== arr2[i].id) {
           returnValue = false;
           break;
@@ -612,13 +618,13 @@ public getSvgText(item: DrObject): TextInfo[] {
       returnValue = false;
     }
 
-    return  returnValue;
+    return returnValue;
   }
 
   private alignObjects(items: DrObject[], alignment: number) {
     let boundingBoxes: any = [];
 
-    for(let i of items) {
+    for (let i of items) {
       boundingBoxes.push({
         item: i,
         bounds: this._objectHelperService.getBoundingBox([i])
@@ -626,71 +632,71 @@ public getSvgText(item: DrObject): TextInfo[] {
     }
 
     let changes: any = [];
-    switch(alignment) {
+    switch (alignment) {
       case 0: {
-          let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
+        let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
 
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { x: left });
-          }
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { x: left });
         }
+      }
         break;
       case 1: {
-          let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
-          let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
-          let middle: number = (left + right) / 2;
+        let left: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.x));
+        let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
+        let middle: number = (left + right) / 2;
 
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { x: middle - o.bounds.width / 2});
-          }
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { x: middle - o.bounds.width / 2 });
         }
+      }
         break;
       case 2: {
-          let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
-    
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { x: right - o.bounds.width });
-          }
+        let right: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.x + b.bounds.width));
+
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { x: right - o.bounds.width });
         }
+      }
         break;
       case 3: {
-          let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
-    
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { y: top });
-          }
+        let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
+
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { y: top });
         }
+      }
         break;
       case 4: {
-          let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
-          let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
-          let middle: number = (top + bottom) / 2;
+        let top: number = Math.min(...boundingBoxes.map((b: any) => b.bounds.y));
+        let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
+        let middle: number = (top + bottom) / 2;
 
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { y: middle - o.bounds.height / 2 });
-          }
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { y: middle - o.bounds.height / 2 });
         }
+      }
         break;
       case 5: {
-          let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
-    
-          for(let o of boundingBoxes) {
-            o.newBounds = Object.assign({}, o.bounds, { y: bottom - o.bounds.height });
-          }
+        let bottom: number = Math.max(...boundingBoxes.map((b: any) => b.bounds.y + b.bounds.height));
+
+        for (let o of boundingBoxes) {
+          o.newBounds = Object.assign({}, o.bounds, { y: bottom - o.bounds.height });
         }
+      }
         break;
     }
 
-    for(let o of boundingBoxes) {
+    for (let o of boundingBoxes) {
       changes.push({
         id: o.item.id,
         changes: this._changeService.getBoundsChanges(o.item, o.newBounds, o.bounds)
       });
     }
 
-    let newBounds: BoundingBox = this._objectHelperService.getBoundingBoxForBounds(boundingBoxes.map((x:any) => x.newBounds));
+    let newBounds: BoundingBox = this._objectHelperService.getBoundingBoxForBounds(boundingBoxes.map((x: any) => x.newBounds));
 
-    this._ngRedux.dispatch({ 
+    this._ngRedux.dispatch({
       type: CHANGE_OBJECTS_PROPERTIES,
       changes: changes
     });
@@ -701,16 +707,16 @@ public getSvgText(item: DrObject): TextInfo[] {
 
   private resetSelection(): void {
     let items: DrObject[] = [];
-    for(let o of this.selectedObjects) {
+    for (let o of this.selectedObjects) {
       items.push(this.elements.find((t: DrObject) => t.id === o.id));
     }
     this._ngRedux.dispatch({
       type: SELECT_OBJECTS,
       items: items,
-      selectedBounds: items.length > 0 ? 
-      (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items)) 
-       : this._objectHelperService.getBoundingBox(items)) 
-    : null
+      selectedBounds: items.length > 0 ?
+        (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items))
+          : this._objectHelperService.getBoundingBox(items))
+        : null
     });
     this.selectedBoundsChanged.emit(this.selectedBounds);
   }
@@ -718,26 +724,26 @@ public getSvgText(item: DrObject): TextInfo[] {
   private buildRotatedPoints(items: DrObject[]): DrPoint[] {
     let returnValue: DrPoint[] = []
 
-    for(let i: number = 0; i < items.length; i++) {
+    for (let i: number = 0; i < items.length; i++) {
       returnValue = returnValue.concat(this._objectHelperService.getRotatedPoints(items[i]));
     }
 
-    return  returnValue;
+    return returnValue;
   }
 
   //=========Selection========
   public selectObjects(items: DrObject[]): void {
-    this._ngRedux.dispatch({ 
-      type: SELECT_OBJECTS, 
-      items: items, 
-      selectedBounds: items.length > 0 ? 
-        (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items)) 
-         : this._objectHelperService.getBoundingBox(items)) 
-      : null
+    this._ngRedux.dispatch({
+      type: SELECT_OBJECTS,
+      items: items,
+      selectedBounds: items.length > 0 ?
+        (items.length > 1 ? this._objectHelperService.getBoundingBoxForPoints(this.buildRotatedPoints(items))
+          : this._objectHelperService.getBoundingBox(items))
+        : null
     });
     this.selectionChanged.emit(this.selectedObjects);
   }
-  
+
   public beginEdit(): void {
     this._ngRedux.dispatch({ type: BEGIN_EDIT });
     this.editingChanged.emit(this.isEditing);
@@ -770,7 +776,7 @@ public getSvgText(item: DrObject): TextInfo[] {
     this.undid.emit();
   }
 
-  public get undoLength():number {
+  public get undoLength(): number {
     return this._ngRedux.getState().elementState.past.length;
   }
 
@@ -778,8 +784,8 @@ public getSvgText(item: DrObject): TextInfo[] {
     this._ngRedux.dispatch(ActionCreators.redo());
     this.redid.emit();
   }
-  
-  public get redoLength():number {
+
+  public get redoLength(): number {
     return this._ngRedux.getState().elementState.future.length;
   }
 
