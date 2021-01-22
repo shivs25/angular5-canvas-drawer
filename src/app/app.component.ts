@@ -388,12 +388,12 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     let elements = [];
     this.dataStoreService.editingChanged.subscribe((items) => {
-      console.log(items);
-      console.log(this.dataStoreService.elements);
+      //console.log(items);
+      //console.log(this.dataStoreService.elements);
     })
     this.dataStoreService.textObjectChanged.subscribe((items) => {
-      console.log("Text Changed!")
-      console.log(items);
+      //console.log("Text Changed!")
+      //console.log(items);
     });
     this.dataStoreService.objectsAdded.subscribe(() => {
       if (this.dataStoreService.elements[this.dataStoreService.elements.length - 1].drType === DrType.TEXT) {
@@ -402,13 +402,13 @@ export class AppComponent implements OnInit {
     });
 
     this.dataStoreService.objectsClicked.subscribe((items) => {
-      console.log("SINGLE");
-      console.log(items);
+      //console.log("SINGLE");
+      //console.log(items);
     });
 
     this.dataStoreService.objectsDoubleClicked.subscribe((items) => {
-      console.log("DOUBLE");
-      console.log(items);
+      //console.log("DOUBLE");
+      //console.log(items);
     });
 
     let t: DrRect = createDrRect({
@@ -652,14 +652,17 @@ export class AppComponent implements OnInit {
   }
 
   testService(evt: DrObject) {
-    console.log(evt);
-    console.log(this.drawerObjHelper.getBoundingBox([evt]));
+    //console.log(evt);
+    //console.log(this.drawerObjHelper.getBoundingBox([evt]));
   }
 
   onMouseOver(evt) {
     //console.log(evt);
   }
   onBackgroundMouseUp(event) {
+    console.log(event);
+  }
+  onSelectorDoubleClick(event) {
     console.log(event);
   }
 }

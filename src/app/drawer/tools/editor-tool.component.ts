@@ -44,7 +44,8 @@ export class EditorToolComponent implements OnInit {
   autoSelectObjects: boolean = true;
   @Output()
   public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
-
+  @Output()
+  selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   @Output()
   backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 

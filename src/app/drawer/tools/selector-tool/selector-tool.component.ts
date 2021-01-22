@@ -69,6 +69,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   bbSelectionStyle: any = null;
   @Output()
   backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  @Output()
+  selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   SIZER_SIZE: number = SIZER_SIZE;
   HALF_SIZER: number = HALF_SIZER;
@@ -448,6 +450,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             this._delay.unsubscribe();
             this._delay = null;
             this._dataStoreService.doubleClickObjects(this._dataStoreService.selectedObjects);
+            this.selectorDoubleClick.emit(data);
           }
           else {
             this._clickPt = data.location;
@@ -536,16 +539,47 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
 
         }
         else {
-          this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
-          if (this._dataStoreService.selectedObjects.length > 0) {
-            this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
-          } else if (this.emitBackgroundClick && data.isBackgroundClick) {
-            this.backgroundMouseUp.emit(data);
+          //Click
+          if (this._delay) {
+            //Double click
+            this._delay.unsubscribe();
+            this._delay = null;
+            this.selectorDoubleClick.emit(data);
+          }
+          else {
+            this._clickPt = data.location;
+            this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
+              if (this._delay) {
+                this._delay.unsubscribe();
+                this._delay = null;
+                this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
+                if (this._dataStoreService.selectedObjects.length > 0) {
+                  this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
+                } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+                  this.backgroundMouseUp.emit(data);
+                }
+              }
+            });
           }
         }
-
       } else if (this.emitBackgroundClick && data.isBackgroundClick) {
-        this.backgroundMouseUp.emit(data);
+        //Click
+        if (this._delay) {
+          //Double click
+          this._delay.unsubscribe();
+          this._delay = null;
+          this.selectorDoubleClick.emit(data);
+        }
+        else {
+          this._clickPt = data.location;
+          this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
+            if (this._delay) {
+              this._delay.unsubscribe();
+              this._delay = null;
+              this.backgroundMouseUp.emit(data);
+            }
+          });
+        }
       }
       this.setupBounds();
 
@@ -555,7 +589,23 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.mouseDownRotator = -1;
       this._dataStoreService.endEdit();
     } else if (this.emitBackgroundClick && data.isBackgroundClick) {
-      this.backgroundMouseUp.emit(data);
+      //Click
+      if (this._delay) {
+        //Double click
+        this._delay.unsubscribe();
+        this._delay = null;
+        this.selectorDoubleClick.emit(data);
+      }
+      else {
+        this._clickPt = data.location;
+        this._delay = Observable.of(null).delay(DOUBLE_CLICK_TIME).subscribe(() => {
+          if (this._delay) {
+            this._delay.unsubscribe();
+            this._delay = null;
+            this.backgroundMouseUp.emit(data);
+          }
+        });
+      }
     }
 
   }

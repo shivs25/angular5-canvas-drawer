@@ -48,21 +48,18 @@ export class EditableDrawerComponent implements OnInit {
   emitMouseEvents: boolean = false;
   @Input()
   emitBackgroundClick: boolean = false;
-
   @Output()
   public mouseAction: EventEmitter<{ type: string, pt: any }> = new EventEmitter<{ type: string, pt: any }>();
-
   @Output()
   public selectionChanged: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-
   @Output()
   public editingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
-
   @Output()
   public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
-
   @Output()
   backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  @Output()
+  selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
 
   constructor(private _dataService: DataStoreService) { }
