@@ -1,5 +1,5 @@
 <app-selector-tool [canModifyShapes]="canModifyShapes"  [multiClickEnabled]="multiClickEnabled" [emitBackgroundClick]="emitBackgroundClick"
-  (backgroundMouseUp)="backgroundMouseUp.emit($event)" [rotaterStyle]="rotaterStyle" [resizerStyle]="resizerStyle" [traceSelectionStyle]="traceSelectionStyle"
+  (selectorMouseUp)="selectorMouseUp.emit($event)" [rotaterStyle]="rotaterStyle" [resizerStyle]="resizerStyle" [traceSelectionStyle]="traceSelectionStyle"
   [bbSelectionStyle]="bbSelectionStyle" (selectorDoubleClick)="selectorDoubleClick.emit($event)"
 *ngIf="SELECTOR_TOOL === (elementState | async)?.present.selectedTool"></app-selector-tool>
 <app-pen-tool *ngIf="PEN_TOOL === (elementState | async)?.present.selectedTool" (mouseAction)="mouseAction.next($event)" [emitMouseEvents]="emitMouseEvents"

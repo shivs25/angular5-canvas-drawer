@@ -47,7 +47,7 @@ export class EditorToolComponent implements OnInit {
   @Output()
   selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   @Output()
-  backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  selectorMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
   SELECTOR_TOOL: EditorToolType = EditorToolType.SELECTOR_TOOL;
   PEN_TOOL: EditorToolType = EditorToolType.PEN_TOOL;

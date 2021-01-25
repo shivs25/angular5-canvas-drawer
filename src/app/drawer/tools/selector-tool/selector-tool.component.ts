@@ -68,7 +68,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   @Input()
   bbSelectionStyle: any = null;
   @Output()
-  backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  selectorMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   @Output()
   selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 
@@ -298,6 +298,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBackgroundMouseUp(evt): void {
+    console.log("onBackgroundMouseUp");
     evt.preventDefault();
     evt.stopPropagation();
 
@@ -321,7 +322,6 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBoundsMouseDown(data: MouseEventData): void {
-
     data.location.x -= this._location.x;
     data.location.y -= this._location.y;
     this.onMouseDown(data);
@@ -332,7 +332,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onBoundsMouseUp(data: MouseEventData): void {
-
+    console.log("onBoundsMouseUp");
   }
 
   onSelectionMouseDown(data: MouseEventData): void {
@@ -346,7 +346,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onSelectionMouseUp(data: MouseEventData): void {
-
+    console.log("onSelectionMouseUp");
   }
 
   onMouseDown(data: MouseEventData): void {
@@ -459,8 +459,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
                 this._delay.unsubscribe();
                 this._delay = null;
                 this._dataStoreService.clickObjects(this._dataStoreService.selectedObjects);
-                if (this.emitBackgroundClick && data.isBackgroundClick) {
-                  this.backgroundMouseUp.emit(data);
+                if (this.emitBackgroundClick) {
+                  this.selectorMouseUp.emit(data);
                 }
               }
             });
@@ -555,14 +555,14 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
                 this.rotateObject(data.location, (this._modifierKeys.shift || this.multiClickEnabled));
                 if (this._dataStoreService.selectedObjects.length > 0) {
                   this._dataStoreService.setRotation(this.selectedObjects[0], this.rotation);
-                } else if (this.emitBackgroundClick && data.isBackgroundClick) {
-                  this.backgroundMouseUp.emit(data);
+                } else if (this.emitBackgroundClick) {
+                  this.selectorMouseUp.emit(data);
                 }
               }
             });
           }
         }
-      } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+      } else if (this.emitBackgroundClick) {
         //Click
         if (this._delay) {
           //Double click
@@ -576,7 +576,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
             if (this._delay) {
               this._delay.unsubscribe();
               this._delay = null;
-              this.backgroundMouseUp.emit(data);
+              this.selectorMouseUp.emit(data);
             }
           });
         }
@@ -588,7 +588,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
       this.mouseDownSizer = -1;
       this.mouseDownRotator = -1;
       this._dataStoreService.endEdit();
-    } else if (this.emitBackgroundClick && data.isBackgroundClick) {
+    } else if (this.emitBackgroundClick) {
       //Click
       if (this._delay) {
         //Double click
@@ -602,7 +602,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
           if (this._delay) {
             this._delay.unsubscribe();
             this._delay = null;
-            this.backgroundMouseUp.emit(data);
+            this.selectorMouseUp.emit(data);
           }
         });
       }
@@ -655,6 +655,8 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onResizerMouseUp(evt: any, index: number): void {
+    console.log("onResizerMouseUp");
+
     evt.preventDefault();
     evt.stopPropagation();
   }
@@ -682,6 +684,7 @@ export class SelectorToolComponent implements OnInit, OnDestroy {
   }
 
   onRotateMouseUp(evt: any, index: number): void {
+    console.log("onRotateMouseUp");
     evt.preventDefault();
     evt.stopPropagation();
 

@@ -57,7 +57,7 @@ export class EditableDrawerComponent implements OnInit {
   @Output()
   public objectsAdded: EventEmitter<DrObject[]> = new EventEmitter<DrObject[]>();
   @Output()
-  backgroundMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
+  selectorMouseUp: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
   @Output()
   selectorDoubleClick: EventEmitter<MouseEventData> = new EventEmitter<MouseEventData>();
 

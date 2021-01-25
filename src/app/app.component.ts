@@ -660,9 +660,21 @@ export class AppComponent implements OnInit {
     //console.log(evt);
   }
   onBackgroundMouseUp(event) {
-    console.log(event);
+    if (event.isBackgroundClick) {
+      console.log("isBackgroundClick");
+    } else if (event.data === null) {
+      console.log("no data at selection");
+    } else {
+      console.log(event);
+    }
   }
   onSelectorDoubleClick(event) {
-    console.log(event);
+    if (event.isBackgroundClick) {
+      console.log("isBackgroundDblClick");
+    } else if (event.data === null) {
+      console.log("no data at dbl click");
+    } else {
+      console.log(event);
+    }
   }
 }
